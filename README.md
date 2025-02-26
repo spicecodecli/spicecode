@@ -10,11 +10,26 @@
 - After installing via PIP, you can run these two commands:
 - ```spice hello```
 - ```spice analyze FILE``` (replace file with the filename)
+- EXAMPLE: ```spice analyze code.js```
 
+
+---
+
+### Supported Programming Langagues for Analysis\
+- Python (.py)
+- JavaScript (.js)
+- Java (.java)
+- Ruby (.rb)
+- Lua (.lua)
+
+- Many more coming soon!
+
+---
 
 You can also visit our page on the pypi registry: https://pypi.org/project/spicecode/
 
-----------
+---
+
 
 ### For Development
 i will write a better tutorial later but for now basically just:
