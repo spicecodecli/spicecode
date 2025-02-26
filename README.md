@@ -9,3 +9,7 @@ i will write a better tutorial later but for now basically just:
 - then run it using ```spice analyze``` followed by the file to be analyzed
 - example: ```spice analyze example.js```
 - you can also run ```spice hello``` for a hello idk
+
+-----
+we also have a pip package now:     
+https://pypi.org/project/spicecode/
