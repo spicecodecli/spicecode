@@ -1,6 +1,22 @@
 # 🌶️ SpiceCode CLI - Making your code spicier 🔥🥵
 
+
+### Installing via PIP
+- Make sure you have Python installed on your system
+- Open the terminal
+- Install SpiceCode via PIP with ```pip install spicecode```
+
+### Using SpiceCode
+- After installing via PIP, you can run these two commands:
+- ```spice hello```
+- ```spice analyze FILE``` (replace file with the filename)
+
+
+You can also visit our page on the pypi registry: https://pypi.org/project/spicecode/
+
 ----------
+
+### For Development
 i will write a better tutorial later but for now basically just:
 - clone the repo yeah no shit
 - create a python virtual enviroment with venv
