@@ -1,6 +1,4 @@
-# spicecode
-SpiceCode CLI - Making your code spicier every day
-
+# SpiceCode CLI - Making your code spicier every day
 
 ----------
 i will write a better tutorial later but for now basically just:
