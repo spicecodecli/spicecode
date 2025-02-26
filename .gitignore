@@ -1,2 +1,6 @@
 # python venv
-/spicecode 
+/spicecode
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
