@@ -16,12 +16,12 @@
 ---
 
 ### Supported Programming Langagues for Analysis:
-- Python *(.py)*
-- JavaScript *(.js)*
-- Java *(.java)*
-- Ruby *(.rb)*
-- Lua *(.lua)*
-- Many more *coming soon!*
+- Python **(.py)**
+- JavaScript **(.js)**
+- Java **(.java)**
+- Ruby **(.rb)**
+- Lua **(.lua)**
+- Many more **coming soon!**
 
 ---
 
