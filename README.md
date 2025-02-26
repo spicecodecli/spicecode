@@ -16,6 +16,7 @@
 ---
 
 ### Supported Programming Langagues for Analysis:
+[![My Skills](https://skillicons.dev/icons?i=python,js, java, ruby, lua)](https://skillicons.dev)
 - Python **(.py)**
 - JavaScript **(.js)**
 - Java **(.java)**
