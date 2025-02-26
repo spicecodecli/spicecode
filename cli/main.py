@@ -1,8 +1,5 @@
-
-
 import typer
 from rich import print
-
 from spice.analyze import analyze_file
 
 app = typer.Typer()
@@ -20,10 +17,13 @@ def analyze(file: str):
 @app.command()
 def hello():
     """
-    welcome message.
+    Welcome message.
     """
     print("🌶️   Welcome to [bold red]SpiceCode[/]! 🌶️")
     print("🔥 The [yellow]CLI tool[/] that makes your code [yellow]spicier[/] 🥵")
 
+def main():
+    app()  # This will run your Typer app
+
 if __name__ == "__main__":
-    app()
+    main()

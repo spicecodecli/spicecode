@@ -1,7 +1,6 @@
 import os
 import tree_sitter_python as tspython
 import tree_sitter_ruby as tsruby
-import tree_sitter_rust as tsrust
 import tree_sitter_java as tsjava
 import tree_sitter_javascript as tsjs
 import tree_sitter_lua as tslua
@@ -13,8 +12,6 @@ def get_language_for_file(file_path):
         return Language(tspython.language())
     elif ext == ".rb":
         return Language(tsruby.language())
-    elif ext == ".rs":
-        return Language(tsrust.language())
     elif ext == ".java":
         return Language(tsjava.language())
     elif ext == ".js":
