@@ -11,5 +11,7 @@ i will write a better tutorial later but for now basically just:
 - you can also run ```spice hello``` for a hello idk
 
 -----
-we also have a pip package now:     
-https://pypi.org/project/spicecode/
+we also have a pip package now:       
+https://pypi.org/project/spicecode/     
+or     
+```pip install spicecode```     
