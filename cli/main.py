@@ -2,21 +2,11 @@
 
 import typer
 
-app = typer.Typer()
 
-
-@app.command()
-def hello(name: str):
-    print(f"Hello {name}")
-
-
-@app.command()
-def goodbye(name: str, formal: bool = False):
-    if formal:
-        print(f"Goodbye{name}")
-    else:
-        print(f"get the fuck out  {name}")
+def main():
+    print("🌶️  Welcome to SpiceCode! 🌶️")
+    print("🔥 The CLI tool that makes your code spicier, line by line... 🥵")
 
 
 if __name__ == "__main__":
-    app()
+    typer.run(main)
