@@ -27,9 +27,7 @@
 
 ---
 
-[![My Skills](https://skillicons.dev/icons?i=python&perline=1)](https://skillicons.dev) Python **(.py)**
-
-You can also visit our page on the pypi registry: https://pypi.org/project/spicecode/
+You can also **visit our page on the pypi registry**: https://pypi.org/project/spicecode/
 
 ---
 
