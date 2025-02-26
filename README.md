@@ -8,7 +8,9 @@
 
 ### Using SpiceCode
 - After installing via PIP, you can run these two commands:
-- ```spice hello```
+```
+spice hello
+```
 - ```spice analyze FILE``` (replace file with the filename)
 - EXAMPLE: ```spice analyze code.js```
 
