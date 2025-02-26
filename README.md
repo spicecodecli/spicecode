@@ -4,15 +4,23 @@
 ### Installing via PIP
 - Make sure you have Python installed on your system
 - Open the terminal
-- Install SpiceCode via PIP with ```pip install spicecode```
+- Install SpiceCode via PIP with:
+```
+pip install spicecode
+```
 
 ### Using SpiceCode
-- After installing via PIP, you can run these two commands:
+- After installing via PIP, you can run these two commands: *(replace file with the filename)*
 ```
 spice hello
 ```
-- ```spice analyze FILE``` (replace file with the filename)
-- EXAMPLE: ```spice analyze code.js```
+```
+spice analyze FILE
+```
+- EXAMPLE: 
+```
+spice analyze code.js
+```
 
 
 ---
