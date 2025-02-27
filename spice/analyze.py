@@ -6,6 +6,7 @@ import tree_sitter_javascript as tsjs
 import tree_sitter_lua as tslua
 from tree_sitter import Language, Parser
 
+
 def get_language_for_file(file_path):
     _, ext = os.path.splitext(file_path)
     if ext == ".py":
