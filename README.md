@@ -51,6 +51,7 @@ i will write a better tutorial later but for now basically just:
 - then run it using ```spice analyze``` followed by the file to be analyzed
 - example: ```spice analyze example.js```
 - you can also run ```spice hello``` for a hello idk
+- idk if whats written above still works but for now, to run locally, im using this -> ```python -m cli.main``` followed by the command like hello or analyze
 
 -----
 we also have a pip package now:       
