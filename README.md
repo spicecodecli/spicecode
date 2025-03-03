@@ -34,7 +34,7 @@ spice analyze code.js
 - Ruby **(.rb)**
 - Lua **(.lua)**
 - Many more **coming soon!**
-
+- (if you are using the development build, only Ruby is supported. since the dev build is using our own in-house parser, while the published pip package is using tree-sitter's open source parser with multi langague support, which is coming soon for our parser.)
 ---
 
 You can also **visit our page on the pypi registry**: https://pypi.org/project/spicecode/
