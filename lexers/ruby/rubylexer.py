@@ -45,8 +45,8 @@ class RubyLexer:
                 tokens.append(token)
                 continue
 
-            if self.match_operator():
-                tokens.append(self.match_operator())
+            if match := self.match_operator():
+                tokens.append(match)  # <- FIX: Only add if match is found
                 continue
 
             if match := self.SYMBOL_PATTERN.match(self.source_code[self.position:]):
@@ -61,6 +61,7 @@ class RubyLexer:
 
         tokens.append(Token(TokenType.EOF, "EOF", self.line, self.column))
         return tokens
+
 
     def tokenize_number(self):
         start_pos = self.position
