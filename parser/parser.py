@@ -1,7 +1,10 @@
-# parser.py
+# parser/parser.py
 
 from lexers.ruby.token import Token, TokenType
-from parser.ast import Program, Assignment, Identifier, Literal, BinaryOperation
+from parser.ast import (
+    Program, Assignment, Identifier, Literal, BinaryOperation,
+    FunctionDefinition, FunctionCall
+)
 
 class Parser:
     def __init__(self, tokens):
@@ -43,23 +46,28 @@ class Parser:
 
         # Handle assignments
         if token.type == TokenType.IDENTIFIER:
-            # Make sure there's an equals sign after the identifier
+            # Check for function call
+            if (self.position + 1 < len(self.tokens) and 
+                self.tokens[self.position + 1].type != TokenType.OPERATOR):
+                return self.parse_function_call()
+                
+            # Check for assignment
             if (self.position + 1 < len(self.tokens) and 
                 self.tokens[self.position + 1].type == TokenType.OPERATOR and 
                 self.tokens[self.position + 1].value == '='):
                 return self.parse_assignment()
-            else:
-                # Handle other identifier usages (like function calls)
-                # For now we'll just skip them
-                return None
+            
+            # Just an identifier by itself
+            identifier = Identifier(token.value)
+            self.position += 1
+            return identifier
 
         # Add more statement types as necessary (e.g., if, while, etc.)
 
         return None  # Return None if no valid statement is found
 
     def parse_function_definition(self):
-        """Parse a function definition (for the 'def' keyword)."""
-        # This is a basic implementation - you'll want to expand this
+        """Parse a function definition."""
         start_pos = self.position
         self.position += 1  # Skip 'def'
         
@@ -68,27 +76,61 @@ class Parser:
             function_name = self.tokens[self.position].value
             self.position += 1
             
-            # Skip everything until we find the matching 'end'
-            nesting_level = 1
+            # Parse parameters if any (not implemented yet)
+            parameters = []
+            
+            # Parse function body
+            body_statements = []
+            
+            # Skip newline after function declaration
+            if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.NEWLINE:
+                self.position += 1
+            
+            # Parse statements until 'end'
             while self.position < len(self.tokens):
                 if (self.tokens[self.position].type == TokenType.KEYWORD and
                     self.tokens[self.position].value == 'end'):
-                    nesting_level -= 1
-                    if nesting_level == 0:
-                        self.position += 1  # Skip the 'end'
-                        break
-                elif (self.tokens[self.position].type == TokenType.KEYWORD and
-                      self.tokens[self.position].value in ['def', 'if', 'class', 'module']):
-                    nesting_level += 1
+                    self.position += 1  # Skip the 'end'
+                    break
                 
-                self.position += 1
+                # Skip newlines
+                if self.tokens[self.position].type == TokenType.NEWLINE:
+                    self.position += 1
+                    continue
+                
+                statement = self.parse_statement()
+                if statement:
+                    body_statements.append(statement)
+                else:
+                    # If we can't parse a statement, advance to avoid infinite loop
+                    self.position += 1
             
-            # Return a placeholder for now
-            return Identifier(function_name)  # Replace with proper FunctionDefinition node
+            return FunctionDefinition(function_name, parameters, body_statements)
         
         # Reset position if we couldn't parse a valid function definition
         self.position = start_pos
         return None
+
+    def parse_function_call(self):
+        """Parse a function call."""
+        function_name = self.tokens[self.position].value
+        self.position += 1  # move past the function name
+        
+        arguments = []
+        
+        # Parse arguments
+        while self.position < len(self.tokens) and self.tokens[self.position].type != TokenType.NEWLINE:
+            arg = self.parse_expression()
+            if arg:
+                arguments.append(arg)
+            else:
+                break
+        
+        # Skip newline
+        if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.NEWLINE:
+            self.position += 1
+            
+        return FunctionCall(function_name, arguments)
 
     def parse_assignment(self):
         """Parse an assignment statement."""
@@ -112,7 +154,17 @@ class Parser:
 
     def parse_expression(self):
         """Parse an expression."""
+        if self.position >= len(self.tokens):
+            return None
+            
+        # Skip newlines
+        if self.tokens[self.position].type == TokenType.NEWLINE:
+            self.position += 1
+            return None
+            
         left = self.parse_term()
+        if not left:
+            return None
         
         while (self.position < len(self.tokens) and 
                self.tokens[self.position].type == TokenType.OPERATOR and
@@ -120,6 +172,8 @@ class Parser:
             operator = self.tokens[self.position]
             self.position += 1  # move past operator
             right = self.parse_term()
+            if not right:
+                break
             left = BinaryOperation(left, operator.value, right)
         
         return left
@@ -127,13 +181,23 @@ class Parser:
     def parse_term(self):
         """Parse terms like literals or identifiers."""
         if self.position >= len(self.tokens):
-            raise SyntaxError("Unexpected end of input")
+            return None
             
         token = self.tokens[self.position]
         
+        # Skip newlines
+        if token.type == TokenType.NEWLINE:
+            self.position += 1
+            return None
+            
         if token.type == TokenType.NUMBER:
             self.position += 1
-            return Literal(int(token.value))  # Convert to int for numbers
+            try:
+                # Try to convert to int first
+                return Literal(int(token.value))
+            except ValueError:
+                # If it's not an int, try float
+                return Literal(float(token.value))
         
         if token.type == TokenType.STRING:
             self.position += 1
@@ -150,14 +214,15 @@ class Parser:
                 return Literal(True)
             elif token.value == 'false':
                 return Literal(False)
+            elif token.value == 'nil':
+                return Literal(None)
             return Identifier(token.value)
         
         if token.type == TokenType.SYMBOL:
             self.position += 1
-            return Literal(token.value)  # Handle symbols as literals for now
+            return Literal(token.value)  # Handle symbols as literals
         
-        # Handle EOF or invalid token scenarios
-        raise SyntaxError(f"Unexpected token: {token}")
+        return None  # Return None for tokens we can't handle yet
 
     def expect(self, token_type, value=None):
         """Ensure the current token matches the expected type and value."""
