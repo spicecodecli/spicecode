@@ -45,9 +45,10 @@ class RubyLexer:
                 self.position += 1
                 continue
 
-            # Handle comments
+            # Handle comments - MODIFIED to create COMMENT tokens
             if char == "#":
-                self.skip_comment()
+                comment_token = self.tokenize_comment()
+                tokens.append(comment_token)
                 continue
 
             # Handle numbers
@@ -131,6 +132,18 @@ class RubyLexer:
 
         tokens.append(Token(TokenType.EOF, "EOF", self.line, self.column))
         return tokens
+
+    def tokenize_comment(self):
+        """Tokenize a comment and return it as a COMMENT token instead of skipping it"""
+        start_pos = self.position
+        start_col = self.column
+        
+        while self.position < len(self.source_code) and self.source_code[self.position] != "\n":
+            self.position += 1
+            self.column += 1
+            
+        comment = self.source_code[start_pos:self.position]
+        return Token(TokenType.COMMENT, comment, self.line, start_col)
 
     def tokenize_number(self):
         start_pos = self.position
@@ -245,13 +258,7 @@ class RubyLexer:
                 self.column += len(op)
                 return token
         return None
-
-    def skip_comment(self):
-        while self.position < len(self.source_code) and self.source_code[self.position] != "\n":
-            self.position += 1
-            self.column += 1
-        # Newline will be handled in the main loop
-        
+    
     def get_current_line(self):
         """Get the current line of code being processed (for error reporting)"""
         end = self.source_code.find('\n', self.current_line_start)

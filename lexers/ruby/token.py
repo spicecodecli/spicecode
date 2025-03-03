@@ -1,50 +1,33 @@
 from enum import Enum, auto
 
 class TokenType(Enum):
-    # Basic token types
-    KEYWORD = auto()        # Ruby keywords like 'def', 'if', etc.
-    IDENTIFIER = auto()     # Variable and method names
-    NUMBER = auto()         # Integer and floating point numbers
-    STRING = auto()         # String literals
-    BOOLEAN = auto()        # true, false
-    OPERATOR = auto()       # +, -, *, /, etc.
-    SYMBOL = auto()         # :symbol
-    DELIMITER = auto()      # (, ), [, ], {, }
+    # Basic tokens
+    IDENTIFIER = auto()
+    KEYWORD = auto()
+    OPERATOR = auto()
+    NUMBER = auto()
+    STRING = auto()
+    BOOLEAN = auto()
+    SYMBOL = auto()
+    DELIMITER = auto()
     
-    # Special variable types
-    INSTANCE_VAR = auto()   # @instance_variable
-    CLASS_VAR = auto()      # @@class_variable
-    GLOBAL_VAR = auto()     # $global_variable
-    CONSTANT = auto()       # CONSTANT
-    
-    # Method-related
-    METHOD_CALL = auto()    # When an identifier is used in a method call
-    
-    # Structural tokens
-    NEWLINE = auto()        # Line breaks
-    EOF = auto()            # End of file
+    # Special token types
+    NEWLINE = auto()
+    COMMENT = auto()
+    INSTANCE_VAR = auto()
+    GLOBAL_VAR = auto()
+    METHOD_CALL = auto()
     
     # Error handling
-    ERROR = auto()          # For lexer errors
+    ERROR = auto()
+    EOF = auto()
 
 class Token:
-    def __init__(self, type: TokenType, value: str, line: int, column: int):
-        self.type = type
+    def __init__(self, token_type, value, line, column):
+        self.type = token_type
         self.value = value
         self.line = line
         self.column = column
-        
+    
     def __repr__(self):
-        return f"Token({self.type}, {repr(self.value)}, {self.line}:{self.column})"
-        
-    def __eq__(self, other):
-        if not isinstance(other, Token):
-            return False
-        return (self.type == other.type and 
-                self.value == other.value and 
-                self.line == other.line and 
-                self.column == other.column)
-                
-    def location(self):
-        """Return a string representation of the token's location"""
-        return f"line {self.line}, column {self.column}"
+        return f"Token({self.type}, '{self.value}', {self.line}:{self.column})"
