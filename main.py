@@ -1,27 +1,29 @@
-import sys
+# main.py
+
 from lexers.ruby.rubylexer import RubyLexer
+from parser.parser import Parser
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python main.py <filename>")
-        return
-    
-    filename = sys.argv[1]
-
-    try:
-        with open(filename, "r") as file:
-            source_code = file.read()
-    except FileNotFoundError:
-        print(f"Error: File '{filename}' not found.")
-        return
-
-    # Run the lexer
-    lexer = RubyLexer(source_code)
-    tokens = lexer.tokenize()
-
-    print("\nTokens:")
-    for token in tokens:
-        print(token)
 
 if __name__ == "__main__":
-    main()
+    # Sample Ruby code
+    code = """
+    def hello
+      puts "Hello, world!"
+      result = 42 + 3
+      is_valid = true
+      my_symbol = :ruby
+    end
+    """
+    
+    lexer = RubyLexer(code)
+    tokens = lexer.tokenize()
+
+    print("Tokens:")
+    for token in tokens:
+        print(token)
+    
+    parser = Parser(tokens)
+    ast = parser.parse()
+    
+    print("\nAST:")
+    print(ast)
