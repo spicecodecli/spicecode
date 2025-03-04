@@ -12,11 +12,11 @@ def get_analyzer_for_file(file_path):
 
 class RubyAnalyzer:
     def analyze(self, code):
-        # Tokenize the code using our custom Ruby lexer
+        # tokenize the code using our in house custom SPICY RUBY LEXER
         lexer = RubyLexer(code)
         tokens = lexer.tokenize()
         
-        # Parse the tokens using our custom Ruby parser
+        # parse the tokens using our in house custom SPICY PARSER
         parser = RubyParser(tokens)
         ast = parser.parse()
         
@@ -32,7 +32,7 @@ class RubyAnalyzer:
         }
     
     def _count_functions(self, tokens):
-        # Count function definitions by looking for 'def' keywords
+        # count function definitions by looking for 'def' keywords
         function_count = 0
         for i, token in enumerate(tokens):
             if (token.type == TokenType.KEYWORD and token.value == "def" and 
@@ -41,7 +41,7 @@ class RubyAnalyzer:
         return function_count
     
     def _count_comment_lines(self, tokens):
-        # Count comment tokens
+        # count comment tokens
         comment_lines = 0
         for token in tokens:
             if token.type == TokenType.COMMENT:
