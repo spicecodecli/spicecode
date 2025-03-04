@@ -2,21 +2,21 @@ import re
 from .token import Token, TokenType
 
 class RubyLexer:
-    # Expanded keywords list to include more Ruby keywords
+    # Ruby keywords
     KEYWORDS = {
         "def", "end", "if", "else", "elsif", "unless", "while", "until", "for", "do", 
         "return", "break", "next", "class", "module", "begin", "rescue", "ensure", 
         "yield", "self", "nil", "true", "false", "super", "then", "case", "when"
     }
     
-    # Expanded operators list to include more Ruby operators
+    # Ruby operators carlos sainz smooth operator as a LH fan i thank you for your sacrifice
     OPERATORS = {
         "+", "-", "*", "/", "%", "=", "==", "!=", "<", ">", "<=", ">=", "&&", "||", 
         "+=", "-=", "*=", "/=", "%=", "**", "**=", "&", "|", "^", "~", "<<", ">>", 
         "and", "or", "not", "=>", "..", "...", "!~", "=~"
     }
     
-    # Enhanced regex patterns
+    # i have NO CLUE what any of this means or how it works so dont ask me use chatgpt or claude or something
     SYMBOL_PATTERN = re.compile(r":([a-zA-Z_][a-zA-Z0-9_]*|[-+/*!%^&*=<>?]|\[\]=?|<<|>>)")
     NUMBER_PATTERN = re.compile(r"\d+(\.\d+)?([eE][+-]?\d+)?")
     
@@ -33,7 +33,7 @@ class RubyLexer:
         while self.position < len(self.source_code):
             char = self.source_code[self.position]
 
-            # Handle whitespace
+            # handle whitespace
             if char.isspace():
                 if char == "\n":
                     tokens.append(Token(TokenType.NEWLINE, "\\n", self.line, self.column))
@@ -45,43 +45,43 @@ class RubyLexer:
                 self.position += 1
                 continue
 
-            # Handle comments - MODIFIED to create COMMENT tokens
+            # handle comments
             if char == "#":
                 comment_token = self.tokenize_comment()
                 tokens.append(comment_token)
                 continue
 
-            # Handle numbers
+            # handle numbers
             if char.isdigit():
                 token = self.tokenize_number()
                 tokens.append(token)
                 continue
 
-            # Handle strings with interpolation awareness
+            # handle strings with something called interpolation awareness whatever that means
             if char in {'"', "'"}:
                 token = self.tokenize_string()
                 tokens.append(token)
                 continue
 
-            # Handle identifiers and keywords
+            # handle identifiers and keywords
             if char.isalpha() or char == "_":
                 token = self.tokenize_identifier()
                 tokens.append(token)
                 continue
 
-            # Handle special delimiters used in blocks
+            # handle special delimiters used in blocks
             if char in "({[]})" and self.position < len(self.source_code):
                 tokens.append(Token(TokenType.DELIMITER, char, self.line, self.column))
                 self.position += 1
                 self.column += 1
                 continue
 
-            # Handle operators
+            # handle operators
             if match := self.match_operator():
                 tokens.append(match)
                 continue
 
-            # Handle symbols
+            # handle symbols
             if char == ':':
                 symbol_match = self.SYMBOL_PATTERN.match(self.source_code[self.position:])
                 if symbol_match:
@@ -91,18 +91,18 @@ class RubyLexer:
                     self.column += len(symbol)
                     continue
 
-            # Handle special cases like instance variables (@var) and class variables (@@var)
+            # handle special for like instance variables (@var) and class variables (@@var)
             if char == '@' and self.position + 1 < len(self.source_code):
                 start_pos = self.position
-                self.position += 1  # Skip @
+                self.position += 1  # sjip @
                 self.column += 1
                 
-                # Check for class variable (@@)
+                # check for class variable (@@)
                 if self.position < len(self.source_code) and self.source_code[self.position] == '@':
                     self.position += 1
                     self.column += 1
                 
-                # Parse the variable name
+                # parse  variable name
                 if self.position < len(self.source_code) and (self.source_code[self.position].isalpha() or self.source_code[self.position] == '_'):
                     while self.position < len(self.source_code) and (self.source_code[self.position].isalnum() or self.source_code[self.position] == '_'):
                         self.position += 1
@@ -110,13 +110,13 @@ class RubyLexer:
                     tokens.append(Token(TokenType.INSTANCE_VAR, self.source_code[start_pos:self.position], self.line, self.column))
                     continue
 
-            # Handle global variables ($var)
+            # handle global variables ($var)
             if char == '$' and self.position + 1 < len(self.source_code):
                 start_pos = self.position
-                self.position += 1  # Skip $
+                self.position += 1  # skip $
                 self.column += 1
                 
-                # Parse the variable name or special global variable
+                # parase variable name or special global variable
                 if self.position < len(self.source_code) and (self.source_code[self.position].isalnum() or self.source_code[self.position] in '_!@&+`\'=~/\\,;.<>*$?:'):
                     while self.position < len(self.source_code) and (self.source_code[self.position].isalnum() or self.source_code[self.position] == '_'):
                         self.position += 1
@@ -124,7 +124,7 @@ class RubyLexer:
                     tokens.append(Token(TokenType.GLOBAL_VAR, self.source_code[start_pos:self.position], self.line, self.column))
                     continue
 
-            # Unknown character - emit an error token but continue processing
+            # unknown character - emit an error token but continue processing keep going never stop
             error_char = self.source_code[self.position]
             tokens.append(Token(TokenType.ERROR, error_char, self.line, self.column))
             self.position += 1
@@ -148,7 +148,7 @@ class RubyLexer:
     def tokenize_number(self):
         start_pos = self.position
         
-        # Use regex to match complex number patterns
+        # use regex to match complex number patterns
         match = self.NUMBER_PATTERN.match(self.source_code[self.position:])
         if match:
             number = match.group(0)
@@ -156,15 +156,15 @@ class RubyLexer:
             self.column += len(number)
             return Token(TokenType.NUMBER, number, self.line, self.column - len(number))
         
-        # Fallback to simple digit parsing
+        # fallback to simple digit parsing
         while self.position < len(self.source_code) and self.source_code[self.position].isdigit():
             self.position += 1
             self.column += 1
         
-        # Check for decimal point followed by digits
+        # check for decimal point followed by digits
         if self.position < len(self.source_code) and self.source_code[self.position] == '.' and \
            self.position + 1 < len(self.source_code) and self.source_code[self.position + 1].isdigit():
-            self.position += 1  # Skip decimal point
+            self.position += 1  # skip decimal point
             self.column += 1
             while self.position < len(self.source_code) and self.source_code[self.position].isdigit():
                 self.position += 1
@@ -182,7 +182,7 @@ class RubyLexer:
             
         word = self.source_code[start_pos:self.position]
         
-        # Check if it's a keyword or a boolean literal
+        # check if it's a keyword or a boolean literal
         if word in self.KEYWORDS:
             token_type = TokenType.KEYWORD
         elif word in ["true", "false", "nil"]:
@@ -190,7 +190,7 @@ class RubyLexer:
         else:
             token_type = TokenType.IDENTIFIER
             
-        # Check for method calls (identifier followed by a dot)
+        # check for method calls (identifier followed by dot)
         if (token_type == TokenType.IDENTIFIER and 
             self.position < len(self.source_code) and 
             self.source_code[self.position] == '.'):
@@ -202,19 +202,19 @@ class RubyLexer:
         quote_char = self.source_code[self.position]
         start_pos = self.position
         start_col = self.column
-        self.position += 1  # Skip opening quote
+        self.position += 1  # skip opening quote
         self.column += 1
         
-        # Flag to track if we're handling string interpolation
+        # flag to track if its handling string interpolation
         in_interpolation = False
         
         while self.position < len(self.source_code):
             char = self.source_code[self.position]
             
-            # Handle string interpolation
+            # handle string interpolation
             if quote_char == '"' and char == '#' and self.position + 1 < len(self.source_code) and self.source_code[self.position + 1] == '{':
                 in_interpolation = True
-                self.position += 2  # Skip #{
+                self.position += 2  # skip #{
                 self.column += 2
                 continue
                 
@@ -224,19 +224,19 @@ class RubyLexer:
                 self.column += 1
                 continue
                 
-            # Handle escape sequences
+            # handle escape sequences
             if char == '\\' and self.position + 1 < len(self.source_code):
-                self.position += 2  # Skip the escape sequence
+                self.position += 2  # skip the escape sequence
                 self.column += 2
                 continue
                 
-            # Check for closing quote (but not if we're inside interpolation)
+            # chec for closing quote (but not if inside interpolation)
             if char == quote_char and not in_interpolation:
-                self.position += 1  # Skip closing quote
+                self.position += 1  # sjip closing quote
                 self.column += 1
                 return Token(TokenType.STRING, self.source_code[start_pos:self.position], self.line, start_col)
                 
-            # Handle newlines in strings
+            # handle newlines in strings
             if char == '\n':
                 self.line += 1
                 self.column = 1
@@ -246,11 +246,11 @@ class RubyLexer:
                 
             self.position += 1
 
-        # Handle unclosed strings - this is an error condition
+        # handle unclosed strings - this is an error condition
         return Token(TokenType.ERROR, f"Unclosed string: {self.source_code[start_pos:self.position]}", self.line, start_col)
 
     def match_operator(self):
-        # Sort operators by length to match longest first
+        # sort operators by length to match longest first
         for op in sorted(self.OPERATORS, key=len, reverse=True):
             if self.source_code[self.position:self.position + len(op)] == op:
                 token = Token(TokenType.OPERATOR, op, self.line, self.column)

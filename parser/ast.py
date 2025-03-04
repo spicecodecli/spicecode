@@ -1,4 +1,4 @@
-# parser/ast.py
+
 
 class Node:
     """Base class for all AST nodes."""

@@ -1,4 +1,3 @@
-# parser/parser.py
 
 from lexers.ruby.token import Token, TokenType
 from parser.ast import (
@@ -14,12 +13,12 @@ class Parser:
     def parse(self):
         statements = []
         while self.position < len(self.tokens):
-            # Skip newlines
+            # skip new lines
             if self.tokens[self.position].type == TokenType.NEWLINE:
                 self.position += 1
                 continue
                 
-            # Check for EOF
+            # check for eof end of file
             if self.tokens[self.position].type == TokenType.EOF:
                 break
                 
@@ -27,8 +26,10 @@ class Parser:
             if statement:
                 statements.append(statement)
             else:
-                # Important: advance position if no statement was parsed
+                # advance position if no statement was parsed
                 # to avoid infinite loop
+                # dont ask me how i know
+                # please.
                 self.position += 1
         
         return Program(statements)
@@ -40,60 +41,60 @@ class Parser:
 
         token = self.tokens[self.position]
 
-        # Handle function definitions
+        # function definitions
         if token.type == TokenType.KEYWORD and token.value == 'def':
             return self.parse_function_definition()
 
-        # Handle assignments
+        # assignments
         if token.type == TokenType.IDENTIFIER:
-            # Check for function call
+            # check for function call
             if (self.position + 1 < len(self.tokens) and 
                 self.tokens[self.position + 1].type != TokenType.OPERATOR):
                 return self.parse_function_call()
                 
-            # Check for assignment
+            # check for assignment
             if (self.position + 1 < len(self.tokens) and 
                 self.tokens[self.position + 1].type == TokenType.OPERATOR and 
                 self.tokens[self.position + 1].value == '='):
                 return self.parse_assignment()
             
-            # Just an identifier by itself
+            # indendeitifier alone
             identifier = Identifier(token.value)
             self.position += 1
             return identifier
 
-        # Add more statement types as necessary (e.g., if, while, etc.)
+        # can add more stuff here (if, while, etc.)
 
-        return None  # Return None if no valid statement is found
+        return None  # return none if no valid statement is found
 
     def parse_function_definition(self):
         """Parse a function definition."""
         start_pos = self.position
-        self.position += 1  # Skip 'def'
+        self.position += 1  # skip 'def'
         
-        # Expect function name identifier
+        # expecting function name identifier
         if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.IDENTIFIER:
             function_name = self.tokens[self.position].value
             self.position += 1
             
-            # Parse parameters if any (not implemented yet)
+            # parse parameters if any (TODO NOT WORKING YET)
             parameters = []
             
-            # Parse function body
+            # parse function body
             body_statements = []
             
-            # Skip newline after function declaration
+            # skip newline after function declaration
             if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.NEWLINE:
                 self.position += 1
             
-            # Parse statements until 'end'
+            # parase statements until 'end'
             while self.position < len(self.tokens):
                 if (self.tokens[self.position].type == TokenType.KEYWORD and
                     self.tokens[self.position].value == 'end'):
                     self.position += 1  # Skip the 'end'
                     break
                 
-                # Skip newlines
+                # skip newlines
                 if self.tokens[self.position].type == TokenType.NEWLINE:
                     self.position += 1
                     continue
@@ -102,23 +103,24 @@ class Parser:
                 if statement:
                     body_statements.append(statement)
                 else:
-                    # If we can't parse a statement, advance to avoid infinite loop
+                    # if can't parse statement, advance to avoid infinite loop
+                    # again, PLEASE do not ask how i know this
                     self.position += 1
             
             return FunctionDefinition(function_name, parameters, body_statements)
         
-        # Reset position if we couldn't parse a valid function definition
+        # reset position if  can t't parse a valid function definition
         self.position = start_pos
         return None
 
     def parse_function_call(self):
         """Parse a function call."""
         function_name = self.tokens[self.position].value
-        self.position += 1  # move past the function name
+        self.position += 1  # move past function name
         
         arguments = []
         
-        # Parse arguments
+        # parse arguments
         while self.position < len(self.tokens) and self.tokens[self.position].type != TokenType.NEWLINE:
             arg = self.parse_expression()
             if arg:
@@ -126,7 +128,7 @@ class Parser:
             else:
                 break
         
-        # Skip newline
+        # skup newline
         if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.NEWLINE:
             self.position += 1
             
@@ -137,18 +139,18 @@ class Parser:
         variable_token = self.tokens[self.position]
         self.position += 1  # move past the identifier
         
-        # Check if next token is '='
+        # check if next token is '='
         if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.OPERATOR and self.tokens[self.position].value == '=':
-            self.position += 1  # move past the '=' operator
+            self.position += 1  # move past the '=' op
             value = self.parse_expression()
             
-            # Skip newline
+            # skip newline
             if self.position < len(self.tokens) and self.tokens[self.position].type == TokenType.NEWLINE:
                 self.position += 1
                 
             return Assignment(variable_token.value, value)
         
-        # If no equals sign, go back
+        # if no equals sign, go back
         self.position -= 1
         return None
 
@@ -157,7 +159,7 @@ class Parser:
         if self.position >= len(self.tokens):
             return None
             
-        # Skip newlines
+        # skip newlines
         if self.tokens[self.position].type == TokenType.NEWLINE:
             self.position += 1
             return None
@@ -185,7 +187,7 @@ class Parser:
             
         token = self.tokens[self.position]
         
-        # Skip newlines
+        # skip newlines
         if token.type == TokenType.NEWLINE:
             self.position += 1
             return None
@@ -193,15 +195,15 @@ class Parser:
         if token.type == TokenType.NUMBER:
             self.position += 1
             try:
-                # Try to convert to int first
+                # try to convert to int first
                 return Literal(int(token.value))
             except ValueError:
-                # If it's not an int, try float
+                # if it's not an int, try float
                 return Literal(float(token.value))
         
         if token.type == TokenType.STRING:
             self.position += 1
-            # Remove quotes if present
+            # remove quotes if present
             value = token.value
             if value.startswith('"') and value.endswith('"'):
                 value = value[1:-1]
@@ -209,7 +211,7 @@ class Parser:
         
         if token.type == TokenType.IDENTIFIER:
             self.position += 1
-            # Handle Ruby boolean literals
+            # handle Ruby boolean literals
             if token.value == 'true':
                 return Literal(True)
             elif token.value == 'false':
@@ -220,9 +222,9 @@ class Parser:
         
         if token.type == TokenType.SYMBOL:
             self.position += 1
-            return Literal(token.value)  # Handle symbols as literals
+            return Literal(token.value)  # handle symbols as literals
         
-        return None  # Return None for tokens we can't handle yet
+        return None  # return None for tokens with no current support maybe i could like print this so i know what tokens need support? does that make senes? TODO
 
     def expect(self, token_type, value=None):
         """Ensure the current token matches the expected type and value."""

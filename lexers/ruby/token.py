@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 class TokenType(Enum):
-    # Basic tokens
+    # basic tokens
     IDENTIFIER = auto()
     KEYWORD = auto()
     OPERATOR = auto()
@@ -11,14 +11,14 @@ class TokenType(Enum):
     SYMBOL = auto()
     DELIMITER = auto()
     
-    # Special token types
+    # special token types
     NEWLINE = auto()
     COMMENT = auto()
     INSTANCE_VAR = auto()
     GLOBAL_VAR = auto()
     METHOD_CALL = auto()
     
-    # Error handling
+    # ertror handling
     ERROR = auto()
     EOF = auto()
 
