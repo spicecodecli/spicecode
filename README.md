@@ -37,7 +37,7 @@ spice analyze code.js
 
 
 ### EXCEPTION:
-If you are using the development build, only Ruby is supported. since the dev build is using our own in-house parser, while the published pip package is using tree-sitter's open source parser with multi langague support, which is coming soon for our parser
+If you are using the development build, only Ruby and Python are supported. since the dev build is using our own in-house parser, while the published pip package is using tree-sitter's open source parser with multi langague support, which is coming soon for our parser
 
 
 ---
