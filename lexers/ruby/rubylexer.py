@@ -1,5 +1,5 @@
 import re
-from .token import Token, TokenType
+from ..token import Token, TokenType
 
 class RubyLexer:
     # Ruby keywords

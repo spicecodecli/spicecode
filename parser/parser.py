@@ -1,5 +1,5 @@
 
-from lexers.ruby.token import Token, TokenType
+from lexers.token import Token, TokenType
 from parser.ast import (
     Program, Assignment, Identifier, Literal, BinaryOperation,
     FunctionDefinition, FunctionCall
