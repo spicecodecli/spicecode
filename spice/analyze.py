@@ -2,11 +2,11 @@ import os
 
 from lexers.ruby.rubylexer import RubyLexer
 from parser.parser import Parser as RubyParser
-from lexers.ruby.token import TokenType
+from lexers.token import TokenType
 
 from lexers.python.pythonlexer import PythonLexer
 from parser.parser import Parser as PythonParser
-from lexers.python.token import TokenType
+from lexers.token import TokenType
 
 def get_analyzer_for_file(file_path):
     _, ext = os.path.splitext(file_path)
