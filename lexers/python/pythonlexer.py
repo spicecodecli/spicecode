@@ -1,5 +1,5 @@
 import re
-from custom_token import Token, TokenType
+from .token import Token, TokenType
 
 class PythonLexer:
     # palavras-chave do python
