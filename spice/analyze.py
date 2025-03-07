@@ -6,7 +6,9 @@ from lexers.token import TokenType
 
 from lexers.python.pythonlexer import PythonLexer
 from parser.parser import Parser as PythonParser
-from lexers.token import TokenType
+
+from lexers.javascript.javascriptlexer import JavaScriptLexer  
+from parser.parser import Parser as JavaScriptParser
 
 def get_analyzer_for_file(file_path):
     _, ext = os.path.splitext(file_path)
@@ -14,6 +16,8 @@ def get_analyzer_for_file(file_path):
         return RubyAnalyzer()
     elif ext == ".py":
         return PythonAnalyzer()
+    elif ext == ".js":  
+        return JavaScriptAnalyzer()
     else:
         raise ValueError(f"Unsupported file extension: {ext}")
 
@@ -27,7 +31,7 @@ class RubyAnalyzer:
         parser = RubyParser(tokens)
         ast = parser.parse()
         
-        # Analyze the code
+        # analyze the code
         line_count = code.count("\n") + 1
         function_count = self._count_functions(tokens)
         comment_line_count = self._count_comment_lines(tokens)
@@ -81,6 +85,44 @@ class PythonAnalyzer:
         function_count = 0
         for i, token in enumerate(tokens):
             if (token.type == TokenType.KEYWORD and token.value == "def" and 
+                i + 1 < len(tokens) and tokens[i + 1].type == TokenType.IDENTIFIER):
+                function_count += 1
+        return function_count
+    
+    def _count_comment_lines(self, tokens):
+        # conta linhas de comentário
+        comment_lines = 0
+        for token in tokens:
+            if token.type == TokenType.COMMENT:
+                comment_lines += 1
+        return comment_lines
+
+class JavaScriptAnalyzer:
+    def analyze(self, code):
+        # tokeniza o código usando o lexer de javascript
+        lexer = JavaScriptLexer(code)
+        tokens = lexer.tokenize()
+        
+        # parseia os tokens usando o parser de javascript
+        parser = JavaScriptParser(tokens)
+        ast = parser.parse()
+        
+        # analisa o código
+        line_count = code.count("\n") + 1
+        function_count = self._count_functions(tokens)
+        comment_line_count = self._count_comment_lines(tokens)
+        
+        return {
+            "line_count": line_count,
+            "function_count": function_count,
+            "comment_line_count": comment_line_count
+        }
+    
+    def _count_functions(self, tokens):
+        # conta definições de função procurando por 'function'
+        function_count = 0
+        for i, token in enumerate(tokens):
+            if (token.type == TokenType.KEYWORD and token.value == "function" and 
                 i + 1 < len(tokens) and tokens[i + 1].type == TokenType.IDENTIFIER):
                 function_count += 1
         return function_count
