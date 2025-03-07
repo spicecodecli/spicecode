@@ -63,3 +63,4 @@ we also have a pip package now:
 https://pypi.org/project/spicecode/     
 or     
 ```pip install spicecode```     
+
