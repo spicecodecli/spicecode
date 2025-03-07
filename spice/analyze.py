@@ -7,6 +7,7 @@ from lexers.token import TokenType
 from lexers.ruby.rubylexer import RubyLexer
 from lexers.python.pythonlexer import PythonLexer
 from lexers.javascript.javascriptlexer import JavaScriptLexer
+from lexers.brainfuck.brainfucklexer import BrainfuckLexer
 
 # import our in-house parser
 from parser.parser import Parser
@@ -85,11 +86,67 @@ class JavaScriptAnalyzer(CodeAnalyzer):
         self.function_keyword = "function"
 
 
+class BrainfuckAnalyzer(CodeAnalyzer):
+    def __init__(self):
+        super().__init__()
+        self.lexer_class = BrainfuckLexer
+        self.parser_class = Parser
+        self.function_keyword = None  # Brainfuck doesn't have functions
+    
+    def _count_functions(self, tokens):
+        """Override: Brainfuck doesn't have functions"""
+        return 0
+    
+    def analyze(self, code):
+        """Override analyze method for Brainfuck-specific metrics"""
+        # Tokenize the code
+        lexer = self.lexer_class(code)
+        tokens = lexer.tokenize()
+        
+        # Parse the tokens (likely minimal for Brainfuck)
+        parser = self.parser_class(tokens)
+        ast = parser.parse()
+        
+        # Count lines and comments
+        line_count = code.count("\n") + 1
+        comment_line_count = self._count_comment_lines(tokens)
+        
+        # Count Brainfuck operations
+        operation_counts = {
+            ">": 0,  # Increment pointer
+            "<": 0,  # Decrement pointer
+            "+": 0,  # Increment value
+            "-": 0,  # Decrement value
+            ".": 0,  # Output
+            ",": 0,  # Input
+            "[": 0,  # Jump forward
+            "]": 0   # Jump backward
+        }
+        
+        for token in tokens:
+            if token.type == TokenType.OPERATOR and token.value in operation_counts:
+                operation_counts[token.value] += 1
+        
+        # Count loops (pairs of [ and ])
+        loop_count = operation_counts["["]  # Should be equal to operation_counts["]"]
+        
+        return {
+            "line_count": line_count,
+            "function_count": 0,  # No functions in Brainfuck
+            "comment_line_count": comment_line_count,
+            "operation_counts": operation_counts,
+            "loop_count": loop_count,
+            "io_operations": operation_counts["."] + operation_counts[","]
+        }
+
+
 # dicionario tipo aurelio
 LANGUAGE_ANALYZERS = {
     ".rb": RubyAnalyzer,
     ".py": PythonAnalyzer,
-    ".js": JavaScriptAnalyzer
+    ".js": JavaScriptAnalyzer,
+    ".bf": BrainfuckAnalyzer,
+    ".b": BrainfuckAnalyzer
 }
 
 
@@ -114,8 +171,27 @@ def analyze_file(file_path):
         results = analyzer.analyze(code)
         
         print(f"Analyzing file: {os.path.basename(file_path)}")
-        print(f"The filed has {results['line_count']} lines.")
-        print(f"The file has {results['function_count']} functions.")
-        print(f"The file has {results['comment_line_count']} comment lines.")
+        print(f"The file has {results['line_count']} lines.")
+        
+        # For most languages
+        if isinstance(analyzer, (RubyAnalyzer, PythonAnalyzer, JavaScriptAnalyzer)):
+            print(f"The file has {results['function_count']} functions.")
+            print(f"The file has {results['comment_line_count']} comment lines.")
+        
+        # Brainfuck-specific output
+        elif isinstance(analyzer, BrainfuckAnalyzer):
+            ops = results['operation_counts']
+            print(f"The file has {results['comment_line_count']} comment lines.")
+            print(f"Brainfuck Operations:")
+            print(f"  > (inc ptr): {ops['>']} operations")
+            print(f"  < (dec ptr): {ops['<']} operations")
+            print(f"  + (inc val): {ops['+']} operations")
+            print(f"  - (dec val): {ops['-']} operations")
+            print(f"  . (output): {ops['.']} operations")
+            print(f"  , (input): {ops[',']} operations")
+            print(f"  [ (loop start): {ops['[']} operations")
+            print(f"  ] (loop end): {ops[']']} operations")
+            print(f"Total loops: {results['loop_count']}")
+            print(f"I/O operations: {results['io_operations']}")
     except ValueError as e:
         print(f"Error: {e}")
