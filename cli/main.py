@@ -3,6 +3,7 @@ import sys
 import importlib
 import typer
 from rich import print
+from InquirerPy import inquirer
 from spice.analyze import analyze_file
 
 
@@ -45,16 +46,27 @@ def get_translation():
 
 # SPICE SET_LANG COMMAND
 @app.command()
-def set_lang(language: str):
+def translate():
     """
     Set the language for CLI messages.
     """
 
+    # LIST OF ALL AVAILIBLE LANGAUGES ADD NEW TRANSLATIONS HERE PLEASE !!!!!!!!!!!!!!!!!!!!!!!!
+    LANGUAGES = ["en", "pt_br"]
+
+    # intereacitive menu
+    selected_lang = inquirer.select(
+        message="Choose a language:",
+        choices=LANGUAGES,
+        pointer="> ",
+        default="en"
+    ).execute()
+
     # will write the new language to the langague file (to save it to HD instead of memory) (so its persistant between commands)
     with open(LANG_FILE, "w") as file:
-        file.write(language)
+        file.write(selected_lang)
 
-    print(f"[green]Language set to:[/] {language}")
+    print(f"[green]Language set to:[/] {selected_lang}")
 
 
 
