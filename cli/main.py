@@ -13,8 +13,11 @@ app = typer.Typer()
 # add the current directory (cli) to the sys.path
 sys.path.append('cli')
 
+# get current directory, this is needed for it to work on other peoples computers via pip
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # select a file to save the current selected langague (if saved to memory it wont persist between commands)
-LANG_FILE = "./lang.txt"
+LANG_FILE = os.path.join(CURRENT_DIR, "lang.txt")
 
 # this will load the translations
 def get_translation():
