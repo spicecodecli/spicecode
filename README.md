@@ -10,9 +10,12 @@ pip install spicecode
 ```
 
 ### Using SpiceCode
-- After installing via PIP, you can run these two commands: *(replace file with the filename)*
+- After installing via PIP, you can run these three commands: *(replace file with the filename)*
 ```
 spice hello
+```
+```
+spice translate
 ```
 ```
 spice analyze FILE
