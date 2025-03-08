@@ -22,14 +22,15 @@ def get_translation():
     if os.path.exists(LANG_FILE):
         with open(LANG_FILE, "r") as file:
                 lang = file.read().strip()
+
+                if not lang:
+                     lang = 'en' # if file is empty, default to english
     else:
-            lang = "en"  # default to English if there is not file but there will always be a file.
+            lang = 'en'  # default to English if there is not file but there will always be a file this is just in case ALSO THIS IS SO @icrcode DOESNT COMPLAIN ABOUT MY CODE NOT BEING CLEAN AND WHATEVER
 
     try:
-        print(f"Loading translation for language: {lang}")  # Debugging line
         return importlib.import_module(f"cli.translations.{lang}").messages
     except ModuleNotFoundError:
-        print(f"Translation for {lang} not found, defaulting to English.")  # Debugging line
         return importlib.import_module("cli.translations.en").messages  # Default to English
 
     
