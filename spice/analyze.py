@@ -177,6 +177,7 @@ class GoAnalyzer:
             if token.type == TokenType.COMMENT:
                 comment_lines += 1
         return comment_lines
+    
 
 def analyze_file(file_path: str):
     """
