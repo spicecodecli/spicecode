@@ -33,11 +33,12 @@ spice analyze code.js
 ---
 
 ### Supported Programming Langagues for Analysis:
-[![My Skills](https://skillicons.dev/icons?i=python,js,ruby&perline=10)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=python,js,ruby,go&perline=10)](https://skillicons.dev)
 
 - Python **(.py)**
 - JavaScript **(.js)**
 - Ruby **(.rb)**
+- Go **(.go)**
 - Many more **coming soon!**
   
 
