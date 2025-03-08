@@ -113,17 +113,52 @@ def analyze(file: str):
     # load translations
     messages = get_translation()
 
+    # Define available stats
+    available_stats = [
+        "line_count",
+        "function_count", 
+        "comment_line_count"
+    ]
+
+    # Create human-readable labels for the stats
+    stats_labels = {
+        "line_count": messages.get("line_count_option", "Line Count"),
+        "function_count": messages.get("function_count_option", "Function Count"),
+        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count")
+    }
+    
+    # Present a checkbox menu to select which stats to show
+    selected_stats = inquirer.checkbox(
+        message=messages.get("select_stats", "Select stats to display:"),
+        choices=[stats_labels[stat] for stat in available_stats],
+        pointer="> ",
+        default=[stats_labels[stat] for stat in available_stats],  # All selected by default
+        instruction=messages.get("checkbox_hint", "(Use space to select, enter to confirm)")
+    ).execute()
+
+    # If no stats were selected, return early
+    if not selected_stats:
+        print(messages.get("no_stats_selected", "No stats selected. Analysis cancelled."))
+        return
+
+    # Create a mapping from displayed labels back to stat keys
+    reverse_mapping = {v: k for k, v in stats_labels.items()}
+    
+    # Convert selected labels back to stat keys
+    selected_stat_keys = [reverse_mapping[label] for label in selected_stats]
+
     # try to analyze and if error then print the error
     try:
-
+        # Show analyzing message
+        print(f"{messages['analyzing_file']}: {file}")
+        
         # get analysis results from analyze_file
         results = analyze_file(file)
         
-        # print results
-        print(f"{messages['analyzing_file']}: {results['file_name']}")
-        print(messages['line_count'].format(count=results['line_count']))
-        print(messages['function_count'].format(count=results['function_count']))
-        print(messages['comment_line_count'].format(count=results['comment_line_count']))
+        # Only print the selected stats
+        for stat in selected_stat_keys:
+            if stat in results:
+                print(messages[stat].format(count=results[stat]))
         
     except Exception as e:
         print(f"[red]{messages['error']}[/] {e}")
