@@ -55,6 +55,7 @@ def translate():
     LANGUAGES = {
     "en": {"name": "English"},
     "pt-br": {"name": "Portuguese"},
+    "fremen": {"name": "Fremen"},
     # Add more languages as needed
     }
 
