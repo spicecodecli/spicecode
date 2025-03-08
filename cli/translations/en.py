@@ -1,5 +1,5 @@
 messages = {
-    "welcome": "🌶️   Welcome to [bold red]SpiceCode[/]! 🌶️",
-    "description": "🔥 The [yellow]CLI tool[/] that makes your code [yellow]spicier[/] 🥵",
-    "error": "Error:",
+    "welcome": "Welcome to the Spice CLI!",
+    "description": "This tool analyzes files.",
+    "error": "An error occurred",
 }
