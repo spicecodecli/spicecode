@@ -6,7 +6,7 @@ with open("requirements.txt", encoding="utf-16") as f:
 
 setup(
     name="spicecode",
-    version="0.3.6",
+    version="0.3.8",
     packages=find_packages(exclude=["spicecode-venv", "spicecode.egg-info"]),
     install_requires=install_requires,
     entry_points={
