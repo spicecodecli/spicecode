@@ -14,7 +14,7 @@ app = typer.Typer()
 sys.path.append('cli')
 
 # select a file to save the current selected langague (if saved to memory it wont persist between commands)
-LANG_FILE = "cli/lang.txt"
+LANG_FILE = "./lang.txt"
 
 # this will load the translations
 def get_translation():
