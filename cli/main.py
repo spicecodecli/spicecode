@@ -54,7 +54,7 @@ def translate():
     # LIST OF ALL AVAILIBLE LANGAUGES ADD NEW TRANSLATIONS HERE PLEASE !!!!!!!!!!!!!!!!!!!!!!!!
     LANGUAGES = {
     "en": {"name": "English"},
-    "pt_br": {"name": "Portuguese"},
+    "pt-br": {"name": "Portuguese"},
     # Add more languages as needed
     }
 
