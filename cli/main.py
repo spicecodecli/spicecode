@@ -58,23 +58,6 @@ def set_lang(language: str):
 
 
 
-# SPICE ANALYZE COMMAND
-@app.command()
-def analyze(file: str):
-    """
-    Analyze the given file.
-    """
-    
-    # load translations
-    messages = get_translation()
-
-    # try to analyze if error then print the error
-    try:
-        analyze_file(file)
-    except Exception as e:
-        print(f"[red]{messages['error']}[/] {e}")
-
-
 # SPICE HELLO COMMAND
 @app.command()
 def hello():
@@ -88,6 +71,32 @@ def hello():
     # print the hello message
     print(messages["welcome"])
     print(messages["description"])
+
+
+# SPICE ANALYZE COMMAND
+@app.command()
+def analyze(file: str):
+    """
+    Analyze the given file.
+    """
+    
+    # load translations
+    messages = get_translation()
+
+    # try to analyze and if error then print the error
+    try:
+
+        # get analysis results from analyze_file
+        results = analyze_file(file)
+        
+        # print results
+        print(f"{messages['analyzing_file']}: {results['file_name']}")
+        print(messages['line_count'].format(count=results['line_count']))
+        print(messages['function_count'].format(count=results['function_count']))
+        print(messages['comment_line_count'].format(count=results['comment_line_count']))
+        
+    except Exception as e:
+        print(f"[red]{messages['error']}[/] {e}")
 
 
 def main():

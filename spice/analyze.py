@@ -179,16 +179,16 @@ class GoAnalyzer:
         return comment_lines
 
 def analyze_file(file_path: str):
+    """
+    Analyzes a file and returns the analysis results.
+    """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
     
-    try:
-        analyzer = get_analyzer_for_file(file_path)
-        results = analyzer.analyze(code)
-        
-        print(f"Analyzing file: {os.path.basename(file_path)}")
-        print(f"The file has {results['line_count']} lines.")
-        print(f"The file has {results['function_count']} functions.")
-        print(f"The file has {results['comment_line_count']} comment lines.")
-    except ValueError as e:
-        print(f"Error: {e}")
+    analyzer = get_analyzer_for_file(file_path)
+    results = analyzer.analyze(code)
+    
+    # add file name to results
+    results['file_name'] = os.path.basename(file_path)
+    
+    return results
