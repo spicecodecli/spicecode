@@ -1,3 +1,9 @@
+# ==============================================================================
+# Complex Python Example
+# This file demonstrates various Python language features, syntax, and constructs
+# for testing lexers, parsers, and code analyzers.
+# ==============================================================================
+
 import math
 import numpy as np
 

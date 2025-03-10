@@ -1,3 +1,9 @@
+// ==============================================================================
+// Complex Javascript Example
+// This file demonstrates various Javascript language features, syntax, and constructs
+// for testing lexers, parsers, and code analyzers.
+// ==============================================================================
+
 // Constants
 const PI = Math.PI;
 const E = Math.E;
