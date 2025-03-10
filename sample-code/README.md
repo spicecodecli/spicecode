@@ -1,1 +1,0 @@
-## sample code for testing the SpiceCode Code Analyzer Tool
