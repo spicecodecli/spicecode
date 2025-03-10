@@ -1,0 +1,6 @@
+# created this new gitignore here to make it more organized
+# this will only ignore the lang.txt file
+# so we can work on translations during dev and it won't mess up the prod build
+# lang.txt is already on the repo with default language to english, so ignoring it now will freeze it in time
+
+lang.txt
