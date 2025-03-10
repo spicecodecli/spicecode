@@ -16,6 +16,9 @@ messages = {
     "comment_line_count_option": "Comment Line Count",
     "no_stats_selected": "No stats selected. Analysis cancelled.",
     "confirm_and_analyze": "Confirm and analyze",
-    "checkbox_hint": "(Use space to select, enter to confirm)"
-    
+    "checkbox_hint": "(Use space to select, enter to confirm)",
+    # keys for the version command
+    "version_info": "Version:",
+    "version_not_found": "Version information not found in setup.py",
+    "setup_not_found": "Error: setup.py not found."
 }
