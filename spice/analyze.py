@@ -38,46 +38,47 @@ def analyze_file(file_path: str, selected_stats=None):
     Returns:
         dict: Dictionary containing the requested stats
     """
-    # Default to all stats if none specified
+    # default to all stats if none specified
     if selected_stats is None:
         selected_stats = ["line_count", "function_count", "comment_line_count"]
 
-    # Initialize results with the file name (always include this)
+    # initialize results with the file name (dont change this please)
     results = {
         "file_name": os.path.basename(file_path)
     }
     
-    # Read the code file only once
+    # read the code file only once and load it into memory
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
     
-    # Process line count if requested
+    # line count if requested
     if "line_count" in selected_stats:
         results["line_count"] = count_lines(code)
     
-    # Only proceed with tokenization if we need function count or comment count
+    # only put the code through the lexer and proceed with tokenization if we need function count or comment count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
     if "function_count" in selected_stats or "comment_line_count" in selected_stats:
-        # Get the lexer for the code's language
+        # get the lexer for the code's language
         LexerClass = get_lexer_for_file(file_path)
         
-        # Tokenize the code
+        # tokenize the code via lexer
         lexer = LexerClass(code)
         tokens = lexer.tokenize()
         
-        # Process comment line count if requested
+        # process comment line count if requested
         if "comment_line_count" in selected_stats:
             results["comment_line_count"] = count_comment_lines(tokens)
         
-        # Only proceed with parsing if we need function count
+        # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
         if "function_count" in selected_stats:
-            # Import parser here to avoid error
+
+            # import parser here to avoid error i still dont know why but it works
             from parser.parser import Parser
             
-            # Parse tokens into an AST
+            # prase tokens into AST
             parser = Parser(tokens)
             ast = parser.parse()
             
-            # Count functions
+            # count functions
             results["function_count"] = count_functions(ast)
     
     return results
