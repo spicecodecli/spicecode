@@ -156,7 +156,7 @@ def analyze(file: str):
         print(f"{messages['analyzing_file']}: {file}")
         
         # get analysis results from analyze_file
-        results = analyze_file(file)
+        results = analyze_file(file, selected_stats=selected_stat_keys)
         
         # only print the selected stats
         for stat in selected_stat_keys:

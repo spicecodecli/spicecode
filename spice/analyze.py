@@ -3,7 +3,7 @@ import os
 # this is the universal token, used by all lexers to know what to output
 from lexers.token import TokenType
 
-# this are the individual lexers for all languagues we support
+# these are the individual lexers for all languages we support
 from lexers.ruby.rubylexer import RubyLexer
 from lexers.python.pythonlexer import PythonLexer
 from lexers.javascript.javascriptlexer import JavaScriptLexer
@@ -12,7 +12,6 @@ from lexers.golang.golexer import GoLexer
 
 # this will read the file extension and return the correct lexer
 def get_lexer_for_file(file_path):
-
     _, ext = os.path.splitext(file_path)
 
     if ext == ".rb":
@@ -27,43 +26,62 @@ def get_lexer_for_file(file_path):
         raise ValueError(f"Unsupported file extension: {ext}")
     
 
-
-# this is the analyze functions
-def analyze_file(file_path: str):
-
-    # import parser here to avoid error idk why but it fixed it
-    from parser.parser import Parser
+# this is the analyze function
+def analyze_file(file_path: str, selected_stats=None):
+    """
+    Analyze a file and return only the requested stats.
     
-    # read the code file and save it to memory
+    Args:
+        file_path (str): Path to the file to analyze
+        selected_stats (list, optional): List of stats to compute. If None, compute all stats.
+    
+    Returns:
+        dict: Dictionary containing the requested stats
+    """
+    # default to all stats if none specified
+    if selected_stats is None:
+        selected_stats = ["line_count", "function_count", "comment_line_count"]
+
+    # initialize results with the file name (dont change this please)
+    results = {
+        "file_name": os.path.basename(file_path)
+    }
+    
+    # read the code file only once and load it into memory
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
     
-
-    # get the lexer for the code's language
-    LexerClass = get_lexer_for_file(file_path)
+    # line count if requested
+    if "line_count" in selected_stats:
+        results["line_count"] = count_lines(code)
     
+    # only put the code through the lexer and proceed with tokenization if we need function count or comment count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
+    if "function_count" in selected_stats or "comment_line_count" in selected_stats:
+        # get the lexer for the code's language
+        LexerClass = get_lexer_for_file(file_path)
+        
+        # tokenize the code via lexer
+        lexer = LexerClass(code)
+        tokens = lexer.tokenize()
+        
+        # process comment line count if requested
+        if "comment_line_count" in selected_stats:
+            results["comment_line_count"] = count_comment_lines(tokens)
+        
+        # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
+        if "function_count" in selected_stats:
 
-    # put the code through the lexer
-    lexer = LexerClass(code)
-    tokens = lexer.tokenize()
+            # import parser here to avoid error i still dont know why but it works
+            from parser.parser import Parser
+            
+            # prase tokens into AST
+            parser = Parser(tokens)
+            ast = parser.parse()
+            
+            # count functions
+            results["function_count"] = count_functions(ast)
     
-
-    # parse the output of the lexer (tokens) through the parse to get an AST
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-
-    # analyze the AST
-    results = {
-        "file_name": os.path.basename(file_path),
-        "line_count": count_lines(code),
-        "function_count": count_functions(ast),
-        "comment_line_count": count_comment_lines(tokens)
-    }
-    
-    # return the results above, they will each call their own function to do what they need to do and get the stats they refer to
     return results
-
 
 
 # this will count lines straight from the raw code
@@ -71,10 +89,8 @@ def count_lines(code):
     return code.count("\n") + 1
 
 
-
 # this will count functions in the AST
 def count_functions(ast):
-
     # import function definition from the parser's ast
     from parser.ast import FunctionDefinition, Program
     
@@ -120,10 +136,8 @@ def count_functions(ast):
     return function_count
 
 
-
 # this will count comment lines, since our AST/Parser doesn't include comment lines, this needs to be done in the tokenized output of the lexer
 def count_comment_lines(tokens):
-
     comment_count = 0
 
     for token in tokens:
