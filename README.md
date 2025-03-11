@@ -54,10 +54,43 @@ You can **visit our page on the pypi registry**: https://pypi.org/project/spicec
 
 
 ### For Development
-i will write a better tutorial later but for now basically just:
-- clone the repo yeah no shit
-- create a python virtual enviroment with venv
-- install the requirements.txt with ```pip install -r requirements.txt``` (not sure about this one but probably works)
-- install the package locally with ```pip install -e . ```
-- then run it using ```spice analyze``` followed by the file to be analyzed
-- example: ```spice analyze example.js```
+- Clone the repo to your machine
+- Go to the cloned spicecode folder
+- Create a python virtual environment (venv):
+```
+python -m venv venv
+```
+
+- Activate your virtual environment:
+- **Windows**
+```
+./venv/Scripts/activate
+```
+- **Linux**
+```
+source ./venv/bin/activate
+```
+
+- Install all packages from requirements.txt:
+```
+pip install -r requirements.txt
+```
+
+- Install (build) the spicecode package locally:
+```
+pip install -e .
+```
+
+- Have fun!
+```
+spice version
+```
+```
+spice hello
+```
+```
+spice translate
+```
+```
+spice analyze
+```
