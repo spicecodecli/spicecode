@@ -214,8 +214,6 @@ def analyze(
         # output in JSON format if flag
         if json_output:
             import json
-            # Add filename to results
-            results["filename"] = file
             print(json.dumps(results, indent=2))
         else:
             # only print the selected stats in normal mode
