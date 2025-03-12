@@ -8,7 +8,7 @@ from cli.main import app
 runner = CliRunner()
 
 # Get the absolute path to the sample file
-SAMPLE_FILE_PATH = os.path.join(os.path.dirname(__file__), "sample-code", "example.py")
+SAMPLE_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "sample-code", "example.py")
 
 def test_analyze_command_with_json_flag():
     """Test the analyze command with the --json flag"""
