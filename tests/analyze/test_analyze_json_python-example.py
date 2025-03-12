@@ -22,13 +22,13 @@ def test_analyze_command_with_json_flag():
     output = json.loads(result.stdout)
     
     # Check if all expected stats are in the output
-    assert "filename" in output
+    assert "file_name" in output
     assert "line_count" in output
     assert "comment_line_count" in output
     assert "function_count" in output
     
     # Verify the values match expected results
-    assert output["filename"] == SAMPLE_FILE_PATH
+    assert output["file_name"] == SAMPLE_FILE_PATH
     assert output["line_count"] == 161
     assert output["comment_line_count"] == 25
     assert output["function_count"] == 17
