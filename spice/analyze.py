@@ -137,11 +137,25 @@ def count_functions(ast):
 
 
 # this will count comment lines, since our AST/Parser doesn't include comment lines, this needs to be done in the tokenized output of the lexer
+# COMMENT LINE IS A LINE THAT EXCLUSIVELY HAS A COMMENT
+# so like: y = 5 #sets y to 5 IS NOT A COMMENT LINE!!!!!!!!
 def count_comment_lines(tokens):
     comment_count = 0
-
+    line_number = 1
+    comment_lines = set()
+    
     for token in tokens:
+        # track line number across all tokens
+        line_number += token.value.count('\n')
+        
         if token.type == TokenType.COMMENT:
-            comment_count += 1
+            # only count if this is the first non-whitespace token on its line
+            # get the line this token starts on
+            token_line = line_number - token.value.count('\n')
+            
+            # check if we already encountered a non-comment token on this line
+            if token_line not in comment_lines:
+                comment_count += 1
+                comment_lines.add(token_line)
     
     return comment_count
