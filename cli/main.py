@@ -224,7 +224,9 @@ def analyze(
     except Exception as e:
         if json_output:
             import json
-            print(json.dumps({"error": str(e)}))
+            # Replace newlines with spaces or escape them properly
+            error_msg = str(e).replace('\n', ' ')
+            print(json.dumps({"error": error_msg}))
         else:
             print(f"[red]{messages['error']}[/] {e}")
 
