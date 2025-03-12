@@ -28,7 +28,7 @@ def test_analyze_command_with_json_flag():
     assert "function_count" in output
     
     # Verify the values match expected results
-    assert output["file_name"] == SAMPLE_FILE_PATH
+    assert output["file_name"] == os.path.basename(SAMPLE_FILE_PATH)
     assert output["line_count"] == 161
     assert output["comment_line_count"] == 25
     assert output["function_count"] == 17
