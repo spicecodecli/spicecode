@@ -66,7 +66,7 @@ def analyze_file(file_path: str, selected_stats=None):
         
         # process comment line count if requested
         if "comment_line_count" in selected_stats:
-            results["comment_line_count"] = count_comment_lines(tokens)
+            results["comment_line_count"] = count_comment_lines(code)
         
         # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
         if "function_count" in selected_stats:
@@ -137,11 +137,19 @@ def count_functions(ast):
 
 
 # this will count comment lines, since our AST/Parser doesn't include comment lines, this needs to be done in the tokenized output of the lexer
-def count_comment_lines(tokens):
+# COMMENT LINE IS A LINE THAT EXCLUSIVELY HAS A COMMENT
+# so like: y = 5 #sets y to 5 IS NOT A COMMENT LINE!!!!!!!!
+def count_comment_lines(code):
+    """Count lines that are exclusively comments (no code on the same line)"""
+    # split the code into lines
+    lines = code.splitlines()
     comment_count = 0
-
-    for token in tokens:
-        if token.type == TokenType.COMMENT:
+    
+    for line in lines:
+        # Remove leading whitespace
+        stripped = line.strip()
+        # Check if this line consists only of a comment
+        if stripped and stripped.startswith('#'):
             comment_count += 1
     
     return comment_count
