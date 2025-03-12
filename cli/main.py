@@ -142,9 +142,8 @@ def version():
         print(f"[red]{messages.get('error', 'Error:')}[/] {e}")
 
 
-# SPICE ANALYZE COMMAND
 @app.command()
-def analyze(file: str):
+def analyze(file: str, all: bool = typer.Option(False, "--all", help="Analyze all stats without selection menu")):
     """
     Analyze the given file.
     """
@@ -152,41 +151,43 @@ def analyze(file: str):
     # load translations
     messages = get_translation()
 
-    # define available stats UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!
+    # define available stats UPDATE THIS WHEN NEEDED PLEASE !!!!!!!!
     available_stats = [
         "line_count",
         "function_count", 
         "comment_line_count"
     ]
 
-    # dicionary for the stats UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!
+    # dictionary for the stats UPDATE THIS WHEN NEEDED PLEASE !!!!!!!!
     stats_labels = {
         "line_count": messages.get("line_count_option", "Line Count"),
         "function_count": messages.get("function_count_option", "Function Count"),
         "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count")
     }
     
+    # If --all flag is used, skip the selection menu and use all stats
+    if all:
+        selected_stat_keys = available_stats
+    else:
+        # print checkbox menu to select which stats to show
+        selected_stats = inquirer.checkbox(
+            message=messages.get("select_stats", "Select stats to display:"),
+            choices=[stats_labels[stat] for stat in available_stats],
+            pointer="> ",
+            default=[stats_labels[stat] for stat in available_stats],  # All selected by default
+            instruction=messages.get("checkbox_hint", "(Use space to select, enter to confirm)")
+        ).execute()
 
-    # print checkbox menu to select which stats to show
-    selected_stats = inquirer.checkbox(
-        message=messages.get("select_stats", "Select stats to display:"),
-        choices=[stats_labels[stat] for stat in available_stats],
-        pointer="> ",
-        default=[stats_labels[stat] for stat in available_stats],  # All selected by default
-        instruction=messages.get("checkbox_hint", "(Use space to select, enter to confirm)")
-    ).execute()
+        # if no stats were selected
+        if not selected_stats:
+            print(messages.get("no_stats_selected", "No stats selected. Analysis cancelled."))
+            return
 
-
-    # if no stats were selected
-    if not selected_stats:
-        print(messages.get("no_stats_selected", "No stats selected. Analysis cancelled."))
-        return
-
-    # create a mapping from displayed labels back to stat keys
-    reverse_mapping = {v: k for k, v in stats_labels.items()}
-    
-    # convert selected labels back to stat keys
-    selected_stat_keys = [reverse_mapping[label] for label in selected_stats]
+        # create a mapping from displayed labels back to stat keys
+        reverse_mapping = {v: k for k, v in stats_labels.items()}
+        
+        # convert selected labels back to stat keys
+        selected_stat_keys = [reverse_mapping[label] for label in selected_stats]
 
     # try to analyze and if error then print the error
     try:
