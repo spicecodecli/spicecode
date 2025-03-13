@@ -1,5 +1,6 @@
 import os
 from rich import print # this add colors to the printed text
+
 from cli.utils.get_translation import get_translation
 
 
