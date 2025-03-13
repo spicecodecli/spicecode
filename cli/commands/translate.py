@@ -1,6 +1,6 @@
 from InquirerPy import inquirer
 
-def translate(LANG_FILE):
+def translate_command(LANG_FILE):
     """
     Set the language for CLI messages.
     """
