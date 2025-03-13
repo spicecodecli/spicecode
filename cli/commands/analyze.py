@@ -1,9 +1,7 @@
-
 from InquirerPy import inquirer
 
 from cli.utils.get_translation import get_translation
 from spice.analyze import analyze_file
-
 
 
 def analyze_command(file, all, json_output, LANG_FILE):
