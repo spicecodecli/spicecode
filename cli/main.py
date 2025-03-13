@@ -1,6 +1,5 @@
 import os
 import sys
-import importlib
 import typer
 from rich import print
 from InquirerPy import inquirer
