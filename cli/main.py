@@ -50,6 +50,7 @@ def hello():
     hello_command(LANG_FILE)
 
 
+
 # SPICE VERSION COMMAND
 @app.command()
 def version():
