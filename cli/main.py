@@ -12,6 +12,7 @@ from cli.utils.get_translation import get_translation
 
 # here we import the commands
 from cli.commands.translate import translate_command
+from cli.commands.hello import hello_command
 
 
 # initialize typer
@@ -46,12 +47,7 @@ def hello():
     Welcome message.
     """
 
-    # load translations
-    messages = get_translation(LANG_FILE)
-
-    # print the hello message
-    print(messages["welcome"])
-    print(messages["description"])
+    hello_command(LANG_FILE)
 
 
 # SPICE VERSION COMMAND
