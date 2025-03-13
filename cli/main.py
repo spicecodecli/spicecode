@@ -1,8 +1,6 @@
 import os
 import sys
 import typer
-from rich import print
-from InquirerPy import inquirer
 
 # this is the analyzer
 from spice.analyze import analyze_file
