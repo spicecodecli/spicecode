@@ -4,8 +4,20 @@ import typer
 from rich import print
 from InquirerPy import inquirer
 
+# this is the analyzer
 from spice.analyze import analyze_file
+
+# here we import utilities
 from cli.utils.get_translation import get_translation
+
+# here we import the commands
+def translate_command():
+    """
+    Set the language for CLI messages.
+    """
+
+    translate(LANG_FILE)
+
 
 # initialize typer
 app = typer.Typer()
