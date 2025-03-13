@@ -32,7 +32,7 @@ def version_command(LANG_FILE, CURRENT_DIR):
         
         # Display version information
         if version_info:
-            print(f"[green]{messages.get('version_info', 'Version:')}[/] {version_info}")
+            print(f"[green]{messages.get('version_info', 'SpiceCode Version:')}[/] {version_info}")
         else:
             print(f"[yellow]{messages.get('version_not_found', 'Version information not found in setup.py')}")
             
