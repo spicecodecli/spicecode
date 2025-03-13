@@ -40,6 +40,7 @@ def translate():
 
     translate_command(LANG_FILE)
 
+# -- end -- #
 
 
 # SPICE HELLO COMMAND
@@ -51,6 +52,7 @@ def hello():
 
     hello_command(LANG_FILE)
 
+# -- end -- #
 
 
 # SPICE VERSION COMMAND
@@ -61,6 +63,8 @@ def version():
     """
     
     version_command(LANG_FILE, CURRENT_DIR)
+
+#--- end ---#
 
 
 # SPICE ANALYZE COMMAND
@@ -75,12 +79,18 @@ def analyze(
     """
     
     analyze_command(file, all, json_output, LANG_FILE)
-    
+
+# -- end -- #
 
 
 def main():
     app()  # run typer
 
+# -- end -- #
+
+
 # whatever the fuck this is python makes no sense
 if __name__ == "__main__":
     main()
+
+# -- end -- #
