@@ -85,3 +85,4 @@ def analyze_command(file, all, json_output, LANG_FILE):
             print(json.dumps({"error": error_msg}))
         else:
             print(f"[red]{messages['error']}[/] {e}")
+
