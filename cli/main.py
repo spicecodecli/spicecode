@@ -29,7 +29,7 @@ LANG_FILE = os.path.join(CURRENT_DIR, "lang.txt")
 
 
 
-# SPICE SET_LANG COMMAND
+# SPICE TRANSLATE COMMAND
 @app.command()
 def translate():
     """
