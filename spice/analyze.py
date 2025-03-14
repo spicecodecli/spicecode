@@ -9,6 +9,9 @@ from lexers.python.pythonlexer import PythonLexer
 from lexers.javascript.javascriptlexer import JavaScriptLexer
 from lexers.golang.golexer import GoLexer
 
+# gustavo testando alguma coisa 
+
+from spice.identation import detect_indentation
 
 # this will read the file extension and return the correct lexer
 def get_lexer_for_file(file_path):
@@ -40,7 +43,7 @@ def analyze_file(file_path: str, selected_stats=None):
     """
     # default to all stats if none specified
     if selected_stats is None:
-        selected_stats = ["line_count", "function_count", "comment_line_count"]
+        selected_stats = ["line_count", "function_count", "comment_line_count", "identation_level"]
 
     # initialize results with the file name (dont change this please)
     results = {
@@ -80,6 +83,8 @@ def analyze_file(file_path: str, selected_stats=None):
             
             # count functions
             results["function_count"] = count_functions(ast)
+        if "identation_level" in selected_stats:
+            analyze_code_structure(code)
     
     return results
 
@@ -153,3 +158,13 @@ def count_comment_lines(code):
             comment_count += 1
     
     return comment_count
+
+def analyze_code_structure(code):
+    indentation_info = detect_indentation(code)
+
+    print(f"Detected Indentation Type: {indentation_info['indent_type']}")
+    print(f"Detected Indentation Size: {indentation_info['indent_size']}")
+    for line, level in indentation_info["levels"]:
+        # print(f"Indentation Level {level}: {line}")
+        print(f"Detected Indentation Type: {indentation_info['indent_type']}")
+        print(f"Detected Indentation Size: {indentation_info['indent_size']}")
