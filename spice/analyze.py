@@ -160,11 +160,8 @@ def count_comment_lines(code):
     return comment_count
 
 def analyze_code_structure(code):
-    indentation_info = detect_indentation(code)
-
-    print(f"Detected Indentation Type: {indentation_info['indent_type']}")
-    print(f"Detected Indentation Size: {indentation_info['indent_size']}")
-    for line, level in indentation_info["levels"]:
-        # print(f"Indentation Level {level}: {line}")
-        print(f"Detected Indentation Type: {indentation_info['indent_type']}")
-        print(f"Detected Indentation Size: {indentation_info['indent_size']}")
+     indentation_info = detect_indentation(code)
+ 
+     print(f"Detected Indentation Type: {indentation_info['indent_type']}")
+     print(f"Detected Indentation Size: {indentation_info['indent_size']}")
+   

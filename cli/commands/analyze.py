@@ -16,14 +16,16 @@ def analyze_command(file, all, json_output, LANG_FILE):
     available_stats = [
         "line_count",
         "function_count", 
-        "comment_line_count"
+        "comment_line_count",
+        "identation_level"
     ]
 
     # dictionary for the stats UPDATE THIS WHEN NEEDED PLEASE !!!!!!!!
     stats_labels = {
         "line_count": messages.get("line_count_option", "Line Count"),
         "function_count": messages.get("function_count_option", "Function Count"),
-        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count")
+        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count"),
+        "identation_level": messages.get("identation_level", "Identation Level")
     }
     
     # If --all flag is used, skip the selection menu and use all stats
