@@ -2,13 +2,7 @@ import os
 import sys
 import typer
 
-# this is the analyzer
-from spice.analyze import analyze_file
-
-# here we import utilities
-from cli.utils.get_translation import get_translation
-
-# here we import the commands
+# import commands
 from cli.commands.translate import translate_command
 from cli.commands.hello import hello_command
 from cli.commands.version import version_command
