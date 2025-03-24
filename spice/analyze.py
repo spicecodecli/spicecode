@@ -41,19 +41,20 @@ def analyze_file(file_path: str, selected_stats=None):
     # line count if requested
     if "line_count" in selected_stats:
         results["line_count"] = count_lines(code)
+
+    # comment line count if requested
+    if "comment_line_count" in selected_stats:
+        results["comment_line_count"] = count_comment_lines(code)
     
-    # only put the code through the lexer and proceed with tokenization if we need function count or comment count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
-    if "function_count" in selected_stats or "comment_line_count" in selected_stats:
+    # only put the code through the lexer and proceed with tokenization if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
+    if "function_count" in selected_stats:
+
         # get the lexer for the code's language
         LexerClass = get_lexer_for_file(file_path)
         
         # tokenize the code via lexer
         lexer = LexerClass(code)
         tokens = lexer.tokenize()
-        
-        # process comment line count if requested
-        if "comment_line_count" in selected_stats:
-            results["comment_line_count"] = count_comment_lines(code)
         
         # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
         if "function_count" in selected_stats:
