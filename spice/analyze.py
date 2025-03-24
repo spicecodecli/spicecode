@@ -74,6 +74,13 @@ def analyze_file(file_path: str, selected_stats=None):
 
 
 
+
+
+# im not sure what to do with this part 😂
+# this is the identation analyzer
+# but it's not included in the menu?
+# im not going to change this since gtins knows better than me how this works
+# but this needs to be refactores and included directly into the analyze_file function and the analyze menu
 def analyze_code_structure(code):
     indentation_info = detect_indentation(code)
 
@@ -83,3 +90,5 @@ def analyze_code_structure(code):
         # print(f"Indentation Level {level}: {line}")
         print(f"Detected Indentation Type: {indentation_info['indent_type']}")
         print(f"Detected Indentation Size: {indentation_info['indent_size']}")
+
+# ----------------------------------------------------------------------------------------------------
