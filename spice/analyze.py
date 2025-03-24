@@ -11,7 +11,7 @@ from lexers.golang.golexer import GoLexer
 
 # gustavo testando alguma coisa 
 
-from spice.identation import detect_indentation
+from spice.analyzers.identation import detect_indentation
 
 # this will read the file extension and return the correct lexer
 def get_lexer_for_file(file_path):
