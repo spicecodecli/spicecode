@@ -9,8 +9,11 @@ from lexers.python.pythonlexer import PythonLexer
 from lexers.javascript.javascriptlexer import JavaScriptLexer
 from lexers.golang.golexer import GoLexer
 
-# gustavo testando alguma coisa 
+# import analyzer functions from analyzers folder
+from spice.analyzers.count_lines import count_lines
 
+
+# gustavo testando alguma coisa 
 from spice.analyzers.identation import detect_indentation
 
 # this will read the file extension and return the correct lexer
@@ -88,10 +91,6 @@ def analyze_file(file_path: str, selected_stats=None):
     
     return results
 
-
-# this will count lines straight from the raw code
-def count_lines(code):
-    return code.count("\n") + 1
 
 
 # this will count functions in the AST
