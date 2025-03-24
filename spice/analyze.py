@@ -45,6 +45,10 @@ def analyze_file(file_path: str, selected_stats=None):
     # comment line count if requested
     if "comment_line_count" in selected_stats:
         results["comment_line_count"] = count_comment_lines(code)
+
+    # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
+    if "identation_level" in selected_stats:
+            analyze_code_structure(code)
     
     # only put the code through the lexer and proceed with tokenization if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
     if "function_count" in selected_stats:
@@ -68,8 +72,6 @@ def analyze_file(file_path: str, selected_stats=None):
             
             # count functions
             results["function_count"] = count_functions(ast)
-        if "identation_level" in selected_stats:
-            analyze_code_structure(code)
     
     return results
 
