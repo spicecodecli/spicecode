@@ -47,6 +47,8 @@ def analyze_file(file_path: str, selected_stats=None):
         results["comment_line_count"] = count_comment_lines(code)
 
     # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
+    # edit: ok i see whats going on, instead of appending the results to the resuls, this will itself print the results to the terminal
+    # TODO: make analyze_code_structure return the results, then append those results to the results array
     if "identation_level" in selected_stats:
             analyze_code_structure(code)
     
