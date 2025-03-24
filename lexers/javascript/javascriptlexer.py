@@ -139,6 +139,25 @@ class JavaScriptLexer:
         comment = self.source_code[start_pos:self.position]  # pega o texto do comentário
         return Token(TokenType.COMMENT, comment, self.line, start_col)
 
+    def tokenize_identifier(self):
+        """Tokeniza um identificador ou palavra-chave."""
+        start_pos = self.position  # posição inicial do identificador
+        start_col = self.column  # coluna inicial do identificador
+        
+        # avança enquanto for um caractere válido para identificadores
+        while self.position < len(self.source_code) and (self.source_code[self.position].isalnum() or self.source_code[self.position] == "_"):
+            self.position += 1
+            self.column += 1
+        
+        identifier = self.source_code[start_pos:self.position]  # pega o texto do identificador
+        
+        # verifica se é uma palavra-chave
+        if identifier in self.KEYWORDS:
+            return Token(TokenType.KEYWORD, identifier, self.line, start_col)
+        
+        # caso contrário, é um identificador
+        return Token(TokenType.IDENTIFIER, identifier, self.line, start_col)
+
     def tokenize_number(self):
         """tokeniza um número (inteiro, decimal ou notação científica)."""
         start_pos = self.position  # posição inicial do número
