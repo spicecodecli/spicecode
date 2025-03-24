@@ -1,9 +1,5 @@
 import os
 
-# this is the universal token, used by all lexers to know what to output
-from lexers.token import TokenType
-
-
 # import utils
 from spice.utils.get_lexer import get_lexer_for_file
 
