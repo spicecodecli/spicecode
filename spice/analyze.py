@@ -1,13 +1,5 @@
 import os
 
-# import utils
-from spice.utils.get_lexer import get_lexer_for_file
-
-# import analyzer functions from analyzers folder
-from spice.analyzers.count_lines import count_lines
-from spice.analyzers.count_comment_lines import count_comment_lines
-from spice.analyzers.count_functions import count_functions
-
 # gustavo testando alguma coisa 
 from spice.analyzers.identation import detect_indentation
 
@@ -40,10 +32,12 @@ def analyze_file(file_path: str, selected_stats=None):
     
     # line count if requested
     if "line_count" in selected_stats:
+        from spice.analyzers.count_lines import count_lines
         results["line_count"] = count_lines(code)
 
     # comment line count if requested
     if "comment_line_count" in selected_stats:
+        from spice.analyzers.count_comment_lines import count_comment_lines
         results["comment_line_count"] = count_comment_lines(code)
 
     # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
@@ -56,6 +50,7 @@ def analyze_file(file_path: str, selected_stats=None):
     if "function_count" in selected_stats:
 
         # get the lexer for the code's language
+        from spice.utils.get_lexer import get_lexer_for_file
         LexerClass = get_lexer_for_file(file_path)
         
         # tokenize the code via lexer
@@ -73,6 +68,7 @@ def analyze_file(file_path: str, selected_stats=None):
             ast = parser.parse()
             
             # count functions
+            from spice.analyzers.count_functions import count_functions
             results["function_count"] = count_functions(ast)
     
     return results
