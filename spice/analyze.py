@@ -3,11 +3,9 @@ import os
 # this is the universal token, used by all lexers to know what to output
 from lexers.token import TokenType
 
-# these are the individual lexers for all languages we support
-from lexers.ruby.rubylexer import RubyLexer
-from lexers.python.pythonlexer import PythonLexer
-from lexers.javascript.javascriptlexer import JavaScriptLexer
-from lexers.golang.golexer import GoLexer
+
+# import utils
+from spice.utils.get_lexer import get_lexer_for_file
 
 # import analyzer functions from analyzers folder
 from spice.analyzers.count_lines import count_lines
@@ -16,20 +14,6 @@ from spice.analyzers.count_lines import count_lines
 # gustavo testando alguma coisa 
 from spice.analyzers.identation import detect_indentation
 
-# this will read the file extension and return the correct lexer
-def get_lexer_for_file(file_path):
-    _, ext = os.path.splitext(file_path)
-
-    if ext == ".rb":
-        return RubyLexer
-    elif ext == ".py":
-        return PythonLexer
-    elif ext == ".js":
-        return JavaScriptLexer
-    elif ext == ".go":
-        return GoLexer
-    else:
-        raise ValueError(f"Unsupported file extension: {ext}")
     
 
 # this is the analyze function
