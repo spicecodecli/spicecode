@@ -1,4 +1,3 @@
-import os 
 import re
 
 def detect_indentation(code):

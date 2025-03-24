@@ -1,33 +1,9 @@
 import os
 
-# this is the universal token, used by all lexers to know what to output
-from lexers.token import TokenType
-
-# these are the individual lexers for all languages we support
-from lexers.ruby.rubylexer import RubyLexer
-from lexers.python.pythonlexer import PythonLexer
-from lexers.javascript.javascriptlexer import JavaScriptLexer
-from lexers.golang.golexer import GoLexer
-
 # gustavo testando alguma coisa 
+from spice.analyzers.identation import detect_indentation
 
-from spice.identation import detect_indentation
 
-# this will read the file extension and return the correct lexer
-def get_lexer_for_file(file_path):
-    _, ext = os.path.splitext(file_path)
-
-    if ext == ".rb":
-        return RubyLexer
-    elif ext == ".py":
-        return PythonLexer
-    elif ext == ".js":
-        return JavaScriptLexer
-    elif ext == ".go":
-        return GoLexer
-    else:
-        raise ValueError(f"Unsupported file extension: {ext}")
-    
 
 # this is the analyze function
 def analyze_file(file_path: str, selected_stats=None):
@@ -56,20 +32,30 @@ def analyze_file(file_path: str, selected_stats=None):
     
     # line count if requested
     if "line_count" in selected_stats:
+        from spice.analyzers.count_lines import count_lines
         results["line_count"] = count_lines(code)
+
+    # comment line count if requested
+    if "comment_line_count" in selected_stats:
+        from spice.analyzers.count_comment_lines import count_comment_lines
+        results["comment_line_count"] = count_comment_lines(code)
+
+    # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
+    # edit: ok i see whats going on, instead of appending the results to the resuls, this will itself print the results to the terminal
+    # TODO: make analyze_code_structure return the results, then append those results to the results array
+    if "identation_level" in selected_stats:
+            analyze_code_structure(code)
     
-    # only put the code through the lexer and proceed with tokenization if we need function count or comment count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
-    if "function_count" in selected_stats or "comment_line_count" in selected_stats:
+    # only put the code through the lexer and proceed with tokenization if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
+    if "function_count" in selected_stats:
+
         # get the lexer for the code's language
+        from spice.utils.get_lexer import get_lexer_for_file
         LexerClass = get_lexer_for_file(file_path)
         
         # tokenize the code via lexer
         lexer = LexerClass(code)
         tokens = lexer.tokenize()
-        
-        # process comment line count if requested
-        if "comment_line_count" in selected_stats:
-            results["comment_line_count"] = count_comment_lines(code)
         
         # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
         if "function_count" in selected_stats:
@@ -82,83 +68,20 @@ def analyze_file(file_path: str, selected_stats=None):
             ast = parser.parse()
             
             # count functions
+            from spice.analyzers.count_functions import count_functions
             results["function_count"] = count_functions(ast)
-        if "identation_level" in selected_stats:
-            analyze_code_structure(code)
     
     return results
 
 
-# this will count lines straight from the raw code
-def count_lines(code):
-    return code.count("\n") + 1
 
 
-# this will count functions in the AST
-def count_functions(ast):
-    # import function definition from the parser's ast
-    from parser.ast import FunctionDefinition, Program
-    
-    if not isinstance(ast, Program):
-        return 0
-    
-    function_count = 0
-    
-    # recursive search for function definitions in the AST
-    def search_node(node):
-        nonlocal function_count
-        
-        if isinstance(node, FunctionDefinition):
-            function_count += 1
-        
-        # process child nodes if they exist
-        if hasattr(node, 'statements') and node.statements:
-            for statement in node.statements:
-                search_node(statement)
-        
-        if hasattr(node, 'body') and node.body:
-            for body_statement in node.body:
-                search_node(body_statement)
-        
-        # for binary operation, check both sides
-        if hasattr(node, 'left'):
-            search_node(node.left)
-        if hasattr(node, 'right'):
-            search_node(node.right)
-        
-        # check the value part of an assignment
-        if hasattr(node, 'value'):
-            search_node(node.value)
-            
-        # check function call arguments
-        if hasattr(node, 'arguments') and node.arguments:
-            for arg in node.arguments:
-                search_node(arg)
-    
-    # start recursive search from the root Program node
-    search_node(ast)
-    
-    return function_count
 
-
-# this will count comment lines, since our AST/Parser doesn't include comment lines, this needs to be done in the tokenized output of the lexer
-# COMMENT LINE IS A LINE THAT EXCLUSIVELY HAS A COMMENT
-# so like: y = 5 #sets y to 5 IS NOT A COMMENT LINE!!!!!!!!
-def count_comment_lines(code):
-    """Count lines that are exclusively comments (no code on the same line)"""
-    # split the code into lines
-    lines = code.splitlines()
-    comment_count = 0
-    
-    for line in lines:
-        # Remove leading whitespace
-        stripped = line.strip()
-        # Check if this line consists only of a comment
-        if stripped and stripped.startswith('#'):
-            comment_count += 1
-    
-    return comment_count
-
+# im not sure what to do with this part 😂
+# this is the identation analyzer
+# but it's not included in the menu?
+# im not going to change this since gtins knows better than me how this works
+# but this needs to be refactores and included directly into the analyze_file function and the analyze menu
 def analyze_code_structure(code):
     indentation_info = detect_indentation(code)
 
@@ -168,3 +91,5 @@ def analyze_code_structure(code):
         # print(f"Indentation Level {level}: {line}")
         print(f"Detected Indentation Type: {indentation_info['indent_type']}")
         print(f"Detected Indentation Size: {indentation_info['indent_size']}")
+
+# ----------------------------------------------------------------------------------------------------
