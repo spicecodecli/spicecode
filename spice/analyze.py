@@ -2,7 +2,7 @@ import os
 
 # gustavo testando alguma coisa 
 from spice.analyzers.identation import detect_indentation
-
+from spice.utils.get_langague import detect_language
 
 
 # this is the analyze function
@@ -26,6 +26,8 @@ def analyze_file(file_path: str, selected_stats=None):
         "file_name": os.path.basename(file_path)
     }
     
+    LANG = detect_language(file_path)
+    
     # read the code file only once and load it into memory
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
@@ -38,7 +40,7 @@ def analyze_file(file_path: str, selected_stats=None):
     # comment line count if requested
     if "comment_line_count" in selected_stats:
         from spice.analyzers.count_comment_lines import count_comment_lines
-        results["comment_line_count"] = count_comment_lines(code)
+        results["comment_line_count"] = count_comment_lines(code, LANG)
 
     # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
     # edit: ok i see whats going on, instead of appending the results to the resuls, this will itself print the results to the terminal

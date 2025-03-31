@@ -1,18 +1,63 @@
-# this will count comment lines, since our AST/Parser doesn't include comment lines, this needs to be done in the tokenized output of the lexer
-# not sure about that first line, im pretty sure like about 200% sure this is analyzing the raw code and not the tokenized code but ok
+# this will count comment lines for Python, JavaScript, Ruby, and Go
 # COMMENT LINE IS A LINE THAT EXCLUSIVELY HAS A COMMENT
-# so like: y = 5 #sets y to 5 IS NOT A COMMENT LINE!!!!!!!!
-def count_comment_lines(code):
-    """Count lines that are exclusively comments (no code on the same line)"""
+def count_comment_lines(code, lang):
     # split the code into lines
     lines = code.splitlines()
     comment_count = 0
     
+    # Set language-specific comment markers
+    if lang.lower() == "python":
+        single_comment = "#"
+        multi_start = '"""'
+        alt_multi_start = "'''"
+    elif lang.lower() == "javascript" or lang.lower() == "go":
+        single_comment = "//"
+        multi_start = "/*"
+    elif lang.lower() == "ruby":
+        single_comment = "#"
+        multi_start = "=begin"
+    else:
+        raise ValueError(f"Unsupported language: {lang}")
+    
+    # Track if we're inside a multi-line comment
+    in_multi_comment = False
+    
     for line in lines:
         # Remove leading whitespace
         stripped = line.strip()
-        # Check if this line consists only of a comment
-        if stripped and stripped.startswith('#'):
+        
+        # Skip empty lines
+        if not stripped:
+            continue
+            
+        # Handle multi-line comment blocks
+        if in_multi_comment:
+            comment_count += 1
+            # Check for end of multi-line comment
+            if lang == "python" and (stripped.endswith('"""') or stripped.endswith("'''")):
+                in_multi_comment = False
+            elif (lang == "javascript" or lang == "go") and "*/" in stripped:
+                in_multi_comment = False
+            elif lang == "ruby" and stripped == "=end":
+                in_multi_comment = False
+            continue
+        
+        # Check for start of multi-line comment
+        if lang == "python" and (stripped.startswith('"""') or stripped.startswith("'''")):
+            in_multi_comment = True
+            comment_count += 1
+            continue
+        elif (lang == "javascript" or lang == "go") and stripped.startswith("/*"):
+            in_multi_comment = True
+            comment_count += 1
+            continue
+        elif lang == "ruby" and stripped == "=begin":
+            in_multi_comment = True
+            comment_count += 1
+            continue
+        
+        # Check for single-line comments
+        if stripped.startswith(single_comment):
             comment_count += 1
     
     return comment_count
