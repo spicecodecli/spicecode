@@ -186,8 +186,21 @@ class GoLexer:
             elif char == "\\":  # escape de caracteres
                 self.position += 1
                 self.column += 1
+                if self.position < len(self.source_code):  # avança o caractere escapado
+                    self.position += 1
+                    self.column += 1
+                continue
+            elif char == "\n":  # se tiver uma nova linha dentro da string
+                # Em Go, strings com aspas duplas não podem conter quebras de linha
+                # mas strings com crases (raw strings) podem
+                if quote_char == '"':
+                    return Token(TokenType.ERROR, "string não fechada", self.line, start_col)
+                self.line += 1
+                self.column = 1
+                self.current_line_start = self.position + 1
+            else:
+                self.column += 1
             self.position += 1
-            self.column += 1
         
         string_value = self.source_code[start_pos:self.position]  # pega o texto da string
         return Token(TokenType.STRING, string_value, self.line, start_col)
@@ -210,7 +223,7 @@ class GoLexer:
     def match_operator(self):
         """tenta casar com um operador."""
         for op in sorted(self.OPERATORS, key=len, reverse=True):  # verifica operadores mais longos primeiro
-            if self.source_code.startswith(op, self.position):
+            if self.position + len(op) <= len(self.source_code) and self.source_code[self.position:self.position + len(op)] == op:
                 token = Token(TokenType.OPERATOR, op, self.line, self.column)
                 self.position += len(op)
                 self.column += len(op)

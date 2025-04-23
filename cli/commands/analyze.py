@@ -12,18 +12,20 @@ def analyze_command(file, all, json_output, LANG_FILE):
     # load translations
     messages = get_translation(LANG_FILE)
 
-    # define available stats UPDATE THIS WHEN NEEDED PLEASE !!!!!!!!
+    # define available stats
     available_stats = [
         "line_count",
         "function_count", 
-        "comment_line_count"
+        "comment_line_count",
+        "indentation_level"
     ]
 
-    # dictionary for the stats UPDATE THIS WHEN NEEDED PLEASE !!!!!!!!
+    # dictionary for the stats
     stats_labels = {
         "line_count": messages.get("line_count_option", "Line Count"),
         "function_count": messages.get("function_count_option", "Function Count"),
-        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count")
+        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count"),
+        "indentation_level": messages.get("indentation_level_option", "Indentation Analysis")
     }
     
     # If --all flag is used, skip the selection menu and use all stats
@@ -62,7 +64,7 @@ def analyze_command(file, all, json_output, LANG_FILE):
     try:
         # show analyzing message if not in JSON mode
         if not json_output:
-            print(f"{messages['analyzing_file']}: {file}")
+            print(f"{messages.get('analyzing_file', 'Analyzing file')}: {file}")
         
         # get analysis results from analyze_file
         results = analyze_file(file, selected_stats=selected_stat_keys)
@@ -74,8 +76,11 @@ def analyze_command(file, all, json_output, LANG_FILE):
         else:
             # only print the selected stats in normal mode
             for stat in selected_stat_keys:
-                if stat in results:
-                    print(messages[stat].format(count=results[stat]))
+                if stat == "indentation_level" and "indentation_type" in results:
+                    print(f"{messages.get('indentation_type', 'Indentation Type')}: {results['indentation_type']}")
+                    print(f"{messages.get('indentation_size', 'Indentation Size')}: {results['indentation_size']}")
+                elif stat in results:
+                    print(messages.get(stat, f"{stat.replace('_', ' ').title()}: {{count}}").format(count=results[stat]))
         
     except Exception as e:
         if json_output:
@@ -84,5 +89,4 @@ def analyze_command(file, all, json_output, LANG_FILE):
             error_msg = str(e).replace('\n', ' ')
             print(json.dumps({"error": error_msg}))
         else:
-            print(f"[red]{messages['error']}[/] {e}")
-
+            print(f"{messages.get('error', 'Error')}: {e}")
