@@ -1,11 +1,7 @@
 import os
 
-# gustavo testando alguma coisa 
 from spice.analyzers.identation import detect_indentation
 
-
-
-# this is the analyze function
 def analyze_file(file_path: str, selected_stats=None):
     """
     Analyze a file and return only the requested stats.
@@ -19,9 +15,9 @@ def analyze_file(file_path: str, selected_stats=None):
     """
     # default to all stats if none specified
     if selected_stats is None:
-        selected_stats = ["line_count", "function_count", "comment_line_count", "identation_level"]
+        selected_stats = ["line_count", "function_count", "comment_line_count", "indentation_level"]
 
-    # initialize results with the file name (dont change this please)
+    # initialize results with the file name
     results = {
         "file_name": os.path.basename(file_path)
     }
@@ -40,15 +36,15 @@ def analyze_file(file_path: str, selected_stats=None):
         from spice.analyzers.count_comment_lines import count_comment_lines
         results["comment_line_count"] = count_comment_lines(code)
 
-    # @gtins botei sua funcao aqui pq ela usa o codigo raw e nao o tokenizado, ai so tirei ela ali de baixo pra nao ficar chamando o parser sem precisar
-    # edit: ok i see whats going on, instead of appending the results to the resuls, this will itself print the results to the terminal
-    # TODO: make analyze_code_structure return the results, then append those results to the results array
-    if "identation_level" in selected_stats:
-            analyze_code_structure(code)
+    # indentation analysis if requested
+    if "indentation_level" in selected_stats:
+        indentation_info = detect_indentation(code)
+        results["indentation_type"] = indentation_info["indent_type"]
+        results["indentation_size"] = indentation_info["indent_size"]
+        results["indentation_levels"] = indentation_info["levels"]
     
-    # only put the code through the lexer and proceed with tokenization if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
-    if "function_count" in selected_stats:
-
+    # only put the code through the lexer and proceed with tokenization if needed
+    if any(stat in selected_stats for stat in ["function_count"]):
         # get the lexer for the code's language
         from spice.utils.get_lexer import get_lexer_for_file
         LexerClass = get_lexer_for_file(file_path)
@@ -57,13 +53,12 @@ def analyze_file(file_path: str, selected_stats=None):
         lexer = LexerClass(code)
         tokens = lexer.tokenize()
         
-        # only put the code through the parser and proceed with parsing if we need function count (UPDATE THIS WHEN  NEEDED PLEASE !!!!!!!!)
+        # only put the code through the parser and proceed with parsing if needed
         if "function_count" in selected_stats:
-
-            # import parser here to avoid error i still dont know why but it works
+            # import parser here to avoid circular import issues
             from parser.parser import Parser
             
-            # prase tokens into AST
+            # parse tokens into AST
             parser = Parser(tokens)
             ast = parser.parse()
             
@@ -72,24 +67,3 @@ def analyze_file(file_path: str, selected_stats=None):
             results["function_count"] = count_functions(ast)
     
     return results
-
-
-
-
-
-# im not sure what to do with this part 😂
-# this is the identation analyzer
-# but it's not included in the menu?
-# im not going to change this since gtins knows better than me how this works
-# but this needs to be refactores and included directly into the analyze_file function and the analyze menu
-def analyze_code_structure(code):
-    indentation_info = detect_indentation(code)
-
-    print(f"Detected Indentation Type: {indentation_info['indent_type']}")
-    print(f"Detected Indentation Size: {indentation_info['indent_size']}")
-    for line, level in indentation_info["levels"]:
-        # print(f"Indentation Level {level}: {line}")
-        print(f"Detected Indentation Type: {indentation_info['indent_type']}")
-        print(f"Detected Indentation Size: {indentation_info['indent_size']}")
-
-# ----------------------------------------------------------------------------------------------------

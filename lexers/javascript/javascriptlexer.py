@@ -164,3 +164,69 @@ class JavaScriptLexer:
                 self.column += 1
         
         return Token(TokenType.NUMBER, self.source_code[start_pos:self.position], self.line, self.column - (self.position - start_pos))
+
+    def tokenize_identifier(self):
+        """tokeniza um identificador (nomes de variáveis, funções, etc.)."""
+        start_pos = self.position  # posição inicial do identificador
+        start_col = self.column  # coluna inicial do identificador
+        
+        # Usa o padrão de regex para identificadores ou faz a tokenização manual
+        match = self.IDENTIFIER_PATTERN.match(self.source_code[self.position:])
+        if match:
+            identifier = match.group(0)  # pega o identificador
+            self.position += len(identifier)  # avança a posição
+            self.column += len(identifier)  # avança a coluna
+        else:
+            # tokenização manual como fallback
+            while self.position < len(self.source_code) and (self.source_code[self.position].isalnum() or self.source_code[self.position] == "_"):
+                self.position += 1
+                self.column += 1
+            identifier = self.source_code[start_pos:self.position]  # pega o texto do identificador
+        
+        # verifica se é uma palavra-chave
+        if identifier in self.KEYWORDS:
+            return Token(TokenType.KEYWORD, identifier, self.line, start_col)
+        else:
+            return Token(TokenType.IDENTIFIER, identifier, self.line, start_col)
+
+    def tokenize_string(self):
+        """tokeniza uma string (aspas simples ou duplas)."""
+        start_pos = self.position  # posição inicial da string
+        start_col = self.column  # coluna inicial da string
+        quote_char = self.source_code[self.position]  # tipo de aspas (' ou ")
+        self.position += 1  # avança as aspas iniciais
+        self.column += 1
+        
+        while self.position < len(self.source_code):
+            char = self.source_code[self.position]
+            if char == quote_char:  # fecha a string
+                self.position += 1
+                self.column += 1
+                break
+            elif char == "\\":  # escape de caracteres
+                self.position += 1
+                self.column += 1
+                if self.position < len(self.source_code):
+                    self.position += 1
+                    self.column += 1
+                continue
+            elif char == "\n":  # se tiver uma nova linha dentro da string
+                self.line += 1
+                self.column = 1
+                self.current_line_start = self.position + 1
+            else:
+                self.column += 1
+            self.position += 1
+        
+        string_value = self.source_code[start_pos:self.position]  # pega o texto da string
+        return Token(TokenType.STRING, string_value, self.line, start_col)
+
+    def match_operator(self):
+        """tenta casar com um operador."""
+        for op in sorted(self.OPERATORS, key=len, reverse=True):  # verifica operadores mais longos primeiro
+            if self.source_code.startswith(op, self.position):
+                token = Token(TokenType.OPERATOR, op, self.line, self.column)
+                self.position += len(op)
+                self.column += len(op)
+                return token
+        return None
