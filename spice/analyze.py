@@ -34,7 +34,7 @@ def analyze_file(file_path: str, selected_stats=None):
     # comment line count if requested
     if "comment_line_count" in selected_stats:
         from spice.analyzers.count_comment_lines import count_comment_lines
-        results["comment_line_count"] = count_comment_lines(code)
+        results["comment_line_count"] = count_comment_lines(file_path)
 
     # indentation analysis if requested
     if "indentation_level" in selected_stats:
@@ -43,27 +43,9 @@ def analyze_file(file_path: str, selected_stats=None):
         results["indentation_size"] = indentation_info["indent_size"]
         results["indentation_levels"] = indentation_info["levels"]
     
-    # only put the code through the lexer and proceed with tokenization if needed
-    if any(stat in selected_stats for stat in ["function_count"]):
-        # get the lexer for the code's language
-        from utils.get_lexer import get_lexer_for_file
-        LexerClass = get_lexer_for_file(file_path)
-        
-        # tokenize the code via lexer
-        lexer = LexerClass(code)
-        tokens = lexer.tokenize()
-        
-        # only put the code through the parser and proceed with parsing if needed
-        if "function_count" in selected_stats:
-            # import parser here to avoid circular import issues
-            from parser.parser import Parser
-            
-            # parse tokens into AST
-            parser = Parser(tokens)
-            ast = parser.parse()
-            
-            # count functions
-            from spice.analyzers.count_functions import count_functions
-            results["function_count"] = count_functions(ast)
+    # function count if requested
+    if "function_count" in selected_stats:
+        from spice.analyzers.count_functions import count_functions
+        results["function_count"] = count_functions(file_path)
     
     return results
