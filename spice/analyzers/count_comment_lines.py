@@ -16,11 +16,13 @@ def count_comment_lines(file_path):
     """
     # Get the appropriate lexer for the file
     Lexer = get_lexer_for_file(file_path)
-    lexer = Lexer()
     
     # Read the file content
     with open(file_path, 'r', encoding='utf-8') as f:
         code = f.read()
+    
+    # Initialize lexer with source code
+    lexer = Lexer(source_code=code)
     
     # Split into lines
     lines = code.splitlines()
@@ -35,7 +37,7 @@ def count_comment_lines(file_path):
             continue
             
         # Tokenize the line
-        tokens = lexer.tokenize(stripped)
+        tokens = lexer.tokenize()
         
         # Check if the line consists only of comments
         is_comment_only = True

@@ -14,14 +14,16 @@ def count_functions(file_path):
     """
     # Get the appropriate lexer for the file
     Lexer = get_lexer_for_file(file_path)
-    lexer = Lexer()
     
     # Read the file content
     with open(file_path, 'r', encoding='utf-8') as f:
         code = f.read()
     
+    # Initialize lexer with source code
+    lexer = Lexer(source_code=code)
+    
     # Tokenize the code
-    tokens = lexer.tokenize(code)
+    tokens = lexer.tokenize()
     
     # Parse the tokens into an AST
     from parser.parser import Parser
