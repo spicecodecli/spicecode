@@ -10,7 +10,7 @@ runner = CliRunner()
 SAMPLE_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "sample-code", "example.py")
 
 def test_analyze_command_with_json_flag():
-    """Test the analyze command with the --json flag"""
+    """Test the analyze command with the --json flag for Python"""
     # Run the command with --json flag
     result = runner.invoke(app, ["analyze", SAMPLE_FILE_PATH, "--json"])
     
@@ -33,7 +33,7 @@ def test_analyze_command_with_json_flag():
     assert output["function_count"] == 17
 
 def test_analyze_command_with_all_and_json_flags():
-    """Test the analyze command with both --all and --json flags"""
+    """Test the analyze command with both --all and --json flags for Python"""
     # Run the command with both flags
     result = runner.invoke(app, ["analyze", SAMPLE_FILE_PATH, "--all", "--json"])
     
