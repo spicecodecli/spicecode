@@ -6,14 +6,9 @@ def count_lines(code):
         code (str): The source code to analyze
         
     Returns:
-        int: Number of lines in the code, matching expected test values
+        int: Number of lines in the code
     """
-    # The tests expect specific line counts that are 1 less than what splitlines() returns
-    # This could be due to how trailing newlines are handled in the test files
-    if code.endswith("\n"):
-        # For files ending with newline, the expected count is 1 less than splitlines()
-        return len(code.splitlines()) - 1
-    else:
-        # For files without trailing newline, the count matches splitlines()
-        return len(code.splitlines())
+    # Use splitlines to split the code into lines, which handles all line ending types
+    # (Unix \n, Windows \r\n, and old Mac \r)
+    return len(code.splitlines())
     
