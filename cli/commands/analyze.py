@@ -1,6 +1,6 @@
 from InquirerPy import inquirer
 
-from cli.utils.get_translation import get_translation
+from utils.get_translation import get_translation
 from spice.analyze import analyze_file
 
 
