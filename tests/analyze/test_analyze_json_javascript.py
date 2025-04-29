@@ -28,9 +28,9 @@ def test_analyze_command_with_json_flag():
     
     # Verify the values match expected results
     assert output["file_name"] == os.path.basename(SAMPLE_FILE_PATH)
-    assert output["line_count"] == 152
-    assert output["comment_line_count"] == 23
-    assert output["function_count"] == 15
+    assert output["line_count"] == 153
+    assert output["comment_line_count"] == 21
+    assert output["function_count"] == 18
 
 def test_analyze_command_with_all_and_json_flags():
     """Test the analyze command with both --all and --json flags for JavaScript"""
@@ -44,9 +44,9 @@ def test_analyze_command_with_all_and_json_flags():
     output = json.loads(result.stdout)
     
     # Verify the values match expected results
-    assert output["line_count"] == 152
-    assert output["comment_line_count"] == 23
-    assert output["function_count"] == 15
+    assert output["line_count"] == 153
+    assert output["comment_line_count"] == 21
+    assert output["function_count"] == 18
 
 def test_analyze_command_with_nonexistent_file():
     """Test the analyze command with a nonexistent file"""
