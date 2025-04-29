@@ -46,7 +46,7 @@ def analyze_file(file_path: str, selected_stats=None):
     # only put the code through the lexer and proceed with tokenization if needed
     if any(stat in selected_stats for stat in ["function_count"]):
         # get the lexer for the code's language
-        from spice.utils.get_lexer import get_lexer_for_file
+        from utils.get_lexer import get_lexer_for_file
         LexerClass = get_lexer_for_file(file_path)
         
         # tokenize the code via lexer

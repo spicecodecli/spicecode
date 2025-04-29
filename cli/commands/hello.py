@@ -1,6 +1,6 @@
 from rich import print # this add colors to the printed text
 
-from cli.utils.get_translation import get_translation
+from utils.get_translation import get_translation
 
 
 def hello_command(LANG_FILE):

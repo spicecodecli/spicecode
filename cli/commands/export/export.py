@@ -5,7 +5,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from cli.utils.get_translation import get_translation
+from utils.get_translation import get_translation
 
 def export_results(results, format_type, output_file, messages):
     """

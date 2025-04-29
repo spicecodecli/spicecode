@@ -1,7 +1,7 @@
 import os
 from rich import print # this add colors to the printed text
 
-from cli.utils.get_translation import get_translation
+from utils.get_translation import get_translation
 
 
 def version_command(LANG_FILE, CURRENT_DIR):
