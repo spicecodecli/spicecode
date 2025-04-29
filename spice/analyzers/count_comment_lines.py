@@ -3,6 +3,7 @@
 # COMMENT LINE IS A LINE THAT EXCLUSIVELY HAS A COMMENT
 # so like: y = 5 #sets y to 5 IS NOT A COMMENT LINE!!!!!!!!
 from utils.get_lexer import get_lexer_for_file
+from lexers.token import TokenType
 import os
 
 def count_comment_lines(file_path):
@@ -24,29 +25,30 @@ def count_comment_lines(file_path):
     # Initialize lexer with source code
     lexer = Lexer(source_code=code)
     
-    # Split into lines
-    lines = code.splitlines()
-    comment_count = 0
+    # Get all tokens
+    tokens = lexer.tokenize()
     
-    for line in lines:
-        # Remove leading/trailing whitespace
-        stripped = line.strip()
+    # Group tokens by line number
+    tokens_by_line = {}
+    for token in tokens:
+        if token.line not in tokens_by_line:
+            tokens_by_line[token.line] = []
+        tokens_by_line[token.line].append(token)
+    
+    # Count lines that only have comment tokens (and possibly newlines)
+    comment_count = 0
+    for line_num, line_tokens in tokens_by_line.items():
+        has_comment = False
+        has_non_comment = False
         
-        # Skip empty lines
-        if not stripped:
-            continue
-            
-        # Tokenize the line
-        tokens = lexer.tokenize()
-        
-        # Check if the line consists only of comments
-        is_comment_only = True
-        for token in tokens:
-            if token.type != 'Comment':
-                is_comment_only = False
+        for token in line_tokens:
+            if token.type == TokenType.COMMENT:
+                has_comment = True
+            elif token.type != TokenType.NEWLINE:
+                has_non_comment = True
                 break
-                
-        if is_comment_only:
+        
+        if has_comment and not has_non_comment:
             comment_count += 1
     
     return comment_count
