@@ -11,7 +11,7 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         file_path (str): Path to the file to analyze
         selected_stats (list, optional): List of stats to compute. If None, compute all stats.
             Valid stats are: "line_count", "function_count", "comment_line_count", 
-            "inline_comment_count", "indentation_level"
+            "inline_comment_count", "external_dependencies_count", "indentation_level"
     
     Returns:
         dict: Dictionary containing the requested stats and file information
@@ -35,7 +35,14 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         raise ValueError("File has no extension")
     
     # Define valid stats
-    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level"]
+    valid_stats = [
+        "line_count", 
+        "function_count", 
+        "comment_line_count", 
+        "inline_comment_count", 
+        "external_dependencies_count", 
+        "indentation_level"
+    ]
     
     # default to all stats if none specified
     if selected_stats is None:
@@ -79,6 +86,11 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
             LexerClass = get_lexer_for_file(file_path)
             lexer = LexerClass(source_code=code)  # Pass source_code explicitly
             results["inline_comment_count"] = count_inline_comments(file_path)
+            
+        # external dependencies count if requested
+        if "external_dependencies_count" in selected_stats:
+            from spice.analyzers.count_external_dependencies import count_external_dependencies
+            results["external_dependencies_count"] = count_external_dependencies(file_path)
 
         # indentation analysis if requested
         if "indentation_level" in selected_stats:
