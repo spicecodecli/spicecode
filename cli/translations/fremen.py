@@ -10,12 +10,14 @@ messages = {
     "function_count": "The file holds {count} sacred routines",
     "comment_line_count": "The file whispers {count} lines of hidden lore",
     "inline_comment_count": "The file contains {count} passages of dual meaning",
+    "external_dependencies_count": "The file summons {count} foreign powers from beyond the sands",
     # keys for analyze command checkbox menu
     "select_stats": "Choose the omens to unveil:",
     "line_count_option": "Dune Count",
     "function_count_option": "Sacred Routines", 
     "comment_line_count_option": "Whispered Lore",
     "inline_comment_count_option": "Passages of Dual Meaning",
+    "external_dependencies_count_option": "Foreign Powers Beyond the Sands",
     "no_stats_selected": "No omens were heeded. The analysis fades into the sands.",
     "confirm_and_analyze": "Seal your fate and analyze",
     "checkbox_hint": "(Use space to mark, enter to proceed)"
