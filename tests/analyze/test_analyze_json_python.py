@@ -2,7 +2,7 @@ import json
 import os
 from typer.testing import CliRunner
 from cli.main import app
-from cli.commands.analyze import analyze_to_json
+from cli.commands.analyze import analyze_to_dict
 
 # Setup test runner
 runner = CliRunner()
