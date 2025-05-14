@@ -34,7 +34,7 @@ spice analyze code.js
 
 ---
 
-### Supported Programming Langagues for Analysis
+### Supported Programming Languages for Analysis
 
 [![My Skills](https://skillicons.dev/icons?i=python,js,ruby,go&perline=10)](https://skillicons.dev)
 
