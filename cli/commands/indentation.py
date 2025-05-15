@@ -38,14 +38,14 @@ def indentation_stats(
         cleaned_results = [
             {
                 "original_line_number": line.get("original_line_number", 0),
-                "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", ""),
-                "stripped_line_content": line.get("stripped_line_content", "").replace("\n", " ").replace("\r", ""),
+                "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", "").replace("\t", " "),
+                "stripped_line_content": line.get("stripped_line_content", "").replace("\n", " ").replace("\r", "").replace("\t", " "),
                 "indent_level": line.get("indent_level", 0),
                 "is_empty_or_whitespace_only": line.get("is_empty_or_whitespace_only", True)
             }
             for line in results
         ]
-        console.print(json.dumps(cleaned_results, indent=2))
+        print(json.dumps(cleaned_results, indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('indentation_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         

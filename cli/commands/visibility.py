@@ -34,7 +34,23 @@ def visibility_stats(
     results = analyze_visibility(content, file_name_for_error_reporting=file_path)
 
     if output_format == "json":
-        console.print(json.dumps(results, indent=2))
+        # Clean the results to ensure valid JSON
+        cleaned_results = {
+            "public_functions": results.get("public_functions", 0),
+            "private_functions": results.get("private_functions", 0),
+            "public_methods": results.get("public_methods", 0),
+            "private_methods": results.get("private_methods", 0),
+            "details": [
+                {
+                    "name": detail.get("name", ""),
+                    "type": detail.get("type", ""),
+                    "visibility": detail.get("visibility", ""),
+                    "lineno": detail.get("lineno", 0)
+                }
+                for detail in results.get("details", [])
+            ]
+        }
+        print(json.dumps(cleaned_results, indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('visibility_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         

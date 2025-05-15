@@ -47,12 +47,12 @@ def comment_code_ratio_stats(
                 {
                     "original_line_number": line.get("original_line_number", 0),
                     "type": line.get("type", ""),
-                    "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", "")
+                    "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", "").replace("\t", " ")
                 }
                 for line in results.get("line_by_line_analysis", [])
             ]
         }
-        console.print(json.dumps(cleaned_results, indent=2))
+        print(json.dumps(cleaned_results, indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('comment_code_ratio_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         summary = results.get("summary_stats", {})
