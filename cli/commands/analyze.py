@@ -18,7 +18,8 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "function_count", 
         "comment_line_count",
         "inline_comment_count",
-        "indentation_level"
+        "indentation_level",
+        "external_dependencies_count"
     ]
 
     # dictionary for the stats
@@ -27,7 +28,8 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "function_count": messages.get("function_count_option", "Function Count"),
         "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count"),
         "inline_comment_count": messages.get("inline_comment_count_option", "Inline Comment Count"),
-        "indentation_level": messages.get("indentation_level_option", "Indentation Analysis")
+        "indentation_level": messages.get("indentation_level_option", "Indentation Analysis"),
+        "external_dependencies_count": messages.get("external_dependencies_count_option", "External Dependencies Count")
     }
     
     # If --all flag is used, skip the selection menu and use all stats
