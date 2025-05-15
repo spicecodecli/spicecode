@@ -9,6 +9,12 @@ from cli.commands.version import version_command
 from cli.commands.analyze import analyze_command
 from cli.commands.export.export import export_command
 
+# New analysis commands
+from cli.commands.indentation import app as indentation_app
+from cli.commands.dependencies import app as dependencies_app
+from cli.commands.comment_ratio import app as comment_ratio_app # Assuming I named the file comment_ratio.py
+from cli.commands.visibility import app as visibility_app
+
 # initialize typer
 app = typer.Typer()
 
@@ -64,8 +70,15 @@ def export(
     """
     export_command(file, format_type, output, LANG_FILE)
 
+# Add new analysis commands to the main app
+app.add_typer(indentation_app, name="indentation", help="Analyze indentation levels.")
+app.add_typer(dependencies_app, name="dependencies", help="Analyze external dependencies.")
+app.add_typer(comment_ratio_app, name="ratio", help="Analyze comment-to-code ratio.")
+app.add_typer(visibility_app, name="visibility", help="Analyze function/method visibility.")
+
 def main():
     app()  # run typer
 
 if __name__ == "__main__":
     main()
+
