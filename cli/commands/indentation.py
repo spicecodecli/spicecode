@@ -49,10 +49,10 @@ def indentation_stats(
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('indentation_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         
-        table = Table(title=get_translation("indentation_details_per_line"))
-        table.add_column(get_translation("line_num"), style="dim", width=6)
-        table.add_column(get_translation("indent_level_col"), justify="right")
-        table.add_column(get_translation("content_col"))
+        table = Table(title="Indentation Details Per Line")
+        table.add_column("Line No.", style="dim", width=6)
+        table.add_column("Indent Level", justify="right")
+        table.add_column("Content")
 
         for line_data in results:
             if isinstance(line_data, dict):

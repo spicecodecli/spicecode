@@ -53,7 +53,7 @@ def analyze_visibility(code_content, file_name_for_error_reporting="<string>"):
             is_standalone_function = True
             # Check if it's nested inside another function (not directly supported by this simplified check)
             # For now, if it's not a method, it's a function.
-            if item.name in defined_in_class:
+            if node.name in defined_in_class:
                  is_standalone_function = False # It's a method, already processed
 
             if is_standalone_function:
