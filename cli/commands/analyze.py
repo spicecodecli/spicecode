@@ -23,11 +23,11 @@ def analyze_command(file, all, json_output, LANG_FILE):
 
     # dictionary for the stats
     stats_labels = {
-        "line_count": messages.get("line_count_option", "Line Count"),
-        "function_count": messages.get("function_count_option", "Function Count"),
-        "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count"),
-        "inline_comment_count": messages.get("inline_comment_count_option", "Inline Comment Count"),
-        "indentation_level": messages.get("indentation_level_option", "Indentation Analysis")
+        "line_count": get_translation("line_count_option"),
+        "function_count": get_translation("function_count_option"),
+        "comment_line_count": get_translation("comment_line_count_option"),
+        "inline_comment_count": get_translation("inline_comment_count_option"),
+        "indentation_level": get_translation("indentation_level_option")
     }
     
     # If --all flag is used, skip the selection menu and use all stats

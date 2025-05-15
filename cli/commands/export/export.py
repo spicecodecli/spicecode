@@ -32,7 +32,7 @@ def export_results(results, format_type, output_file, messages):
             with open(output_file, "w", encoding="utf-8", newline="") as f:
                 writer = csv.writer(f)
                 # Write header
-                writer.writerow(["Metric", "Value"])
+                writer.writerow([get_translation("metric"), get_translation("value")])
                 # Write data
                 for key, value in results.items():
                     if isinstance(value, (int, float, str)):
@@ -80,22 +80,20 @@ def export_results(results, format_type, output_file, messages):
         return True
     
     except Exception as e:
-        print(f"{messages.get('export_error', 'Export error')}: {str(e)}")
+        print(f"[red]{get_translation('error')}[/]: {str(e)}")
         return False
 
 def export_command(file, format_type, output, LANG_FILE):
     """
     Export analysis results to a file.
     """
-    # Load translations
-    messages = get_translation(LANG_FILE)
     console = Console()
     
     # Validate format type
     valid_formats = ["json", "csv", "markdown", "html"]
     if format_type not in valid_formats:
-        console.print(f"[red]{messages.get('invalid_format', 'Invalid format')}[/] {format_type}")
-        console.print(f"{messages.get('valid_formats', 'Valid formats')}: {', '.join(valid_formats)}")
+        console.print(f"[red]{get_translation('invalid_format')}[/] {format_type}")
+        console.print(f"{get_translation('valid_formats')}: {', '.join(valid_formats)}")
         return
     
     try:
@@ -109,12 +107,12 @@ def export_command(file, format_type, output, LANG_FILE):
             output = f"{base_name}_analysis.{format_type}"
         
         # Export results
-        success = export_results(results, format_type, output, messages)
+        success = export_results(results, format_type, output, None)
         
         if success:
-            console.print(f"[green]{messages.get('export_success', 'Export successful')}[/]: {output}")
+            console.print(f"[green]{get_translation('export_success')}[/]: {output}")
         else:
-            console.print(f"[red]{messages.get('export_failed', 'Export failed')}[/]")
+            console.print(f"[red]{get_translation('export_failed')}[/]")
     
     except Exception as e:
-        console.print(f"[red]{messages.get('error', 'Error')}[/]: {str(e)}")
+        console.print(f"[red]{get_translation('error')}[/]: {str(e)}")
