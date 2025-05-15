@@ -58,13 +58,14 @@ def visibility_stats(
             details_table.add_column(get_translation('type'))
             details_table.add_column(get_translation('visibility'))
             details_table.add_column(get_translation('line_num'), justify="right")
-            for item in details:
-                details_table.add_row(
-                    item.get("name"), 
-                    get_translation(item.get("type")),
-                    get_translation(item.get("visibility")),
-                    str(item.get("lineno"))
-                )
+            for detail in details:
+                if isinstance(detail, dict):
+                    details_table.add_row(
+                        detail.get("name", ""), 
+                        get_translation(detail.get("type", "")),
+                        get_translation(detail.get("visibility", "")),
+                        str(detail.get("lineno", ""))
+                    )
             console.print(details_table)
         else:
             console.print(get_translation("no_elements_found_for_visibility"))

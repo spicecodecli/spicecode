@@ -35,11 +35,14 @@ def dependency_stats(
 
     if output_format == "json":
         # The analyzer returns a list of imports or an error dict
-        console.print(json.dumps(results, indent=2))
+        if isinstance(results, dict) and "error" in results:
+            console.print(json.dumps({"error": results["error"]}, indent=2))
+        else:
+            console.print(json.dumps(sorted(results) if isinstance(results, list) else [], indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('dependency_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         if isinstance(results, dict) and "error" in results:
-            console.print(f"[bold red]Error analyzing dependencies: {results['error']}[/bold red]")
+            console.print(f"[bold red]{get_translation('error_analyzing_dependencies')}: {results['error']}[/bold red]")
         elif isinstance(results, list):
             if results:
                 table = Table(title=get_translation('dependencies_found'))
@@ -50,8 +53,7 @@ def dependency_stats(
             else:
                 console.print(get_translation("no_dependencies_found"))
         else:
-             console.print(f"[bold red]{get_translation('error_unexpected_result')}[/bold red]")
-
+            console.print(f"[bold red]{get_translation('error_unexpected_result')}[/bold red]")
     else:
         console.print(f"[bold red]{get_translation('error_invalid_format')}: {output_format}. {get_translation('valid_formats_are')} console, json.[/bold red]")
         raise typer.Exit(code=1)

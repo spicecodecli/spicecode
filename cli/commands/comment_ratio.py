@@ -34,7 +34,25 @@ def comment_code_ratio_stats(
     results = analyze_comment_code_ratio(content)
 
     if output_format == "json":
-        console.print(json.dumps(results, indent=2))
+        # Clean the results to ensure valid JSON
+        cleaned_results = {
+            "summary_stats": {
+                "total_lines_in_file": results.get("summary_stats", {}).get("total_lines_in_file", 0),
+                "code_lines": results.get("summary_stats", {}).get("code_lines", 0),
+                "comment_only_lines": results.get("summary_stats", {}).get("comment_only_lines", 0),
+                "empty_or_whitespace_lines": results.get("summary_stats", {}).get("empty_or_whitespace_lines", 0),
+                "comment_to_code_plus_comment_ratio": results.get("summary_stats", {}).get("comment_to_code_plus_comment_ratio", 0)
+            },
+            "line_by_line_analysis": [
+                {
+                    "original_line_number": line.get("original_line_number", 0),
+                    "type": line.get("type", ""),
+                    "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", "")
+                }
+                for line in results.get("line_by_line_analysis", [])
+            ]
+        }
+        console.print(json.dumps(cleaned_results, indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('comment_code_ratio_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         summary = results.get("summary_stats", {})
@@ -56,11 +74,15 @@ def comment_code_ratio_stats(
             table_details.add_column(get_translation('line_type'), style="dim")
             table_details.add_column(get_translation('content_col'))
             for line_data in line_details:
-                table_details.add_row(
-                    str(line_data["original_line_number"]),
-                    get_translation(line_data["type"]),
-                    line_data["line_content"] if len(line_data["line_content"]) < 70 else line_data["line_content"][:67] + "..."
-                )
+                if isinstance(line_data, dict):
+                    content = line_data.get("line_content", "")
+                    if len(content) > 70:
+                        content = content[:67] + "..."
+                    table_details.add_row(
+                        str(line_data.get("original_line_number", "")),
+                        get_translation(line_data.get("type", "")),
+                        content
+                    )
             console.print(table_details)
     else:
         console.print(f"[bold red]{get_translation('error_invalid_format')}: {output_format}. {get_translation('valid_formats_are')} console, json.[/bold red]")

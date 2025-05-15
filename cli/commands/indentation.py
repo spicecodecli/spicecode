@@ -34,7 +34,18 @@ def indentation_stats(
     results = analyze_indentation_levels(content)
 
     if output_format == "json":
-        console.print(json.dumps(results, indent=2))
+        # Clean the results to ensure valid JSON
+        cleaned_results = [
+            {
+                "original_line_number": line.get("original_line_number", 0),
+                "line_content": line.get("line_content", "").replace("\n", " ").replace("\r", ""),
+                "stripped_line_content": line.get("stripped_line_content", "").replace("\n", " ").replace("\r", ""),
+                "indent_level": line.get("indent_level", 0),
+                "is_empty_or_whitespace_only": line.get("is_empty_or_whitespace_only", True)
+            }
+            for line in results
+        ]
+        console.print(json.dumps(cleaned_results, indent=2))
     elif output_format == "console":
         console.print(f"\n[bold cyan]{get_translation('indentation_analysis_for')} [green]{file_path}[/green]:[/bold cyan]")
         
@@ -44,18 +55,22 @@ def indentation_stats(
         table.add_column(get_translation("content_col"))
 
         for line_data in results:
-            if not line_data["is_empty_or_whitespace_only"]:
-                 table.add_row(
-                    str(line_data["original_line_number"]),
-                    str(line_data["indent_level"]),
-                    line_data["stripped_line_content"] if len(line_data["stripped_line_content"]) < 70 else line_data["stripped_line_content"][:67] + "..."
-                )
-            else:
-                table.add_row(
-                    str(line_data["original_line_number"]),
-                    "-",
-                    f"[dim i]({get_translation('empty_line')})[/dim i]"
-                )
+            if isinstance(line_data, dict):
+                if not line_data.get("is_empty_or_whitespace_only", True):
+                    content = line_data.get("stripped_line_content", "")
+                    if len(content) > 70:
+                        content = content[:67] + "..."
+                    table.add_row(
+                        str(line_data.get("original_line_number", "")),
+                        str(line_data.get("indent_level", 0)),
+                        content
+                    )
+                else:
+                    table.add_row(
+                        str(line_data.get("original_line_number", "")),
+                        "-",
+                        f"[dim i]({get_translation('empty_line')})[/dim i]"
+                    )
         console.print(table)
     else:
         console.print(f"[bold red]{get_translation('error_invalid_format')}: {output_format}. {get_translation('valid_formats_are')} console, json.[/bold red]")
