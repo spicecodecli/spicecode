@@ -1,7 +1,7 @@
 import os
 from typing import List, Dict, Optional, Union
 
-from spice.analyzers.identation import detect_indentation
+from spice.analyzers.indentation import detect_indentation
 
 def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> Dict[str, Union[int, str, List[int]]]:
     """
@@ -82,10 +82,10 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
 
         # indentation analysis if requested
         if "indentation_level" in selected_stats:
-            indentation_info = detect_indentation(code)
-            results["indentation_type"] = indentation_info["indent_type"]
-            results["indentation_size"] = indentation_info["indent_size"]
-            results["indentation_levels"] = indentation_info["levels"]
+            from spice.analyzers.indentation import detect_indentation
+            indentation_info = detect_indentation(file_path)
+            results["indentation_type"] = indentation_info["indentation_type"]
+            results["indentation_size"] = indentation_info["indentation_size"]
         
         # function count if requested
         if "function_count" in selected_stats:

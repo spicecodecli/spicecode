@@ -1,5 +1,5 @@
 import pytest
-from spice.analyzers.indentation_analysis import detect_indentation
+from spice.analyzers.indentation import detect_indentation
 
 @pytest.mark.parametrize(
     "code,expected_type,expected_size",
