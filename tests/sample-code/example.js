@@ -3,6 +3,20 @@
 // This file demonstrates various Javascript language features, syntax, and constructs
 // for testing lexers, parsers, and code analyzers.
 // ==============================================================================
+// Imports
+require ('fs');
+require ('path');
+require ('util');
+require ('child_process');
+require ('http');
+require ('url');
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { createServer } from 'http';
+import { parse } from 'url';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+// Total: 6 require, 6 imports
 
 // Constants
 const PI = Math.PI;
@@ -148,6 +162,11 @@ function main() {
     console.log('Radioactive decay:', radioactiveDecay(100, 5730, 1000));
     mandelbrotSetDemo(50);
     console.log('Taylor series of e^1:', taylorExp(1));
+}
+
+function _privateFunction(command) {
+    a = 1
+    b = 3
 }
 
 main();

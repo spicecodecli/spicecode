@@ -18,5 +18,12 @@ messages = {
     "inline_comment_count_option": "Passages of Dual Meaning",
     "no_stats_selected": "No omens were heeded. The analysis fades into the sands.",
     "confirm_and_analyze": "Seal your fate and analyze",
-    "checkbox_hint": "(Use space to mark, enter to proceed)"
+    "checkbox_hint": "(Use space to mark, enter to proceed)",
+    "indentation_level_option": "Sand Pattern Reading",
+    "indentation_type": "Kind of Sand Grain",
+    "indentation_size": "Size of the Sand Grain",
+    "external_dependencies_count_option": "Grains of Sand Beyound Dune",
+    "methods_count_option": "Kinds of Rituals",
+    "private_methods_count_option": "Hidden Rituals",
+    "public_methods_count_option": "Open Rituals",
 }

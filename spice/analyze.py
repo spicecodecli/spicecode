@@ -1,7 +1,7 @@
 import os
 from typing import List, Dict, Optional, Union
 
-from spice.analyzers.identation import detect_indentation
+from spice.analyzers.indentation import detect_indentation
 
 def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> Dict[str, Union[int, str, List[int]]]:
     """
@@ -35,7 +35,7 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         raise ValueError("File has no extension")
     
     # Define valid stats
-    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level"]
+    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level", "external_dependencies_count", "method_type_count"]
     
     # default to all stats if none specified
     if selected_stats is None:
@@ -82,19 +82,29 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
 
         # indentation analysis if requested
         if "indentation_level" in selected_stats:
-            indentation_info = detect_indentation(code)
-            results["indentation_type"] = indentation_info["indent_type"]
-            results["indentation_size"] = indentation_info["indent_size"]
-            results["indentation_levels"] = indentation_info["levels"]
-        
+            from spice.analyzers.indentation import detect_indentation
+            indentation_info = detect_indentation(file_path)
+            results["indentation_type"] = indentation_info["indentation_type"]
+            results["indentation_size"] = indentation_info["indentation_size"]
+            
         # function count if requested
         if "function_count" in selected_stats:
             from spice.analyzers.count_functions import count_functions
-            from utils.get_lexer import get_lexer_for_file
-            LexerClass = get_lexer_for_file(file_path)
-            lexer = LexerClass(source_code=code)  # Pass source_code explicitly
             results["function_count"] = count_functions(file_path)
         
+        # external dependencies count if requested
+        if "external_dependencies_count" in selected_stats:
+            from spice.analyzers.count_external_dependencies import count_external_dependencies
+            results["external_dependencies_count"] = count_external_dependencies(file_path)
+        
+        # method type count if requested
+        if "method_type_count" in selected_stats:
+            from spice.analyzers.count_method_type import count_method_type
+            private_methods, public_methods = count_method_type(file_path)
+            results["method_type_count"] = {
+                "private": private_methods,
+                "public": public_methods
+            }
         return results
         
     except Exception as e:

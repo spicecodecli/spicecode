@@ -18,5 +18,12 @@ messages = {
     "inline_comment_count_option": "Contagem de Comentários Inline",
     "no_stats_selected": "Nenhuma estatística selecionada. Análise cancelada.",
     "confirm_and_analyze": "Confirmar e analisar",
-    "checkbox_hint": "(Use espaço para selecionar, enter para confirmar)"
+    "checkbox_hint": "(Use espaço para selecionar, enter para confirmar)",
+    "indentation_level_option": "Análise de Indentação",
+    "indentation_type": "Tipo de Indentação",
+    "indentation_size": "Tamanho da Indentação",
+    "external_dependencies_count_option": "Contagem de Dependências Externas",
+    "methods_count_option": "Contagem de Tipos de Métodos",
+    "private_methods_count_option": "Contagem de Métodos Privados",
+    "public_methods_count_option": "Contagem de Métodos Públicos",
 }
