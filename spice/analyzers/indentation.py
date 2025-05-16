@@ -40,5 +40,3 @@ def detect_indentation(file_path):
     main_size = size_counter.most_common(1)[0][0] if size_counter else 0
 
     return {"indentation_type": main_type, "indentation_size": main_size}
-
-import re

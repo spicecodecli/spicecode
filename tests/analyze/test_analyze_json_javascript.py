@@ -29,7 +29,7 @@ def test_analyze_command_with_json_flag():
     
     # Verify the values match expected results
     assert output["file_name"] == os.path.basename(SAMPLE_FILE_PATH)
-    assert output["line_count"] == 167 #THIS CAN'T BE HARD CODED, BUT WE'LL FIX THIS LATER
+    assert output["line_count"] == 172 #THIS CAN'T BE HARD CODED, BUT WE'LL FIX THIS LATER
     assert output["comment_line_count"] == 23 #this is the number of comment lines in the sample file
     assert output["function_count"] == 18
     assert output["inline_comment_count"] == 2
@@ -46,7 +46,7 @@ def test_analyze_command_with_all_and_json_flags():
     output = json.loads(result.stdout)
     
     # Verify the values match expected results
-    assert output["line_count"] == 167 #THIS CAN'T BE HARD CODED, BUT WE'LL FIX THIS LATER
+    assert output["line_count"] == 172 #THIS CAN'T BE HARD CODED, BUT WE'LL FIX THIS LATER
     assert output["comment_line_count"] == 23
     assert output["function_count"] == 18
     assert output["inline_comment_count"] == 2

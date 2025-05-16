@@ -164,4 +164,9 @@ function main() {
     console.log('Taylor series of e^1:', taylorExp(1));
 }
 
+function _privateFunction(command) {
+    a = 1
+    b = 3
+}
+
 main();

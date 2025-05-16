@@ -19,7 +19,8 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "comment_line_count",
         "inline_comment_count",
         "indentation_level",
-        "external_dependencies_count"
+        "external_dependencies_count",
+        "method_type_count",
     ]
 
     # dictionary for the stats
@@ -29,7 +30,10 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "comment_line_count": messages.get("comment_line_count_option", "Comment Line Count"),
         "inline_comment_count": messages.get("inline_comment_count_option", "Inline Comment Count"),
         "indentation_level": messages.get("indentation_level_option", "Indentation Analysis"),
-        "external_dependencies_count": messages.get("external_dependencies_count_option", "External Dependencies Count")
+        "external_dependencies_count": messages.get("external_dependencies_count_option", "External Dependencies Count"),
+        "method_type_count": messages.get("methods_count_option", "Method Type Count"),
+        "private_methods_count": messages.get("private_methods_count_option", "Private Methods Count"),
+        "public_methods_count": messages.get("public_methods_count_option", "Public Methods Count"),
     }
     
     # If --all flag is used, skip the selection menu and use all stats
@@ -80,12 +84,20 @@ def analyze_command(file, all, json_output, LANG_FILE):
         else:
             # only print the selected stats in normal mode
             for stat in selected_stat_keys:
+                #print(stat) #debug
+                if stat == "method_type_count" and "method_type_count" in results:
+                    mtc = results["method_type_count"]
+                    print(f"{messages.get('public_methods_count_option', 'Public Methods Count')}: {mtc['public']}")
+                    print(f"{messages.get('private_methods_count_option', 'Private Methods Count')}: {mtc['private']}")
+                    continue
+
                 if stat == "indentation_level" and "indentation_type" in results:
-                    print(f"{messages.get('indentation_type', 'Indentation Type')}: {results['indentation_type']}")
-                    print(f"{messages.get('indentation_size', 'Indentation Size')}: {results['indentation_size']}")
+                    print(f"{messages.get('indentation_type', 'Indentation Type')}: {results.get('indentation_type', 'N/A')}")
+                    print(f"{messages.get('indentation_size', 'Indentation Size')}: {results.get('indentation_size', 'N/A')}")
+                    continue
+                    
                 elif stat in results:
-                    print(messages.get(stat, f"{stat.replace('_', ' ').title()}: {{count}}").format(count=results[stat]))
-        
+                    print(f"{stats_labels[stat]}: {results[stat]}")
     except Exception as e:
         if json_output:
             import json
