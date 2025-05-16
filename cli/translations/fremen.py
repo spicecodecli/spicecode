@@ -18,5 +18,7 @@ messages = {
     "inline_comment_count_option": "Passages of Dual Meaning",
     "no_stats_selected": "No omens were heeded. The analysis fades into the sands.",
     "confirm_and_analyze": "Seal your fate and analyze",
-    "checkbox_hint": "(Use space to mark, enter to proceed)"
+    "checkbox_hint": "(Use space to mark, enter to proceed)",
+    "indentation_level_option": "Sand Pattern Reading",
+    "external_dependencies_count_option": "Grains of Sand Beyound Dune", 
 }

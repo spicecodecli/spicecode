@@ -71,7 +71,7 @@ def analyze_command(file, all, json_output, LANG_FILE):
             print(f"{messages.get('analyzing_file', 'Analyzing file')}: {file}")
         
         # get analysis results from analyze_file
-        results = analyze_file(file, selected_stats=selected_stat_keys)
+        analyze_file(file, selected_stat_keys)
         
         # output in JSON format if flag
         if json_output:
@@ -84,7 +84,7 @@ def analyze_command(file, all, json_output, LANG_FILE):
                     print(f"{messages.get('indentation_type', 'Indentation Type')}: {results['indentation_type']}")
                     print(f"{messages.get('indentation_size', 'Indentation Size')}: {results['indentation_size']}")
                 elif stat in results:
-                    print(messages.get(stat, f"{stat.replace('_', ' ').title()}: {{count}}").format(count=results[stat]))
+                    print(f"{stats_labels[stat]}: {results[stat]}")
         
     except Exception as e:
         if json_output:

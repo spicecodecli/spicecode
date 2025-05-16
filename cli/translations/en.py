@@ -22,5 +22,7 @@ messages = {
     # keys for the version command
     "version_info": "SpiceCode Version:",
     "version_not_found": "Version information not found in setup.py",
-    "setup_not_found": "Error: setup.py not found."
+    "setup_not_found": "Error: setup.py not found.",
+    "indentation_level_option": "Indentation Level Analysis",
+    "external_dependencies_count_option": "External Dependency Count",
 }
