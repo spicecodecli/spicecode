@@ -24,8 +24,10 @@ messages = {
     "version_not_found": "Version information not found in setup.py",
     "setup_not_found": "Error: setup.py not found.",
     "indentation_level_option": "Indentation Level Analysis",
+    "indentation_type": "Indentation Type",
+    "indentation_size": "Indentation Size",
     "external_dependencies_count_option": "External Dependency Count",
-    "methods_type_count_option": "Method Type Count",
+    "methods_count_option": "Method Type Count",
     "private_methods_count_option": "Private Methods Count",
     "public_methods_count_option": "Public Methods Count",
 }

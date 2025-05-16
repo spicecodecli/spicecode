@@ -20,8 +20,10 @@ messages = {
     "confirm_and_analyze": "Seal your fate and analyze",
     "checkbox_hint": "(Use space to mark, enter to proceed)",
     "indentation_level_option": "Sand Pattern Reading",
+    "indentation_type": "Kind of Sand Grain",
+    "indentation_size": "Size of the Sand Grain",
     "external_dependencies_count_option": "Grains of Sand Beyound Dune",
-    "methods_type_count_option": "Kinds of Rituals",
+    "methods_count_option": "Kinds of Rituals",
     "private_methods_count_option": "Hidden Rituals",
     "public_methods_count_option": "Open Rituals",
 }
