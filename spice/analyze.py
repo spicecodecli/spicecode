@@ -35,7 +35,7 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         raise ValueError("File has no extension")
     
     # Define valid stats
-    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level", "external_dependencies_count", "method_type_count"]
+    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level", "external_dependencies_count", "method_type_count", "comment_to_code_ratio"]
     
     # default to all stats if none specified
     if selected_stats is None:
@@ -105,6 +105,11 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
                 "private": private_methods,
                 "public": public_methods
             }
+
+        # comment to code ratio if requested
+        if "comment_to_code_ratio" in selected_stats:
+            from spice.analyzers.count_comment_to_code_ratio import count_comment_to_code_ratio
+            results["comment_to_code_ratio"] = count_comment_to_code_ratio(file_path)
         return results
         
     except Exception as e:

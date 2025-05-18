@@ -21,6 +21,7 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "indentation_level",
         "external_dependencies_count",
         "method_type_count",
+        "comment_to_code_ratio",
     ]
 
     # dictionary for the stats
@@ -34,8 +35,9 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "method_type_count": messages.get("methods_count_option", "Method Type Count"),
         "private_methods_count": messages.get("private_methods_count_option", "Private Methods Count"),
         "public_methods_count": messages.get("public_methods_count_option", "Public Methods Count"),
+        "comment_to_code_ratio": messages.get("comment_to_code_ratio_option", "Comment to Code Ratio"),
     }
-    
+
     # If --all flag is used, skip the selection menu and use all stats
     if all:
         selected_stat_keys = available_stats
