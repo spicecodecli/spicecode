@@ -30,4 +30,5 @@ messages = {
     "methods_count_option": "Method Type Count",
     "private_methods_count_option": "Private Methods Count",
     "public_methods_count_option": "Public Methods Count",
+    "comment_ratio_option": "Comment to Code Ratio",
 }

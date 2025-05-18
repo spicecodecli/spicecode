@@ -26,4 +26,5 @@ messages = {
     "methods_count_option": "Contagem de Tipos de Métodos",
     "private_methods_count_option": "Contagem de Métodos Privados",
     "public_methods_count_option": "Contagem de Métodos Públicos",
+    "comment_ratio_option": "Relação Comentário/Código",
 }
