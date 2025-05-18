@@ -26,4 +26,5 @@ messages = {
     "methods_count_option": "Kinds of Rituals",
     "private_methods_count_option": "Hidden Rituals",
     "public_methods_count_option": "Open Rituals",
+    "comment_ratio_option": "Whisper to Sand Ratio",
 }
