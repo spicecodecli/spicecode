@@ -1,6 +1,6 @@
-# 🌶️ SpiceCode CLI - Tornando seu código mais apimentado 🔥🥵
-
-*"Aquele que controla o código, controla o futuro."*
+# 🌶️ SpiceCode CLI - The next generation of code analysis 🔥🥵
+### *"Aquele que controla o código, controla o futuro."*     
+![small](https://github.com/user-attachments/assets/d659312e-d5cf-4442-98a9-004f59bb291b)
 
 ## Introdução
 
