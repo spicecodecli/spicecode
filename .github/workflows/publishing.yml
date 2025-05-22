@@ -107,7 +107,7 @@ jobs:
     needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     environment:
-      name: release
+      name: publish
     permissions:
       id-token: write
     steps:
