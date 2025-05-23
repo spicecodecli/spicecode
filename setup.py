@@ -10,24 +10,25 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="spicecode",
-    version="2.1.5", # version 2.0.0 = all features from N2 
+    version="2.1.5",  # Version 2.0.0 = all features from N2
     packages=find_packages(exclude=["spicecode-venv", "spicecode.egg-info"]),
     install_requires=install_requires,
     entry_points={
         'console_scripts': [
-            'spice = cli.main:main',  # This tells Python to run the main function in cli.main
+            'spice = cli.main:main',  # Entry point for CLI
         ],
     },
-    description="SpiceCode: The next generation of code analysis.",  # Short one-liner
+    description="SpiceCode: The next generation of code analysis.",
     long_description=long_description,
-    long_description_content_type="text/markdown",  # Required if README is in Markdown
+    long_description_content_type="text/markdown",
     author="SpiceCodeCLI",
     author_email="spicecodecli@gmail.com",
-    url="https://github.com/spicecodecli/spicecode",  # Optional but helpful
+    url="https://github.com/spicecodecli/spicecode",
+    license="Apache-2.0",  # Specify the license
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: Apache License",  # Adjust if needed
-        "Operating System :: Windows :: Linux :: Possibly MAC, not tested.",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
     ],
-
+    python_requires=">=3.7",  # Optional but good practice
 )
