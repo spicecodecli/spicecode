@@ -138,9 +138,15 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Create GitHub Release
+      - name: Check if release exists and create if needed
         id: create_release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
+          # Verificar se a release já existe
+          if ! gh release view ${{ needs.details.outputs.tag_name }} &>/dev/null; then
+            # Se não existir, criar a release
+            gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
+          else
+            echo "Release ${{ needs.details.outputs.tag_name }} já existe, pulando criação."
+          fi
