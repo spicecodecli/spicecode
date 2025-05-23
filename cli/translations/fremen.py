@@ -22,7 +22,7 @@ messages = {
     "indentation_level_option": "Sand Pattern Reading",
     "indentation_type": "Kind of Sand Grain",
     "indentation_size": "Size of the Sand Grain",
-    "external_dependencies_count_option": "Grains of Sand Beyound Dune",
+    "external_dependencies_count_option": "Grains of Sand Beyond Dune",
     "methods_count_option": "Kinds of Rituals",
     "private_methods_count_option": "Hidden Rituals",
     "public_methods_count_option": "Open Rituals",
