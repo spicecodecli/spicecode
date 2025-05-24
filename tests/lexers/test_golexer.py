@@ -67,7 +67,7 @@ def test_go_numbers():
     assert_tokens_equal(tokens, expected)
 
 def test_go_strings():
-    code = "\"hello\" `raw string\nwith newline` \"with \\"escape\\"\""
+    code = "\"hello\" `raw string\\nwith newline` \"with \\\"escape\\\"\""
     lexer = GoLexer(code)
     tokens = lexer.tokenize()
     expected = [
