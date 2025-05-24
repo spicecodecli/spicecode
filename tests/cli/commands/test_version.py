@@ -29,9 +29,11 @@ def test_version_command_success(mock_file_open, mock_exists, mock_get_translati
     """Test version command when setup.py exists and contains version."""
     mock_get_translation.return_value = DUMMY_MESSAGES
     mock_exists.return_value = True
-    mock_file_open.read_data = "version=\"1.2.3\",\n" # Simulate setup.py content
-    mock_file_open.return_value.read.return_value = mock_file_open.read_data
-    mock_file_open.return_value.__iter__.return_value = mock_file_open.read_data.splitlines()
+    
+    # Setup mock file content with proper line structure
+    setup_content = 'version="1.2.3",\nname="spicecode"'
+    mock_file_open.return_value.read.return_value = setup_content
+    mock_file_open.return_value.__iter__.return_value = iter(setup_content.splitlines())
 
     version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
     
@@ -48,9 +50,11 @@ def test_version_command_version_not_in_setup(mock_file_open, mock_exists, mock_
     """Test version command when setup.py exists but lacks version info."""
     mock_get_translation.return_value = DUMMY_MESSAGES
     mock_exists.return_value = True
-    mock_file_open.read_data = "name=\"spicecode\"\n" # Simulate setup.py without version
-    mock_file_open.return_value.read.return_value = mock_file_open.read_data
-    mock_file_open.return_value.__iter__.return_value = mock_file_open.read_data.splitlines()
+    
+    # Setup mock file content without version
+    setup_content = 'name="spicecode"\nauthor="test"'
+    mock_file_open.return_value.read.return_value = setup_content
+    mock_file_open.return_value.__iter__.return_value = iter(setup_content.splitlines())
 
     version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
     
@@ -89,5 +93,3 @@ def test_version_command_read_error(mock_file_open, mock_exists, mock_get_transl
     mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
     mock_file_open.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
     assert "Error: Permission denied" in captured.out
-
-
