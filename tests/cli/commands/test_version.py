@@ -24,51 +24,42 @@ EXPECTED_SETUP_PATH = "/home/ubuntu/spicecode/setup.py"
 
 @patch("cli.commands.version.get_translation")
 @patch("os.path.exists")
-@patch("builtins.open", new_callable=mock_open)
-def test_version_command_success(mock_file_open, mock_exists, mock_get_translation, capsys):
+def test_version_command_success(mock_exists, mock_get_translation, capsys):
     """Test version command when setup.py exists and contains version."""
     mock_get_translation.return_value = DUMMY_MESSAGES
     mock_exists.return_value = True
     
-    # Setup mock file content - each line should end with \n for proper line iteration
-    file_lines = [
-        'name="spicecode",\n',
-        'version="1.2.3",\n',
-        'author="test"\n'
-    ]
-    mock_file_open.return_value.__iter__.return_value = iter(file_lines)
-
-    version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
+    # Create file content with version line
+    file_content = 'name="spicecode",\nversion="1.2.3",\nauthor="test"\n'
     
-    captured = capsys.readouterr()
-    
-    mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
-    mock_file_open.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
-    assert "SpiceCode Version: 1.2.3" in captured.out
+    # Use mock_open with read_data parameter
+    with patch("builtins.open", mock_open(read_data=file_content)) as mock_file:
+        version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
+        
+        captured = capsys.readouterr()
+        
+        mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
+        mock_file.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
+        assert "SpiceCode Version: 1.2.3" in captured.out
 
 @patch("cli.commands.version.get_translation")
 @patch("os.path.exists")
-@patch("builtins.open", new_callable=mock_open)
-def test_version_command_version_not_in_setup(mock_file_open, mock_exists, mock_get_translation, capsys):
+def test_version_command_version_not_in_setup(mock_exists, mock_get_translation, capsys):
     """Test version command when setup.py exists but lacks version info."""
     mock_get_translation.return_value = DUMMY_MESSAGES
     mock_exists.return_value = True
     
-    # Setup mock file content without version line
-    file_lines = [
-        'name="spicecode",\n',
-        'author="test",\n',
-        'description="A CLI tool"\n'
-    ]
-    mock_file_open.return_value.__iter__.return_value = iter(file_lines)
-
-    version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
+    # Create file content without version line
+    file_content = 'name="spicecode",\nauthor="test",\ndescription="A CLI tool"\n'
     
-    captured = capsys.readouterr()
-    
-    mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
-    mock_file_open.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
-    assert "Version information not found in setup.py" in captured.out
+    with patch("builtins.open", mock_open(read_data=file_content)) as mock_file:
+        version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
+        
+        captured = capsys.readouterr()
+        
+        mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
+        mock_file.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
+        assert "Version information not found in setup.py" in captured.out
 
 @patch("cli.commands.version.get_translation")
 @patch("os.path.exists")
@@ -86,16 +77,16 @@ def test_version_command_setup_not_found(mock_exists, mock_get_translation, caps
 
 @patch("cli.commands.version.get_translation")
 @patch("os.path.exists")
-@patch("builtins.open", side_effect=OSError("Permission denied"))
-def test_version_command_read_error(mock_file_open, mock_exists, mock_get_translation, capsys):
+def test_version_command_read_error(mock_exists, mock_get_translation, capsys):
     """Test version command handles exceptions during file reading."""
     mock_get_translation.return_value = DUMMY_MESSAGES
     mock_exists.return_value = True
 
-    version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
-    
-    captured = capsys.readouterr()
-    
-    mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
-    mock_file_open.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
-    assert "Error: Permission denied" in captured.out
+    with patch("builtins.open", side_effect=OSError("Permission denied")) as mock_file:
+        version_command(LANG_FILE="dummy_lang.txt", CURRENT_DIR=TEST_CURRENT_DIR)
+        
+        captured = capsys.readouterr()
+        
+        mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
+        mock_file.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
+        assert "Error: Permission denied" in captured.out
