@@ -22,7 +22,7 @@ const config = {
 
   // GitHub pages deployment config.
   organizationName: 'spicecodecli', // Your GitHub org/user name.
-  projectName: 'spicecode-docs', // Usually your repo name for the docs site.
+  projectName: 'spicecode', // Usually your repo name for the docs site. (im guessing since we dont have a docs repo we can just use the regular repo here?)
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
