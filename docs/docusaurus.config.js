@@ -47,7 +47,7 @@ const config = {
           editUrl:
             'https://github.com/spicecodecli/spicecode/tree/main/docs', // Link to the source repo, assuming docs might live there eventually or for context
         },
-        blog: false, // Disabling blog as it wasn't requested
+        blog: false, // Disabling blog as it wasn't requested // WAIT WE CAN HAVE A BLOG HERE??????????????? // TODO: RESEARCH BLOG POSSIBILITIES
         // blog: {
         //   showReadingTime: true,
         //   feedOptions: {
