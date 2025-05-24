@@ -12,7 +12,7 @@ def assert_tokens_equal(actual_tokens, expected_tokens_data):
     
     for i, (token_type, value) in enumerate(expected_tokens_data):
         assert actual_tokens[i].type == token_type, f"Token {i} type mismatch: Expected {token_type}, got {actual_tokens[i].type} ({actual_tokens[i].value})"
-        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected 	{value}	, got 	{actual_tokens[i].value}	"
+        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected '{value}', got '{actual_tokens[i].value}'"
 
 # --- Test Cases ---
 
@@ -64,7 +64,9 @@ def test_ruby_numbers():
     ]
     assert_tokens_equal(tokens, expected)
 
-def test_ruby_strings()    code = "\'hello\' \"world\" \"with \\\"escape\\\"\" \t\"interp #{var} end\""    lexer = RubyLexer(code)
+def test_ruby_strings():
+    code = "'hello' \"world\" \"with \\\"escape\\\"\" \"interp #{var} end\""
+    lexer = RubyLexer(code)
     tokens = lexer.tokenize()
     expected = [
         (TokenType.STRING, "'hello'"),
@@ -166,17 +168,18 @@ calculate(5, 7)
     lexer = RubyLexer(code)
     tokens = lexer.tokenize()
     expected = [
-        (TokenType.KEYWORD, "def"), (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "x"), (TokenType.ERROR, ","), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ")"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "def"), (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "x"), (TokenType.OPERATOR, ","), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ")"), (TokenType.NEWLINE, "\\n"),
         (TokenType.COMMENT, "# Calculate sum"), (TokenType.NEWLINE, "\\n"),
         (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, "="), (TokenType.IDENTIFIER, "x"), (TokenType.OPERATOR, "+"), (TokenType.IDENTIFIER, "y"), (TokenType.NEWLINE, "\\n"),
         (TokenType.IDENTIFIER, "puts"), (TokenType.STRING, '"Result: #{sum}"'), (TokenType.KEYWORD, "if"), (TokenType.GLOBAL_VAR, "$DEBUG"), (TokenType.NEWLINE, "\\n"),
-        (TokenType.KEYWORD, "return"), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, ">"), (TokenType.NUMBER, "10"), (TokenType.ERROR, "?"), (TokenType.SYMBOL, ":large"), (TokenType.ERROR, ":"), (TokenType.SYMBOL, ":small"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "return"), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, ">"), (TokenType.NUMBER, "10"), (TokenType.OPERATOR, "?"), (TokenType.SYMBOL, ":large"), (TokenType.OPERATOR, ":"), (TokenType.SYMBOL, ":small"), (TokenType.NEWLINE, "\\n"),
         (TokenType.KEYWORD, "end"), (TokenType.NEWLINE, "\\n"),
         (TokenType.NEWLINE, "\\n"),
-        (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.NUMBER, "5"), (TokenType.ERROR, ","), (TokenType.NUMBER, "7"), (TokenType.DELIMITER, ")"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.NUMBER, "5"), (TokenType.OPERATOR, ","), (TokenType.NUMBER, "7"), (TokenType.DELIMITER, ")"), (TokenType.NEWLINE, "\\n"),
     ]
-    # Note: The current Ruby lexer seems to have issues with commas and ternary operators, marking them as ERROR.
-    # These tests reflect the *current* behavior. Further refinement of the lexer might be needed.
+    # Note: The expected tokens assume the lexer handles commas and ternary operators correctly
+    # Adjust these expectations based on your actual lexer implementation
     assert_tokens_equal(tokens, expected)
 
 def test_ruby_error_character():
@@ -199,5 +202,3 @@ def test_ruby_unterminated_string():
     assert len(tokens) == 2 # ERROR token + EOF
     assert tokens[0].type == TokenType.ERROR
     assert "Unclosed string" in tokens[0].value
-
-
