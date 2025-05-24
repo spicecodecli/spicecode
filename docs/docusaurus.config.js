@@ -45,7 +45,7 @@ const config = {
           sidebarPath: './sidebars.js',
           // Point to the actual SpiceCode repo for edits
           editUrl:
-            'https://github.com/spicecodecli/spicecode/tree/main/', // Link to the source repo, assuming docs might live there eventually or for context
+            'https://github.com/spicecodecli/spicecode/tree/main/docs', // Link to the source repo, assuming docs might live there eventually or for context
         },
         blog: false, // Disabling blog as it wasn't requested
         // blog: {
