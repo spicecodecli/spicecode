@@ -10,9 +10,9 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'SpiceCode Documentation',
-  tagline: 'Comprehensive Code Analysis Tool',
-  favicon: 'img/favicon.ico', // Assuming a favicon will be added later or use a default
+  title: 'SpiceCode | Documentation',
+  tagline: 'The next generation of code analysis.',
+  favicon: 'img/spicecode_logo_nobg.png',
 
   // Set the production url of your site here
   url: 'https://spicecodecli.github.io', // Assuming deployment to GitHub Pages
@@ -22,7 +22,7 @@ const config = {
 
   // GitHub pages deployment config.
   organizationName: 'spicecodecli', // Your GitHub org/user name.
-  projectName: 'spicecode-docs', // Usually your repo name for the docs site.
+  projectName: 'spicecode', // Usually your repo name for the docs site. (im guessing since we dont have a docs repo we can just use the regular repo here?)
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -30,6 +30,7 @@ const config = {
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
+  // my site is not chinese. but thank you for the heads up
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -44,9 +45,9 @@ const config = {
           sidebarPath: './sidebars.js',
           // Point to the actual SpiceCode repo for edits
           editUrl:
-            'https://github.com/spicecodecli/spicecode/tree/main/', // Link to the source repo, assuming docs might live there eventually or for context
+            'https://github.com/spicecodecli/spicecode/tree/main/docs', // Link to the source repo, assuming docs might live there eventually or for context
         },
-        blog: false, // Disabling blog as it wasn't requested
+        blog: false, // Disabling blog as it wasn't requested // WAIT WE CAN HAVE A BLOG HERE??????????????? // TODO: RESEARCH BLOG POSSIBILITIES
         // blog: {
         //   showReadingTime: true,
         //   feedOptions: {
@@ -72,13 +73,13 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
-      image: 'img/spicecode-social-card.jpg', // Placeholder social card
+      // Replace with your project's social card // what even is a social card?
+      image: 'img/spicecode_wallpaper.png', // Placeholder social card
       navbar: {
         title: 'SpiceCode',
         logo: {
           alt: 'SpiceCode Logo',
-          src: 'img/logo.svg', // Assuming a logo will be added later
+          src: 'img/spicecode_logo_nobg.png', // Assuming a logo will be added later
         },
         items: [
           {
@@ -131,6 +132,10 @@ const config = {
                 label: 'Report an Issue',
                 href: 'https://github.com/spicecodecli/spicecode/issues',
               },
+              {
+                label: 'GitHub Discussions',
+                href: 'https://github.com/orgs/spicecodecli/discussions',
+              },
             ],
           },
           {
@@ -145,7 +150,7 @@ const config = {
           },
         ],
         // Update copyright notice
-        copyright: `Copyright © ${new Date().getFullYear()} SpiceCode Project. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} SpiceCode CLI. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
