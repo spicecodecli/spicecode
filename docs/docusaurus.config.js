@@ -18,7 +18,7 @@ const config = {
   url: 'https://spicecodecli.github.io', // Assuming deployment to GitHub Pages
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/spicecode-docs/', // Base URL for GitHub pages deployment
+  baseUrl: '/spicecode/', // Base URL for GitHub pages deployment
 
   // GitHub pages deployment config.
   organizationName: 'spicecodecli', // Your GitHub org/user name.
