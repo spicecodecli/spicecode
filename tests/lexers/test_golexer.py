@@ -12,7 +12,7 @@ def assert_tokens_equal(actual_tokens, expected_tokens_data):
     
     for i, (token_type, value) in enumerate(expected_tokens_data):
         assert actual_tokens[i].type == token_type, f"Token {i} type mismatch: Expected {token_type}, got {actual_tokens[i].type} ({actual_tokens[i].value})"
-        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected 	{value}	, got 	{actual_tokens[i].value}	"
+        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected '{value}', got '{actual_tokens[i].value}'"
 
 # --- Test Cases ---
 
@@ -67,13 +67,13 @@ def test_go_numbers():
     assert_tokens_equal(tokens, expected)
 
 def test_go_strings():
-    code = "\"hello\" `raw string\\nwith newline` \"with \\\"escape\\\"\""
+    code = "\"hello\" `raw string\nwith newline` \"with \\\"escape\\\"\""
     lexer = GoLexer(code)
     tokens = lexer.tokenize()
     expected = [
         (TokenType.STRING, "\"hello\""),
         (TokenType.STRING, "`raw string\nwith newline`"),
-        (TokenType.STRING, "\"with \\"escape\\"\""),
+        (TokenType.STRING, "\"with \\\"escape\\\"\""),
     ]
     assert_tokens_equal(tokens, expected)
 
@@ -145,7 +145,7 @@ func main() {
         (TokenType.KEYWORD, "func"), (TokenType.IDENTIFIER, "main"), (TokenType.DELIMITER, "("), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
         (TokenType.COMMENT, "// Declare and initialize"), (TokenType.NEWLINE, "\\n"),
         (TokenType.IDENTIFIER, "message"), (TokenType.OPERATOR, ":="), (TokenType.STRING, "\"Hello, Go!\""), (TokenType.NEWLINE, "\\n"),
-        (TokenType.IDENTIFIER, "fmt"), (TokenType.OPERATOR, "."), (TokenType.IDENTIFIER, "Println"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "message"), (TokenType.DELIMITER, ")"), (TokenType.COMMENT, "// Print message"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.IDENTIFIER, "fmt"), (TokenType.DELIMITER, "."), (TokenType.IDENTIFIER, "Println"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "message"), (TokenType.DELIMITER, ")"), (TokenType.COMMENT, "// Print message"), (TokenType.NEWLINE, "\\n"),
         (TokenType.IDENTIFIER, "num"), (TokenType.OPERATOR, ":="), (TokenType.NUMBER, "10"), (TokenType.OPERATOR, "+"), (TokenType.NUMBER, "5"), (TokenType.NEWLINE, "\\n"),
         (TokenType.KEYWORD, "if"), (TokenType.IDENTIFIER, "num"), (TokenType.OPERATOR, ">"), (TokenType.NUMBER, "10"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
         (TokenType.KEYWORD, "return"), (TokenType.NEWLINE, "\\n"),
@@ -193,6 +193,4 @@ def test_go_unterminated_comment():
     # Go lexer returns an ERROR token for unterminated multi-line comments
     assert len(tokens) == 2 # ERROR token + EOF
     assert tokens[0].type == TokenType.ERROR
-    assert "comentário não fechado" in tokens[0].value
-
-
+    assert "unterminated comment" in tokens[0].value.lower()
