@@ -39,8 +39,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18 # Or your preferred Node.js version
-          cache: 'npm'
-          cache-dependency-path: 'docs/package-lock.json' # Or yarn.lock
 
       - name: Install dependencies
         run: npm ci
