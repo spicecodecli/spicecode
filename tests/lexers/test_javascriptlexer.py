@@ -67,8 +67,7 @@ def test_js_numbers():
     ]
     assert_tokens_equal(tokens, expected)
 
-def test_js_strings():
-    code = "\'hello\' \"world\" \"with \\"escape\\"\""
+def test_js_strings()    code = "\\'hello\\' \"world\" \"with \\\"escape\\\"\""
     lexer = JavaScriptLexer(code)
     tokens = lexer.tokenize()
     expected = [
