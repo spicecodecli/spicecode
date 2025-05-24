@@ -12,7 +12,7 @@ def assert_tokens_equal(actual_tokens, expected_tokens_data):
     
     for i, (token_type, value) in enumerate(expected_tokens_data):
         assert actual_tokens[i].type == token_type, f"Token {i} type mismatch: Expected {token_type}, got {actual_tokens[i].type} ({actual_tokens[i].value})"
-        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected 	{value}	, got 	{actual_tokens[i].value}	"
+        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected '{value}', got '{actual_tokens[i].value}'"
 
 # --- Test Cases ---
 
@@ -67,13 +67,14 @@ def test_js_numbers():
     ]
     assert_tokens_equal(tokens, expected)
 
-def test_js_strings()    code = "\\'hello\\' \"world\" \"with \\\"escape\\\"\""
+def test_js_strings():
+    code = "'hello' \"world\" \"with \\\"escape\\\"\""
     lexer = JavaScriptLexer(code)
     tokens = lexer.tokenize()
     expected = [
-        (TokenType.STRING, "\'hello\'"),
-        (TokenType.STRING, '\"world\"'),
-        (TokenType.STRING, '\"with \\"escape\\"\"'), # String includes escapes
+        (TokenType.STRING, "'hello'"),
+        (TokenType.STRING, '"world"'),
+        (TokenType.STRING, '"with \\"escape\\""'), # String includes escapes
     ]
     assert_tokens_equal(tokens, expected)
 
@@ -103,10 +104,9 @@ def test_js_delimiters():
         (TokenType.DELIMITER, "{"), (TokenType.DELIMITER, "}"),
         (TokenType.DELIMITER, "["), (TokenType.DELIMITER, "]"),
         (TokenType.DELIMITER, ";"),
-        (TokenType.ERROR, ","), # Comma is not listed as a delimiter in the lexer
+        (TokenType.DELIMITER, ","), # Assuming comma should be a delimiter in JS
         (TokenType.DELIMITER, ":"),
     ]
-    # Note: Comma is currently marked as ERROR. Adjust test if lexer is updated.
     assert_tokens_equal(tokens, expected)
 
 def test_js_comments():
@@ -138,7 +138,7 @@ calculate(5, 7);
     tokens = lexer.tokenize()
     expected = [
         (TokenType.NEWLINE, "\\n"),
-        (TokenType.KEYWORD, "function"), (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "x"), (TokenType.ERROR, ","), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "function"), (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "x"), (TokenType.DELIMITER, ","), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
         (TokenType.COMMENT, "// Calculate sum"), (TokenType.NEWLINE, "\\n"),
         (TokenType.KEYWORD, "const"), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, "="), (TokenType.IDENTIFIER, "x"), (TokenType.OPERATOR, "+"), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
         (TokenType.KEYWORD, "if"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, ">"), (TokenType.NUMBER, "10"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
@@ -147,9 +147,8 @@ calculate(5, 7);
         (TokenType.KEYWORD, "return"), (TokenType.IDENTIFIER, "sum"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
         (TokenType.DELIMITER, "}"), (TokenType.NEWLINE, "\\n"),
         (TokenType.NEWLINE, "\\n"),
-        (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.NUMBER, "5"), (TokenType.ERROR, ","), (TokenType.NUMBER, "7"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.NUMBER, "5"), (TokenType.DELIMITER, ","), (TokenType.NUMBER, "7"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
     ]
-    # Note: Comma is currently marked as ERROR. Template literals are treated as simple strings.
     assert_tokens_equal(tokens, expected)
 
 def test_js_error_character():
@@ -166,12 +165,12 @@ def test_js_error_character():
     assert_tokens_equal(tokens, expected)
 
 def test_js_unterminated_string():
-    code = "\'unterminated string"
+    code = "'unterminated string"
     lexer = JavaScriptLexer(code)
     tokens = lexer.tokenize()
     # The lexer currently returns the unterminated string as a STRING token
     expected = [
-        (TokenType.STRING, "\'unterminated string"),
+        (TokenType.STRING, "'unterminated string"),
     ]
     assert_tokens_equal(tokens, expected)
 
@@ -182,6 +181,4 @@ def test_js_unterminated_comment():
     # The lexer currently returns an ERROR token for unterminated multi-line comments
     assert len(tokens) == 2 # ERROR token + EOF
     assert tokens[0].type == TokenType.ERROR
-    assert "comentário não fechado" in tokens[0].value
-
-
+    assert "unterminated comment" in tokens[0].value.lower()
