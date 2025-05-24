@@ -79,7 +79,7 @@ const config = {
         title: 'SpiceCode',
         logo: {
           alt: 'SpiceCode Logo',
-          src: 'img/logo.svg', // Assuming a logo will be added later
+          src: 'img/spicecode_logo_nobg.png', // Assuming a logo will be added later
         },
         items: [
           {
