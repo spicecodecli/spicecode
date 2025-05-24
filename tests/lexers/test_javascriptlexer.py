@@ -1,279 +1,184 @@
-import re
-from ..token import Token, TokenType
+import pytest
+from lexers.javascript.javascriptlexer import JavaScriptLexer
+from lexers.token import TokenType
 
-class JavaScriptLexer:
-    # palavras-chave do javascript
-    KEYWORDS = {
-        "function", "if", "else", "return", "let", "const", "var", "for", "while", 
-        "do", "break", "continue", "switch", "case", "default", "try", "catch", 
-        "throw", "new", "this", "class", "extends", "super", "import", "export", 
-        "typeof", "instanceof", "void", "delete", "in", "of", "yield", "await", 
-        "async", "true", "false", "null", "undefined"
-    }
+# Helper function to compare token lists, ignoring EOF (similar to other lexer tests)
+def assert_tokens_equal(actual_tokens, expected_tokens_data):
+    if actual_tokens and actual_tokens[-1].type == TokenType.EOF:
+        actual_tokens = actual_tokens[:-1]
     
-    # operadores do javascript - Moved : back to OPERATORS based on test_js_operators
-    OPERATORS = {
-        "+", "-", "*", "/", "%", "=", "==", "===", "!=", "!==", ">", "<", ">=", 
-        "<=", "&&", "||", "!", "&", "|", "^", "~", "<<", ">>", ">>>", "++", "--", 
-        "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", ">>>=", 
-        "=>", "?", ":", "." # Added : back
-    }
-
-    # Delimiters - Removed :
-    DELIMITERS = {
-        "(", ")", "{", "}", "[", "]", ",", ";" # Removed :
-    }
+    assert len(actual_tokens) == len(expected_tokens_data), \
+        f"Expected {len(expected_tokens_data)} tokens, but got {len(actual_tokens)}\nActual: {actual_tokens}\nExpected data: {expected_tokens_data}"
     
-    # regex para números e identificadores
-    NUMBER_PATTERN = re.compile(r"\d+(\.\d+)?([eE][+-]?\d+)?")
-    IDENTIFIER_PATTERN = re.compile(r"[a-zA-Z_$][a-zA-Z0-9_$]*")
-    
-    def __init__(self, source_code):
-        self.source_code = source_code
-        self.position = 0
-        self.line = 1
-        self.column = 1
-        self.current_line_start = 0
+    for i, (token_type, value) in enumerate(expected_tokens_data):
+        assert actual_tokens[i].type == token_type, f"Token {i} type mismatch: Expected {token_type}, got {actual_tokens[i].type} ({actual_tokens[i].value})"
+        assert actual_tokens[i].value == value, f"Token {i} value mismatch: Expected '{value}', got '{actual_tokens[i].value}'"
 
-    def tokenize(self):
-        tokens = []
-        while self.position < len(self.source_code):
-            char = self.source_code[self.position]
+# --- Test Cases ---
 
-            if char.isspace():
-                if char == "\n":
-                    tokens.append(Token(TokenType.NEWLINE, "\\n", self.line, self.column))
-                    self.line += 1
-                    self.column = 1
-                    self.current_line_start = self.position + 1
-                else:
-                    self.column += 1
-                self.position += 1
-                continue
+def test_js_empty_input():
+    lexer = JavaScriptLexer("")
+    tokens = lexer.tokenize()
+    assert len(tokens) == 1
+    assert tokens[0].type == TokenType.EOF
 
-            if char == "/":
-                if self.position + 1 < len(self.source_code):
-                    next_char = self.source_code[self.position + 1]
-                    if next_char == "/":
-                        tokens.append(self.tokenize_single_line_comment())
-                        continue
-                    elif next_char == "*":
-                        tokens.append(self.tokenize_multi_line_comment())
-                        continue
-            
-            # Check for operators FIRST (including :)
-            if match := self.match_operator():
-                tokens.append(match)
-                continue
+def test_js_keywords():
+    code = "function if else return let const var for while do break continue switch case default try catch throw new this class extends super import export typeof instanceof void delete in of yield await async true false null undefined"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.KEYWORD, "function"), (TokenType.KEYWORD, "if"), (TokenType.KEYWORD, "else"), (TokenType.KEYWORD, "return"),
+        (TokenType.KEYWORD, "let"), (TokenType.KEYWORD, "const"), (TokenType.KEYWORD, "var"), (TokenType.KEYWORD, "for"),
+        (TokenType.KEYWORD, "while"), (TokenType.KEYWORD, "do"), (TokenType.KEYWORD, "break"), (TokenType.KEYWORD, "continue"),
+        (TokenType.KEYWORD, "switch"), (TokenType.KEYWORD, "case"), (TokenType.KEYWORD, "default"), (TokenType.KEYWORD, "try"),
+        (TokenType.KEYWORD, "catch"), (TokenType.KEYWORD, "throw"), (TokenType.KEYWORD, "new"), (TokenType.KEYWORD, "this"),
+        (TokenType.KEYWORD, "class"), (TokenType.KEYWORD, "extends"), (TokenType.KEYWORD, "super"), (TokenType.KEYWORD, "import"),
+        (TokenType.KEYWORD, "export"), (TokenType.KEYWORD, "typeof"), (TokenType.KEYWORD, "instanceof"), (TokenType.KEYWORD, "void"),
+        (TokenType.KEYWORD, "delete"), (TokenType.KEYWORD, "in"), (TokenType.KEYWORD, "of"), (TokenType.KEYWORD, "yield"),
+        (TokenType.KEYWORD, "await"), (TokenType.KEYWORD, "async"), (TokenType.KEYWORD, "true"), (TokenType.KEYWORD, "false"),
+        (TokenType.KEYWORD, "null"), (TokenType.KEYWORD, "undefined")
+    ]
+    assert_tokens_equal(tokens, expected)
 
-            if char.isdigit():
-                tokens.append(self.tokenize_number())
-                continue
+def test_js_identifiers():
+    code = "myVar _anotherVar var123 $special _"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.IDENTIFIER, "myVar"),
+        (TokenType.IDENTIFIER, "_anotherVar"),
+        (TokenType.IDENTIFIER, "var123"),
+        (TokenType.IDENTIFIER, "$special"), # $ is allowed in JS identifiers
+        (TokenType.IDENTIFIER, "_"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-            # Corrected check for strings to include single quote explicitly
-            if char == "\"" or char == "\"" or char == "`": # Check for ", ", or `
-                if char == "`":
-                    tokens.append(self.tokenize_template_string())
-                else:
-                    # Pass the quote character (", ")
-                    tokens.append(self.tokenize_string(char))
-                continue
+def test_js_numbers():
+    code = "123 45.67 0.5 1e3 2.5e-2 99"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.NUMBER, "123"),
+        (TokenType.NUMBER, "45.67"),
+        (TokenType.NUMBER, "0.5"),
+        (TokenType.NUMBER, "1e3"),
+        (TokenType.NUMBER, "2.5e-2"),
+        (TokenType.NUMBER, "99"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-            if char.isalpha() or char == "_" or char == "$":
-                tokens.append(self.tokenize_identifier())
-                continue
+def test_js_strings():
+    code = "'hello' \"world\" \"with \\\"escape\\\"\""
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.STRING, "'hello'"),
+        (TokenType.STRING, '"world"'),
+        (TokenType.STRING, '"with \\"escape\\""'), # String includes escapes
+    ]
+    assert_tokens_equal(tokens, expected)
 
-            # Check for delimiters AFTER operators
-            if char in self.DELIMITERS:
-                tokens.append(Token(TokenType.DELIMITER, char, self.line, self.column))
-                self.position += 1
-                self.column += 1
-                continue
+def test_js_operators():
+    code = "+ - * / % = == === != !== > < >= <= && || ! & | ^ ~ << >> >>> ++ -- += -= *= /= %= &= |= ^= <<= >>= >>>= => ? : ."
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.OPERATOR, "+"), (TokenType.OPERATOR, "-"), (TokenType.OPERATOR, "*"), (TokenType.OPERATOR, "/"), (TokenType.OPERATOR, "%"),
+        (TokenType.OPERATOR, "="), (TokenType.OPERATOR, "=="), (TokenType.OPERATOR, "==="), (TokenType.OPERATOR, "!="), (TokenType.OPERATOR, "!=="),
+        (TokenType.OPERATOR, ">"), (TokenType.OPERATOR, "<"), (TokenType.OPERATOR, ">="), (TokenType.OPERATOR, "<="), (TokenType.OPERATOR, "&&"),
+        (TokenType.OPERATOR, "||"), (TokenType.OPERATOR, "!"), (TokenType.OPERATOR, "&"), (TokenType.OPERATOR, "|"), (TokenType.OPERATOR, "^"),
+        (TokenType.OPERATOR, "~"), (TokenType.OPERATOR, "<<"), (TokenType.OPERATOR, ">>"), (TokenType.OPERATOR, ">>>"), (TokenType.OPERATOR, "++"),
+        (TokenType.OPERATOR, "--"), (TokenType.OPERATOR, "+="), (TokenType.OPERATOR, "-="), (TokenType.OPERATOR, "*="), (TokenType.OPERATOR, "/="),
+        (TokenType.OPERATOR, "%="), (TokenType.OPERATOR, "&="), (TokenType.OPERATOR, "|="), (TokenType.OPERATOR, "^="), (TokenType.OPERATOR, "<<="),
+        (TokenType.OPERATOR, ">>="), (TokenType.OPERATOR, ">>>="), (TokenType.OPERATOR, "=>"), (TokenType.OPERATOR, "?"), (TokenType.OPERATOR, ":"),
+        (TokenType.OPERATOR, ".")
+    ]
+    assert_tokens_equal(tokens, expected)
 
-            # Unknown character - Use the character itself as the value for ERROR token
-            # Test failures indicate single quotes are being treated as errors
-            # Let's ensure the string check above correctly handles them
-            tokens.append(Token(TokenType.ERROR, char, self.line, self.column))
-            self.position += 1
-            self.column += 1
+def test_js_delimiters():
+    code = "( ) { } [ ] ; , :"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.DELIMITER, "("), (TokenType.DELIMITER, ")"),
+        (TokenType.DELIMITER, "{"), (TokenType.DELIMITER, "}"),
+        (TokenType.DELIMITER, "["), (TokenType.DELIMITER, "]"),
+        (TokenType.DELIMITER, ";"),
+        (TokenType.DELIMITER, ","), # Assuming comma should be a delimiter in JS
+        (TokenType.DELIMITER, ":"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-        tokens.append(Token(TokenType.EOF, "EOF", self.line, self.column))
-        return tokens
+def test_js_comments():
+    code = "// Single line comment\nlet x = 1; /* Multi-line\n comment */ var y = 2;"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.COMMENT, "// Single line comment"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "let"), (TokenType.IDENTIFIER, "x"), (TokenType.OPERATOR, "="), (TokenType.NUMBER, "1"), (TokenType.DELIMITER, ";"),
+        (TokenType.COMMENT, "/* Multi-line\n comment */"),
+        (TokenType.KEYWORD, "var"), (TokenType.IDENTIFIER, "y"), (TokenType.OPERATOR, "="), (TokenType.NUMBER, "2"), (TokenType.DELIMITER, ";"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-    def tokenize_single_line_comment(self):
-        start_pos = self.position
-        start_col = self.column
-        start_line = self.line
-        while self.position < len(self.source_code) and self.source_code[self.position] != "\n":
-            self.position += 1
-            self.column += 1
-        comment = self.source_code[start_pos:self.position]
-        return Token(TokenType.COMMENT, comment, start_line, start_col)
+def test_js_mixed_code():
+    code = """
+function calculate(x, y) {
+  // Calculate sum
+  const sum = x + y;
+  if (sum > 10) {
+    console.log(`Result: ${sum}`); // Log if large
+  }
+  return sum;
+}
 
-    def tokenize_multi_line_comment(self):
-        start_pos = self.position
-        start_col = self.column
-        start_line = self.line
-        self.position += 2 # Skip /*
-        self.column += 2
-        while self.position + 1 < len(self.source_code):
-            if self.source_code[self.position] == "*" and self.source_code[self.position + 1] == "/":
-                self.position += 2
-                self.column += 2
-                comment = self.source_code[start_pos:self.position]
-                return Token(TokenType.COMMENT, comment, start_line, start_col)
-            if self.source_code[self.position] == "\n":
-                self.line += 1
-                self.column = 1
-                self.current_line_start = self.position + 1
-            else:
-                self.column += 1
-            self.position += 1
-        # Unterminated comment
-        self.position = len(self.source_code)
-        return Token(TokenType.ERROR, "Error: unterminated comment", start_line, start_col)
-        
-    def tokenize_number(self):
-        start_pos = self.position
-        start_col = self.column
-        start_line = self.line
-        match = self.NUMBER_PATTERN.match(self.source_code, self.position)
-        if match:
-            number = match.group(0)
-            self.position += len(number)
-            self.column += len(number)
-            return Token(TokenType.NUMBER, number, start_line, start_col)
-        # Should not happen if called correctly
-        return Token(TokenType.ERROR, "Invalid number format", start_line, start_col)
+calculate(5, 7);
+"""
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "function"), (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "x"), (TokenType.DELIMITER, ","), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.COMMENT, "// Calculate sum"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "const"), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, "="), (TokenType.IDENTIFIER, "x"), (TokenType.OPERATOR, "+"), (TokenType.IDENTIFIER, "y"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "if"), (TokenType.DELIMITER, "("), (TokenType.IDENTIFIER, "sum"), (TokenType.OPERATOR, ">"), (TokenType.NUMBER, "10"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, "{"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.IDENTIFIER, "console"), (TokenType.OPERATOR, "."), (TokenType.IDENTIFIER, "log"), (TokenType.DELIMITER, "("), (TokenType.STRING, "`Result: ${sum}`"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, ";"), (TokenType.COMMENT, "// Log if large"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.DELIMITER, "}"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.KEYWORD, "return"), (TokenType.IDENTIFIER, "sum"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.DELIMITER, "}"), (TokenType.NEWLINE, "\\n"),
+        (TokenType.NEWLINE, "\\n"),
+        (TokenType.IDENTIFIER, "calculate"), (TokenType.DELIMITER, "("), (TokenType.NUMBER, "5"), (TokenType.DELIMITER, ","), (TokenType.NUMBER, "7"), (TokenType.DELIMITER, ")"), (TokenType.DELIMITER, ";"), (TokenType.NEWLINE, "\\n"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-    def tokenize_identifier(self):
-        start_pos = self.position
-        start_col = self.column
-        start_line = self.line
-        match = self.IDENTIFIER_PATTERN.match(self.source_code, self.position)
-        if match:
-            identifier = match.group(0)
-            self.position += len(identifier)
-            self.column += len(identifier)
-        else:
-            # This path should not be hit if the main loop logic is correct
-            error_char = self.source_code[self.position]
-            self.position += 1
-            self.column += 1
-            return Token(TokenType.ERROR, error_char, start_line, start_col)
+def test_js_error_character():
+    code = "let a = @;"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    expected = [
+        (TokenType.KEYWORD, "let"),
+        (TokenType.IDENTIFIER, "a"),
+        (TokenType.OPERATOR, "="),
+        (TokenType.ERROR, "@"),
+        (TokenType.DELIMITER, ";"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-        token_type = TokenType.KEYWORD if identifier in self.KEYWORDS else TokenType.IDENTIFIER
-        return Token(token_type, identifier, start_line, start_col)
+def test_js_unterminated_string():
+    code = "'unterminated string"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    # The lexer currently returns the unterminated string as a STRING token
+    expected = [
+        (TokenType.STRING, "'unterminated string"),
+    ]
+    assert_tokens_equal(tokens, expected)
 
-    # Rewritten string tokenizer to handle single quotes and unterminated strings correctly
-    def tokenize_string(self, quote_char):
-        start_pos = self.position # Position of the opening quote
-        start_col = self.column
-        start_line = self.line
-        # The main loop already identified the quote_char, so we start AFTER it.
-        self.position += 1 
-        self.column += 1
-
-        while self.position < len(self.source_code):
-            char = self.source_code[self.position]
-            if char == quote_char:  # End of string
-                self.position += 1
-                self.column += 1
-                # The value includes the quotes
-                string_value = self.source_code[start_pos:self.position] 
-                return Token(TokenType.STRING, string_value, start_line, start_col)
-            elif char == "\\":  # Escape sequence
-                self.position += 1 # Consume backslash
-                self.column += 1
-                if self.position < len(self.source_code):
-                    escaped_char = self.source_code[self.position]
-                    if escaped_char == "\n": # Escaped newline
-                         self.line += 1
-                         self.column = 1
-                         self.current_line_start = self.position + 1
-                    else:
-                         self.column += 1
-                    self.position += 1 # Advance past escaped character
-                else:
-                    # Unterminated escape sequence at EOF -> Unterminated string
-                    break # Exit loop, handle below
-                continue # Continue to next character in string
-            elif char == "\n":  # Literal newline in string
-                 # Test expects STRING token even if unterminated by newline
-                 self.line += 1
-                 self.column = 1
-                 self.current_line_start = self.position + 1
-                 self.position += 1 # Consume newline
-            else: # Regular character in string
-                self.column += 1
-                self.position += 1
-
-        # Reached end of file without closing quote
-        # Test expects STRING token even if unterminated
-        string_value = self.source_code[start_pos:self.position] # Include quotes up to EOF
-        return Token(TokenType.STRING, string_value, start_line, start_col)
-
-    def tokenize_template_string(self):
-        start_pos = self.position
-        start_col = self.column
-        start_line = self.line
-        self.position += 1  # Skip `
-        self.column += 1
-        while self.position < len(self.source_code):
-            char = self.source_code[self.position]
-            if char == "`":
-                self.position += 1
-                self.column += 1
-                string_value = self.source_code[start_pos:self.position]
-                return Token(TokenType.STRING, string_value, start_line, start_col)
-            elif char == "\\":
-                self.position += 1
-                self.column += 1
-                if self.position < len(self.source_code):
-                    if self.source_code[self.position] == "\n":
-                        self.line += 1
-                        self.column = 1
-                        self.current_line_start = self.position + 1
-                    else:
-                        self.column += 1
-                    self.position += 1
-                continue
-            elif char == "$" and self.position + 1 < len(self.source_code) and self.source_code[self.position + 1] == "{":
-                # Basic handling: treat expression as part of string
-                self.position += 2 
-                self.column += 2
-                expr_end = self.source_code.find("}", self.position)
-                if expr_end != -1:
-                    num_newlines = self.source_code[self.position:expr_end].count("\n")
-                    if num_newlines > 0:
-                        self.line += num_newlines
-                        last_newline_pos = self.source_code.rfind("\n", self.position, expr_end)
-                        self.column = expr_end - last_newline_pos
-                    else:
-                        self.column += (expr_end - self.position) + 1 # Add 1 for the closing brace
-                    self.position = expr_end + 1
-                else:
-                    # Unterminated expression - treat as literal characters
-                    self.column += 2 # For ${ 
-                    continue 
-            elif char == "\n":
-                self.line += 1
-                self.column = 1
-                self.current_line_start = self.position + 1
-                self.position += 1
-            else:
-                self.column += 1
-                self.position += 1
-        # Unterminated template literal - Test expects ERROR
-        return Token(TokenType.ERROR, "Unterminated template literal", start_line, start_col)
-
-    def match_operator(self):
-        # Ensure ':' is checked here
-        for op in sorted(self.OPERATORS, key=len, reverse=True):
-            if self.source_code.startswith(op, self.position):
-                token = Token(TokenType.OPERATOR, op, self.line, self.column)
-                self.position += len(op)
-                self.column += len(op)
-                return token
-        return None
-
+def test_js_unterminated_comment():
+    code = "/* Unterminated comment"
+    lexer = JavaScriptLexer(code)
+    tokens = lexer.tokenize()
+    # The lexer currently returns an ERROR token for unterminated multi-line comments
+    assert len(tokens) == 2 # ERROR token + EOF
+    assert tokens[0].type == TokenType.ERROR
+    assert "unterminated comment" in tokens[0].value.lower()
