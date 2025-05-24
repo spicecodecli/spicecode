@@ -12,7 +12,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'SpiceCode | Documentation',
   tagline: 'The next generation of code analysis.',
-  favicon: 'img/spicecode_logo_nobg.png', // Assuming a favicon will be added later or use a default
+  favicon: 'img/spicecode_logo_nobg.png',
 
   // Set the production url of your site here
   url: 'https://spicecodecli.github.io', // Assuming deployment to GitHub Pages
