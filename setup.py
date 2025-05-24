@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 # Read requirements.txt using utf-16 encoding to handle the BOM correctly
-with open("requirements.txt", encoding="utf-16") as f:
+with open("requirements.txt", encoding="utf-8") as f:
     install_requires = f.read().splitlines()
 
 # Read the README.md for PyPI long description
