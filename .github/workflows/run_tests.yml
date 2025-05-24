@@ -21,15 +21,17 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        # Install the project in editable mode to pick up changes
         pip install -e .
-        pip install pytest typer numpy
-        # Note: Ideally, you should fix your requirements.txt and use:
-        # pip install .
-        # Or at least:
-        # pip install -r requirements.txt
-        # But due to the encoding and importlib issues observed,
-        # installing specific dependencies needed for tests directly for now.
+        # Install test dependencies, including pytest-cov for coverage
+        pip install pytest typer numpy pytest-cov
+        # Note: Ideally, dependencies should be managed via requirements-dev.txt
+        # Consider adding pytest-cov to requirements-dev.txt later.
 
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        python -m pytest tests/analyze/
+        # Run pytest on the entire tests directory
+        # Generate coverage report for specified source directories
+        # Report missing lines directly in the terminal output
+        python -m pytest tests/ --cov=spice --cov=cli --cov=utils --cov=parser --cov=lexers --cov-report=term-missing
+
