@@ -150,7 +150,7 @@ const config = {
           },
         ],
         // Update copyright notice
-        copyright: `Copyright © ${new Date().getFullYear()} SpiceCode Project. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} SpiceCode CLI. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
