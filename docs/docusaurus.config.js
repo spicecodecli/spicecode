@@ -10,7 +10,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'SpiceCode Documentation',
+  title: 'SpiceCode | Documentation',
   tagline: 'Comprehensive Code Analysis Tool',
   favicon: 'img/spicecode_logo_nobg.png', // Assuming a favicon will be added later or use a default
 
