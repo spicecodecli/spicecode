@@ -1,45 +1,51 @@
+import React from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
+// Replace the default FeatureList with SpiceCode-specific features
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Deep Code Analysis',
+    // Use a relevant image if available, or remove the Svg component
+    // For now, let's use the logo as a placeholder, but ideally find/create more specific icons
+    ImgSrc: require('@site/static/img/spicecode_logo_nobg.png').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        SpiceCode examines your code and provides detailed metrics and insights
+        to help you understand its structure and quality.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Multi-Language Support',
+    ImgSrc: require('@site/static/img/spicecode_logo_nobg.png').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Analyze code written in Python, JavaScript, Ruby, and Go using native
+        lexers and parsers built specifically for SpiceCode.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Exportable Results',
+    ImgSrc: require('@site/static/img/spicecode_logo_nobg.png').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Export your analysis results easily into various formats like JSON, CSV,
+        Markdown, and HTML for reporting or integration.
       </>
     ),
   },
 ];
 
-function Feature({Svg, title, description}) {
+// Modify the Feature component to use ImgSrc instead of Svg if needed
+function Feature({ImgSrc, title, description}) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        {/* Adjust styling if using img instead of SVG */}
+        <img src={ImgSrc} className={styles.featureImg} alt={title} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
@@ -62,3 +68,4 @@ export default function HomepageFeatures() {
     </section>
   );
 }
+
