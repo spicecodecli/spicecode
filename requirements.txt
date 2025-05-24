@@ -2,5 +2,5 @@ InquirerPy==0.3.4
 numpy==2.2.6
 pytest==8.3.5
 rich==14.0.0
-setuptools==75.8.1
+setuptools==78.1.1
 typer==0.15.4
