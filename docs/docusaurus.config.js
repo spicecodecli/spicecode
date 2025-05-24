@@ -73,7 +73,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
+      // Replace with your project's social card // what even is a social card?
       image: 'img/spicecode-social-card.jpg', // Placeholder social card
       navbar: {
         title: 'SpiceCode',
