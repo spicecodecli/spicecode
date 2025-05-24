@@ -132,6 +132,10 @@ const config = {
                 label: 'Report an Issue',
                 href: 'https://github.com/spicecodecli/spicecode/issues',
               },
+              {
+                label: 'GitHub Discussions',
+                href: 'https://github.com/orgs/spicecodecli/discussions',
+              },
             ],
           },
           {
