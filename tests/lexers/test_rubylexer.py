@@ -64,9 +64,7 @@ def test_ruby_numbers():
     ]
     assert_tokens_equal(tokens, expected)
 
-def test_ruby_strings():
-    code = "'hello' \"world\" \"with \\"escape\\"\" 	\"interp #{var} end\""
-    lexer = RubyLexer(code)
+def test_ruby_strings()    code = "\'hello\' \"world\" \"with \\\"escape\\\"\" \t\"interp #{var} end\""    lexer = RubyLexer(code)
     tokens = lexer.tokenize()
     expected = [
         (TokenType.STRING, "'hello'"),
