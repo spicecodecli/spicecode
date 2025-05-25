@@ -1,0 +1,2 @@
+i'm not sure what do to now the documentation doesnt cover this part
+https://docusaurus.io/docs/i18n/tutorial
