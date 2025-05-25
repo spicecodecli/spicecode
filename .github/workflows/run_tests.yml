@@ -35,6 +35,11 @@ jobs:
           --cov-report=term-missing \
           --cov-report=xml  # <-- this line generates coverage.xml
 
+    - name: Debug coverage file
+      run: |
+        ls -al
+        cat coverage.xml || echo "coverage.xml not found"
+
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2
       with:
