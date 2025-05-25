@@ -33,7 +33,7 @@ const config = {
   // my site is not chinese. but thank you for the heads up
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'pt-br'],
+    locales: ['en', 'pt-BR'],
   },
 
   presets: [
