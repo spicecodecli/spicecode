@@ -2,6 +2,8 @@
 ### *"Aquele que controla o código, controla o futuro."*     
 ![small](https://github.com/user-attachments/assets/d659312e-d5cf-4442-98a9-004f59bb291b)
 
+**Visite nossa página no PyPI**: [https://pypi.org/project/spicecode/](https://pypi.org/project/spicecode/)
+
 ---------------------
 ## SonarCloud Ratings
 
@@ -20,6 +22,7 @@
 
 
 [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=spicecodecli_spicecode)
+
 ---------------------
 
 ## Introdução
