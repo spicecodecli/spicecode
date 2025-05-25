@@ -88,12 +88,17 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
+          {
+          type: 'localeDropdown',
+          position: 'left',
+        },
           // {to: '/blog', label: 'Blog', position: 'left'}, // Blog disabled
           {
             href: 'https://github.com/spicecodecli/spicecode',
             label: 'GitHub',
             position: 'right',
           },
+          
         ],
       },
       footer: {
