@@ -1,8 +1,10 @@
 # 🌶️ SpiceCode - The next generation of code analysis.
-### *"Aquele que controla o código, controla o futuro."*     
+### *"Aquele que controla o código, controla o futuro."*   
+
 ![small](https://github.com/user-attachments/assets/d659312e-d5cf-4442-98a9-004f59bb291b)
 
-**Visite nossa página no PyPI**: [https://pypi.org/project/spicecode/](https://pypi.org/project/spicecode/)
+- **Full Documentation & Tutorial**: https://spicecodecli.github.io/spicecode/docs/intro/
+- **Visite nossa página no PyPI**: [https://pypi.org/project/spicecode/](https://pypi.org/project/spicecode/)
 
 ---------------------
 ## SonarCloud Ratings
