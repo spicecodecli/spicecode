@@ -30,8 +30,9 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        # Run pytest on the entire tests directory
-        # Generate coverage report for specified source directories
-        # Report missing lines directly in the terminal output
-        python -m pytest tests/ --cov=spice --cov=cli --cov=utils --cov=parser --cov=lexers --cov-report=term-missing
+        python -m pytest tests/ \
+          --cov=spice --cov=cli --cov=utils --cov=parser --cov=lexers \
+          --cov-report=term-missing \
+          --cov-report=xml  # <-- this line generates coverage.xml
+
 
