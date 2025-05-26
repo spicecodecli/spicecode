@@ -33,7 +33,13 @@ const config = {
   // my site is not chinese. but thank you for the heads up
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'pt'],
+      // You can add localeConfigs for 'pt' if you need to override defaults like htmlLang
+    localeConfigs: {
+      pt: {
+        htmlLang: 'pt-BR', // Or 'pt-PT' depending on your target
+      },
+    },
   },
 
   presets: [
