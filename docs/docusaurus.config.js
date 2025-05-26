@@ -34,13 +34,15 @@ const config = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'pt'],
-      // You can add localeConfigs for 'pt' if you need to override defaults like htmlLang
+    // Optional: Add specific config for Portuguese if needed
     localeConfigs: {
       pt: {
-        htmlLang: 'pt-BR', // Or 'pt-PT' depending on your target
+        htmlLang: 'pt-BR', // Or pt-PT
+        label: 'Portugues (Brasil)', // Label for the language dropdown
       },
     },
-  },
+},
+
 
   presets: [
     [
