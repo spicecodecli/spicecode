@@ -4,6 +4,7 @@ class Node:
     """Base class for all AST nodes."""
     pass
 
+
 class Program(Node):
     """Root node representing the entire program."""
     def __init__(self, statements):

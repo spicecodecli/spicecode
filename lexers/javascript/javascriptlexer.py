@@ -1,6 +1,7 @@
 import re
 from ..token import Token, TokenType
 
+
 class JavaScriptLexer:
     # palavras-chave do javascript
     KEYWORDS = {

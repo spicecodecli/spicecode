@@ -11,6 +11,7 @@ def count_comment_ratio(path):
         '.go': {'single': [r'//'], 'multi': [('/*', '*/')]},
         '.rb': {'single': [r'#'], 'multi': []},
     }
+    
 
     def analyze_file(file_path, ext):
         nonlocal total_comments, total_lines

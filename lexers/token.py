@@ -11,6 +11,7 @@ class TokenType(Enum):
     SYMBOL = auto()
     DELIMITER = auto()
     
+    
     # special token types
     NEWLINE = auto()
     COMMENT = auto()

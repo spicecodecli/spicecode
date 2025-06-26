@@ -20,3 +20,4 @@ def get_lexer_for_file(file_path):
     
     else:
         raise ValueError(f"Unsupported file extension: {ext}")
+    
