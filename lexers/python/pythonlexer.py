@@ -10,6 +10,7 @@ class PythonLexer:
         "global", "nonlocal", "assert", "del", "async", "await"
     }
     
+    
     # operadores do python
     OPERATORS = {
         "+", "-", "*", "/", "//", "%", "**", "=", "==", "!=", "<", ">", "<=", ">=", 

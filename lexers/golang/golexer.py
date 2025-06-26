@@ -1,6 +1,7 @@
 import re
 from ..token import Token, TokenType
 
+
 class GoLexer:
     # palavras-chave do Go
     KEYWORDS = {

@@ -1,0 +1,32 @@
+:root {
+  /* Primary brand colors - Spicy red-orange palette */
+  --ifm-color-primary: #e65100; /* Deep spice orange */
+  --ifm-color-primary-dark: #bf360c;
+  --ifm-color-primary-darker: #a12900;
+  --ifm-color-primary-darkest: #7f1f00;
+  --ifm-color-primary-light: #ff6d00;
+  --ifm-color-primary-lighter: #ff8f00;
+  --ifm-color-primary-lightest: #ffb300;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(230, 81, 0, 0.1); /* translucent spice */
+  
+  /* Optional spice-themed accent */
+  --ifm-link-color: #ff5722;
+  --ifm-link-hover-color: #ff7043;
+}
+
+/* Dark mode variant */
+[data-theme='dark'] {
+  --ifm-color-primary: #ff8a50;
+  --ifm-color-primary-dark: #ff7043;
+  --ifm-color-primary-darker: #f4511e;
+  --ifm-color-primary-darkest: #bf360c;
+  --ifm-color-primary-light: #ffa270;
+  --ifm-color-primary-lighter: #ffb792;
+  --ifm-color-primary-lightest: #ffd2b3;
+
+  --docusaurus-highlighted-code-line-bg: rgba(255, 138, 80, 0.2);
+  --ifm-link-color: #ffab91;
+  --ifm-link-hover-color: #ffccbc;
+}

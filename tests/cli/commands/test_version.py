@@ -90,3 +90,6 @@ def test_version_command_read_error(mock_exists, mock_get_translation, capsys):
         mock_exists.assert_called_once_with(EXPECTED_SETUP_PATH)
         mock_file.assert_called_once_with(EXPECTED_SETUP_PATH, "r")
         assert "Error: Permission denied" in captured.out
+
+
+        
