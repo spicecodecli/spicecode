@@ -26,7 +26,7 @@ export const FileHeader: React.FC<FileHeaderProps> = ({ selectedFile }) => {
           </p>
           <div style={styles.fileHeaderMeta}>
             <span>🕒 {selectedFile.readable_timestamp}</span>
-            <span>💾 {selectedFile.metrics.file_size ? `${(selectedFile.metrics.file_size / 1024).toFixed(1)} KB` : 'N/A'}</span>
+            {/* <span>💾 {selectedFile.metrics.file_size ? `${(selectedFile.metrics.file_size / 1024).toFixed(1)} KB` : 'N/A'}</span> */}
             <span>📂 {selectedFile.metrics.file_extension || 'N/A'}</span>
           </div>
         </div>
