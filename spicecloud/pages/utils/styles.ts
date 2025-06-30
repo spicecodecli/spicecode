@@ -181,7 +181,8 @@ export const styles = {
     alignItems: 'center',
     gap: '0.75rem',
     marginBottom: '1rem',
-    color: '#000000'
+    color: '#000000',
+    cursor: 'pointer'
   },
   metricIcon: {
     fontSize: '1.5rem',
@@ -197,6 +198,19 @@ export const styles = {
     fontWeight: 'bold',
     color: '#000000',
     marginBottom: '0.5rem'
+  },
+  metricDetails: {
+    /* corpo que aparece quando o card está aberto */
+    marginTop: '0.5rem',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '0.25rem'
+  },
+  detailLine: {
+    /* linha individual dentro do corpo */
+    fontSize: '0.875rem',
+    opacity: 0.8,            // ligeiro cinza
+    color: '#000000'
   },
   progressBar: {
     width: '100%',

@@ -63,7 +63,7 @@ def analyze_command(file, all, json_output, LANG_FILE):
     # load translations
     messages = get_translation(LANG_FILE)
 
-    # define available stats
+    # define available stats (updated with new features)
     available_stats = [
         "line_count",
         "function_count", 
@@ -73,9 +73,12 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "external_dependencies_count",
         "method_type_count",
         "comment_ratio",
+        "average_function_size",
+        "duplicate_code_detection",
+        "asymptotic_complexity"
     ]
 
-    # dictionary for the stats
+    # dictionary for the stats (updated with new features)
     stats_labels = {
         "line_count": messages.get("line_count_option", "Line Count"),
         "function_count": messages.get("function_count_option", "Function Count"),
@@ -87,6 +90,9 @@ def analyze_command(file, all, json_output, LANG_FILE):
         "private_methods_count": messages.get("private_methods_count_option", "Private Methods Count"),
         "public_methods_count": messages.get("public_methods_count_option", "Public Methods Count"),
         "comment_ratio": messages.get("comment_ratio_option", "Comment to Code Ratio"),
+        "average_function_size": messages.get("average_function_size_option", "Average Function Size"),
+        "duplicate_code_detection": messages.get("duplicate_code_detection_option", "Duplicate Code Detection"),
+        "asymptotic_complexity": messages.get("asymptotic_complexity_option", "Asymptotic Complexity Analysis")
     }
 
     # If --all flag is used, skip the selection menu and use all stats
@@ -156,9 +162,25 @@ def analyze_command(file, all, json_output, LANG_FILE):
                     print(f"{messages.get('private_methods_count_option', 'Private Methods Count')}: {mtc['private']}")
                     continue
 
-                if stat == "indentation_level" and "indentation_type" in results:
+                elif stat == "indentation_level" and "indentation_type" in results:
                     print(f"{messages.get('indentation_type', 'Indentation Type')}: {results.get('indentation_type', 'N/A')}")
                     print(f"{messages.get('indentation_size', 'Indentation Size')}: {results.get('indentation_size', 'N/A')}")
+                    continue
+
+                elif stat == "duplicate_code_detection" and any(key in results for key in ["duplicate_blocks", "duplicate_lines", "duplicate_percentage"]):
+                    print(f"{messages.get('duplicate_blocks', 'Duplicate Blocks')}: {results.get('duplicate_blocks', 'N/A')}")
+                    print(f"{messages.get('duplicate_lines', 'Duplicate Lines')}: {results.get('duplicate_lines', 'N/A')}")
+                    print(f"{messages.get('duplicate_percentage', 'Duplicate Percentage')}: {results.get('duplicate_percentage', 'N/A')}%")
+                    continue
+
+                elif stat == "asymptotic_complexity" and any(key in results for key in ["average_complexity", "complexity_distribution", "total_analyzed_functions"]):
+                    print(f"{messages.get('average_complexity', 'Average Complexity')}: {results.get('average_complexity', 'N/A')}")
+                    print(f"{messages.get('total_analyzed_functions', 'Total Analyzed Functions')}: {results.get('total_analyzed_functions', 'N/A')}")
+                    complexity_dist = results.get('complexity_distribution', {})
+                    if complexity_dist:
+                        print(f"{messages.get('complexity_distribution', 'Complexity Distribution')}:")
+                        for complexity, count in complexity_dist.items():
+                            print(f"  {complexity}: {count}")
                     continue
                     
                 elif stat in results:

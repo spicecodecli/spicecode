@@ -14,8 +14,8 @@ export const Header: React.FC<HeaderProps> = ({ dataLength, loading, onRefresh }
         <div>
           <h1 style={styles.title}>
             <img 
-              src="/spicecode-logo.png" 
-              alt="SpiceCode Logo" 
+              src="/spicecloud-logo.png" 
+              alt="SpiceCloud Logo" 
               style={{ width: '3rem', height: '3rem', verticalAlign: 'middle', marginRight: '0.5rem' }}
             />
             SpiceCloud | Powered by SpiceCodeCLI

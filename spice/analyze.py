@@ -11,7 +11,9 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         file_path (str): Path to the file to analyze
         selected_stats (list, optional): List of stats to compute. If None, compute all stats.
             Valid stats are: "line_count", "function_count", "comment_line_count", 
-            "inline_comment_count", "indentation_level"
+            "inline_comment_count", "indentation_level", "external_dependencies_count", 
+            "method_type_count", "comment_ratio", "average_function_size", 
+            "duplicate_code_detection", "asymptotic_complexity"
     
     Returns:
         dict: Dictionary containing the requested stats and file information
@@ -34,8 +36,13 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
     if not ext:
         raise ValueError("File has no extension")
     
-    # Define valid stats
-    valid_stats = ["line_count", "function_count", "comment_line_count", "inline_comment_count", "indentation_level", "external_dependencies_count", "method_type_count", "comment_ratio"]
+    # Define valid stats (including new ones)
+    valid_stats = [
+        "line_count", "function_count", "comment_line_count", "inline_comment_count", 
+        "indentation_level", "external_dependencies_count", "method_type_count", 
+        "comment_ratio", "average_function_size", "duplicate_code_detection", 
+        "asymptotic_complexity"
+    ]
     
     # default to all stats if none specified
     if selected_stats is None:
@@ -110,6 +117,30 @@ def analyze_file(file_path: str, selected_stats: Optional[List[str]] = None) -> 
         if "comment_ratio" in selected_stats:
             from spice.analyzers.count_comment_ratio import count_comment_ratio
             results["comment_ratio"] = count_comment_ratio(file_path)
+
+        # NEW FEATURES BELOW
+        
+        # average function size if requested
+        if "average_function_size" in selected_stats:
+            from spice.analyzers.average_function_size import calculate_average_function_size
+            results["average_function_size"] = calculate_average_function_size(file_path)
+        
+        # duplicate code detection if requested
+        if "duplicate_code_detection" in selected_stats:
+            from spice.analyzers.duplicate_code_detection import get_duplicate_code_summary
+            duplicate_info = get_duplicate_code_summary(file_path)
+            results["duplicate_blocks"] = duplicate_info["duplicate_blocks"]
+            results["duplicate_lines"] = duplicate_info["duplicate_lines"]
+            results["duplicate_percentage"] = duplicate_info["duplicate_percentage"]
+        
+        # asymptotic complexity analysis if requested
+        if "asymptotic_complexity" in selected_stats:
+            from spice.analyzers.asymptotic_complexity import analyze_asymptotic_complexity
+            complexity_info = analyze_asymptotic_complexity(file_path)
+            results["average_complexity"] = complexity_info["average_complexity"]
+            results["complexity_distribution"] = complexity_info["complexity_distribution"]
+            results["total_analyzed_functions"] = complexity_info.get("total_functions", 0)
+
         return results
         
     except Exception as e:

@@ -31,4 +31,14 @@ messages = {
     "private_methods_count_option": "Private Methods Count",
     "public_methods_count_option": "Public Methods Count",
     "comment_ratio_option": "Comment to Code Ratio",
+    # new
+    "average_function_size_option": "Average Function Size",
+    "duplicate_code_detection_option": "Duplicate Code Detection", 
+    "asymptotic_complexity_option": "Asymptotic Complexity Analysis",
+    "duplicate_blocks": "Duplicate Blocks",
+    "duplicate_lines": "Duplicate Lines", 
+    "duplicate_percentage": "Duplicate Percentage",
+    "average_complexity": "Average Complexity",
+    "total_analyzed_functions": "Total Analyzed Functions",
+    "complexity_distribution": "Complexity Distribution"
 }
