@@ -106,17 +106,18 @@ export default function Home() {
 
   const getMetricColor = (key: string): string => {
   if (key.includes('count') || key.includes('line')) 
-    return 'linear-gradient(135deg, #D7B377, #A0783A)'; // sand gradients
+    return 'linear-gradient(135deg, #e3d6b0, #c9b67a)'; // lighter sand
   if (key.includes('ratio')) 
-    return 'linear-gradient(135deg, #D94F04, #A13E02)'; // spice orange
+    return 'linear-gradient(135deg, #d97304, #a35402)'; // spice orange
   if (key.includes('dependencies')) 
-    return 'linear-gradient(135deg, #6B4C1B, #4A2C0B)'; // deep brown
+    return 'linear-gradient(135deg, #a67c23, #6b4c1b)'; // brown earth
   if (key.includes('indentation')) 
-    return 'linear-gradient(135deg, #B07A3A, #D7B377)'; // lighter sand
+    return 'linear-gradient(135deg, #d7b377, #f0e3c8)'; // light sand
   if (key.includes('method')) 
-    return 'linear-gradient(135deg, #A13E02, #D94F04)'; // spice strong orange
-  return 'linear-gradient(135deg, #4A2C0B, #362C3A)'; // dark earth/sky
+    return 'linear-gradient(135deg, #a35402, #d97304)'; // spice orange
+  return 'linear-gradient(135deg, #6b4c1b, #4a2c0b)'; // darker earth tones
 };
+
 
 
   const formatAge = (age: number): string => {
@@ -138,19 +139,19 @@ export default function Home() {
   const styles = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #362C3A, #4A2C0B, #D7B377)', // dark night to desert sand
+    background: 'linear-gradient(135deg, #f0e3c8, #e3d6b0, #d7b377)', // lighter sand gradient
     fontFamily: 'system-ui, -apple-system, sans-serif',
-    color: '#F5F0E6'
+    color: '#000000' // black text globally
   },
   header: {
-    background: 'rgba(74, 44, 11, 0.8)', // deep brown translucent
+    background: 'rgba(215, 179, 119, 0.9)', // light sand with opacity for clarity
     backdropFilter: 'blur(10px)',
-    borderBottom: '1px solid rgba(215, 179, 119, 0.4)', // light sand border
+    borderBottom: '1px solid rgba(160, 130, 60, 0.8)', // darker sand border
     position: 'sticky' as const,
     top: 0,
     zIndex: 40,
     padding: '1rem 1.5rem',
-    color: '#F5F0E6',
+    color: '#000000',
   },
   headerContent: {
     display: 'flex',
@@ -162,13 +163,13 @@ export default function Home() {
   title: {
     fontSize: '1.5rem',
     fontWeight: 'bold',
-    color: '#F5F0E6',
+    color: '#000000',
     display: 'flex',
     alignItems: 'center',
     gap: '0.75rem'
   },
   subtitle: {
-    color: 'rgba(245, 240, 230, 0.7)', // lighter sand
+    color: 'rgba(0, 0, 0, 0.7)',
     marginTop: '0.25rem'
   },
   refreshButton: {
@@ -178,8 +179,8 @@ export default function Home() {
     transition: 'all 0.2s',
     border: 'none',
     cursor: 'pointer',
-    background: loading ? '#6B4C1B' : '#D94F04', // dark brown or spice orange
-    color: loading ? '#BFAF85' : '#F5F0E6',
+    background: loading ? '#bfa865' : '#d97304', // lighter brown / orange
+    color: '#000000',
   },
   mainContent: {
     maxWidth: '1200px',
@@ -190,20 +191,20 @@ export default function Home() {
     gap: '2rem'
   },
   sidebar: {
-    background: 'rgba(215, 179, 119, 0.15)', // light sand translucent
+    background: 'rgba(215, 179, 119, 0.25)',
     backdropFilter: 'blur(10px)',
     borderRadius: '1rem',
     padding: '1.5rem',
-    border: '1px solid rgba(74, 44, 11, 0.4)', // deep brown border
+    border: '1px solid rgba(160, 130, 60, 0.5)',
     height: 'fit-content',
     position: 'sticky' as const,
     top: '6rem',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   sidebarTitle: {
     fontSize: '1.25rem',
     fontWeight: '600',
-    color: '#4A2C0B', // deep brown
+    color: '#000000',
     marginBottom: '1.5rem',
     display: 'flex',
     alignItems: 'center',
@@ -221,19 +222,19 @@ export default function Home() {
     borderRadius: '0.75rem',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    border: '1px solid rgba(74, 44, 11, 0.1)', // subtle brown border
-    background: 'rgba(215, 179, 119, 0.05)', // subtle sand background
-    color: '#4A2C0B',
+    border: '1px solid rgba(160, 130, 60, 0.3)',
+    background: 'rgba(215, 179, 119, 0.1)',
+    color: '#000000',
   },
   fileItemSelected: {
-    background: 'linear-gradient(45deg, #D94F04, #A13E02)', // spice orange gradient
-    color: '#F5F0E6',
+    background: 'linear-gradient(45deg, #d97304, #a35402)',
+    color: '#000000',
     transform: 'scale(1.02)',
-    boxShadow: '0 10px 25px rgba(217, 79, 4, 0.5)'
+    boxShadow: '0 10px 25px rgba(217, 115, 4, 0.5)'
   },
   fileItemDefault: {
-    background: 'rgba(215, 179, 119, 0.05)',
-    color: '#4A2C0B'
+    background: 'rgba(215, 179, 119, 0.1)',
+    color: '#000000'
   },
   fileInfo: {
     display: 'flex',
@@ -255,7 +256,7 @@ export default function Home() {
   },
   fileAge: {
     fontSize: '0.75rem',
-    opacity: 0.6,
+    opacity: 0.7,
     display: 'flex',
     alignItems: 'center',
     gap: '0.25rem'
@@ -266,12 +267,12 @@ export default function Home() {
     gap: '1.5rem'
   },
   fileHeader: {
-    background: 'linear-gradient(135deg, rgba(215, 179, 119, 0.15), rgba(74, 44, 11, 0.1))',
+    background: 'linear-gradient(135deg, rgba(215, 179, 119, 0.3), rgba(160, 130, 60, 0.2))',
     backdropFilter: 'blur(10px)',
     borderRadius: '1rem',
     padding: '1.5rem',
-    border: '1px solid rgba(74, 44, 11, 0.4)',
-    color: '#4A2C0B'
+    border: '1px solid rgba(160, 130, 60, 0.5)',
+    color: '#000000'
   },
   fileHeaderContent: {
     display: 'flex',
@@ -284,11 +285,11 @@ export default function Home() {
   fileHeaderTitle: {
     fontSize: '1.5rem',
     fontWeight: 'bold',
-    color: '#4A2C0B',
+    color: '#000000',
     marginBottom: '0.5rem'
   },
   fileHeaderPath: {
-    color: 'rgba(74, 44, 11, 0.7)',
+    color: 'rgba(0, 0, 0, 0.7)',
     fontSize: '0.875rem',
     marginBottom: '0.5rem'
   },
@@ -297,7 +298,7 @@ export default function Home() {
     alignItems: 'center',
     gap: '1rem',
     fontSize: '0.875rem',
-    color: 'rgba(74, 44, 11, 0.5)'
+    color: 'rgba(0, 0, 0, 0.5)'
   },
   metricsGrid: {
     display: 'grid',
@@ -307,19 +308,19 @@ export default function Home() {
   metricCard: {
     borderRadius: '1rem',
     padding: '1.5rem',
-    border: '1px solid rgba(74, 44, 11, 0.4)',
+    border: '1px solid rgba(160, 130, 60, 0.5)',
     backdropFilter: 'blur(10px)',
-    background: 'rgba(217, 79, 4, 0.15)', // light spice orange tint
+    background: 'rgba(217, 115, 4, 0.15)',
     transition: 'all 0.2s',
     cursor: 'default',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   metricHeader: {
     display: 'flex',
     alignItems: 'center',
     gap: '0.75rem',
     marginBottom: '1rem',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   metricIcon: {
     fontSize: '1.5rem',
@@ -327,33 +328,33 @@ export default function Home() {
   },
   metricTitle: {
     fontWeight: '600',
-    color: '#4A2C0B',
+    color: '#000000',
     fontSize: '1.125rem'
   },
   metricValue: {
     fontSize: '2rem',
     fontWeight: 'bold',
-    color: '#4A2C0B',
+    color: '#000000',
     marginBottom: '0.5rem'
   },
   progressBar: {
     width: '100%',
     height: '0.5rem',
-    background: 'rgba(74, 44, 11, 0.3)',
+    background: 'rgba(160, 130, 60, 0.3)',
     borderRadius: '0.25rem',
     marginTop: '0.75rem',
     overflow: 'hidden'
   },
   progressFill: {
     height: '100%',
-    background: 'linear-gradient(90deg, #D94F04, #A13E02)',
+    background: 'linear-gradient(90deg, #d97304, #a35402)',
     borderRadius: '0.25rem',
     transition: 'width 1s ease'
   },
   methodTypeCard: {
-    background: 'linear-gradient(135deg, rgba(217, 79, 4, 0.2), rgba(161, 62, 2, 0.2))',
-    border: '1px solid rgba(217, 79, 4, 0.2)',
-    color: '#4A2C0B'
+    background: 'linear-gradient(135deg, rgba(217, 115, 4, 0.2), rgba(161, 84, 2, 0.2))',
+    border: '1px solid rgba(217, 115, 4, 0.2)',
+    color: '#000000'
   },
   methodTypeList: {
     display: 'flex',
@@ -365,9 +366,9 @@ export default function Home() {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0.75rem',
-    background: 'rgba(74, 44, 11, 0.1)',
+    background: 'rgba(160, 130, 60, 0.1)',
     borderRadius: '0.5rem',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   methodTypeLabel: {
     display: 'flex',
@@ -380,17 +381,17 @@ export default function Home() {
     borderRadius: '50%'
   },
   methodTypeText: {
-    color: '#4A2C0B'
+    color: '#000000'
   },
   methodTypeValue: {
     fontSize: '1.25rem',
     fontWeight: 'bold',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   indentationCard: {
-    background: 'linear-gradient(135deg, rgba(217, 79, 4, 0.2), rgba(161, 62, 2, 0.2))',
-    border: '1px solid rgba(217, 79, 4, 0.2)',
-    color: '#4A2C0B'
+    background: 'linear-gradient(135deg, rgba(217, 115, 4, 0.2), rgba(161, 84, 2, 0.2))',
+    border: '1px solid rgba(217, 115, 4, 0.2)',
+    color: '#000000'
   },
   indentationList: {
     display: 'flex',
@@ -401,29 +402,29 @@ export default function Home() {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   indentationLabel: {
-    color: '#4A2C0B'
+    color: '#000000'
   },
   indentationValue: {
     fontSize: '1.125rem',
     fontWeight: '600',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   loading: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #362C3A, #4A2C0B, #D7B377)',
-    color: '#F5F0E6'
+    background: 'linear-gradient(135deg, #f0e3c8, #e3d6b0, #d7b377)',
+    color: '#000000'
   },
   loadingSpinner: {
     width: '4rem',
     height: '4rem',
-    border: '4px solid rgba(217, 79, 4, 0.3)',
-    borderTop: '4px solid #D94F04',
+    border: '4px solid rgba(217, 115, 4, 0.3)',
+    borderTop: '4px solid #d97304',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite'
   },
@@ -432,7 +433,7 @@ export default function Home() {
     justifyContent: 'center',
     alignItems: 'center',
     height: '24rem',
-    color: '#4A2C0B'
+    color: '#000000'
   },
   emptyStateContent: {
     textAlign: 'center' as const
@@ -443,10 +444,11 @@ export default function Home() {
     opacity: 0.5
   },
   emptyStateText: {
-    color: 'rgba(74, 44, 11, 0.7)',
+    color: 'rgba(0, 0, 0, 0.7)',
     fontSize: '1.25rem'
   }
 };
+
 
 
   if (loading && data.length === 0) {
