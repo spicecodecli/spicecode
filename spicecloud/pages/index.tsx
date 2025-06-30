@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 interface MetricData {
@@ -21,17 +20,54 @@ export default function Home() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/data');
-      const result = await response.json();
-      
-      if (result.success) {
-        setData(result.data);
-        // Only auto-select if no file is currently selected
-        if (result.data.length > 0 && !selectedFile) {
-          setSelectedFile(result.data[0]);
+      // Simulated data for demo
+      const mockData = [
+        {
+          id: '1',
+          hash: 'abc123',
+          timestamp: Date.now() - 1800000,
+          file_name: 'func_sample.go',
+          file_path: 'C:\\Users\\marua\\Desktop\\scripts\\2024\\2025\\spicecode\\tests\\sample-code\\func_sample.go',
+          age: 1800000,
+          readable_timestamp: '29/06/2025, 23:13:33',
+          metrics: {
+            line_count: 28,
+            comment_line_count: 2,
+            inline_comment_count: 1,
+            function_count: 15,
+            external_dependencies_count: 1,
+            comment_ratio: 0.1667,
+            file_extension: '.go',
+            file_size: 1024,
+            indentation_type: 'tabs',
+            indentation_size: 4,
+            method_type_count: { public: 8, private: 7 }
+          }
+        },
+        {
+          id: '2',
+          hash: 'def456',
+          timestamp: Date.now() - 1920000,
+          file_name: 'example.js',
+          file_path: 'C:\\Users\\marua\\Desktop\\scripts\\2024\\2025\\spicecode\\tests\\sample-code\\example.js',
+          age: 1920000,
+          readable_timestamp: '29/06/2025, 23:11:33',
+          metrics: {
+            line_count: 45,
+            comment_line_count: 8,
+            inline_comment_count: 3,
+            function_count: 6,
+            external_dependencies_count: 3,
+            comment_ratio: 0.2444,
+            file_extension: '.js',
+            file_size: 2048
+          }
         }
-      } else {
-        setError('Failed to load data');
+      ];
+      
+      setData(mockData);
+      if (mockData.length > 0 && !selectedFile) {
+        setSelectedFile(mockData[0]);
       }
     } catch (err) {
       setError('Error fetching data');
@@ -43,7 +79,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -69,12 +105,12 @@ export default function Home() {
   };
 
   const getMetricColor = (key: string): string => {
-    if (key.includes('count') || key.includes('line')) return 'from-blue-500 to-blue-600';
-    if (key.includes('ratio')) return 'from-green-500 to-green-600';
-    if (key.includes('dependencies')) return 'from-orange-500 to-orange-600';
-    if (key.includes('indentation')) return 'from-purple-500 to-purple-600';
-    if (key.includes('method')) return 'from-pink-500 to-pink-600';
-    return 'from-gray-500 to-gray-600';
+    if (key.includes('count') || key.includes('line')) return 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+    if (key.includes('ratio')) return 'linear-gradient(135deg, #10b981, #059669)';
+    if (key.includes('dependencies')) return 'linear-gradient(135deg, #f59e0b, #d97706)';
+    if (key.includes('indentation')) return 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
+    if (key.includes('method')) return 'linear-gradient(135deg, #ec4899, #db2777)';
+    return 'linear-gradient(135deg, #6b7280, #4b5563)';
   };
 
   const formatAge = (age: number): string => {
@@ -93,293 +129,559 @@ export default function Home() {
       .replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0f172a, #581c87, #0f172a)',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    },
+    header: {
+      background: 'rgba(0, 0, 0, 0.2)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      position: 'sticky' as const,
+      top: 0,
+      zIndex: 40,
+      padding: '1rem 1.5rem'
+    },
+    headerContent: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    },
+    title: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      color: 'white',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.75rem'
+    },
+    subtitle: {
+      color: 'rgba(255, 255, 255, 0.6)',
+      marginTop: '0.25rem'
+    },
+    refreshButton: {
+      padding: '0.5rem 1rem',
+      borderRadius: '0.5rem',
+      fontWeight: '500',
+      transition: 'all 0.2s',
+      border: 'none',
+      cursor: 'pointer',
+      background: loading ? '#374151' : '#7c3aed',
+      color: loading ? '#9ca3af' : 'white'
+    },
+    mainContent: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '2rem 1.5rem',
+      display: 'grid',
+      gridTemplateColumns: 'minmax(300px, 1fr) 2fr',
+      gap: '2rem'
+    },
+    sidebar: {
+      background: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '1rem',
+      padding: '1.5rem',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      height: 'fit-content',
+      position: 'sticky' as const,
+      top: '6rem'
+    },
+    sidebarTitle: {
+      fontSize: '1.25rem',
+      fontWeight: '600',
+      color: 'white',
+      marginBottom: '1.5rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem'
+    },
+    fileList: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '0.75rem',
+      maxHeight: '60vh',
+      overflowY: 'auto' as const
+    },
+    fileItem: {
+      padding: '1rem',
+      borderRadius: '0.75rem',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      border: '1px solid rgba(255, 255, 255, 0.1)'
+    },
+    fileItemSelected: {
+      background: 'linear-gradient(45deg, #7c3aed, #3b82f6)',
+      color: 'white',
+      transform: 'scale(1.02)',
+      boxShadow: '0 10px 25px rgba(124, 58, 237, 0.25)'
+    },
+    fileItemDefault: {
+      background: 'rgba(255, 255, 255, 0.05)',
+      color: 'rgba(255, 255, 255, 0.8)'
+    },
+    fileInfo: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '0.75rem'
+    },
+    fileIcon: {
+      fontSize: '1.25rem'
+    },
+    fileName: {
+      fontWeight: '500',
+      fontSize: '0.875rem',
+      marginBottom: '0.25rem'
+    },
+    filePath: {
+      fontSize: '0.75rem',
+      opacity: 0.8,
+      marginBottom: '0.5rem'
+    },
+    fileAge: {
+      fontSize: '0.75rem',
+      opacity: 0.7,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.25rem'
+    },
+    metricsArea: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '1.5rem'
+    },
+    fileHeader: {
+      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '1rem',
+      padding: '1.5rem',
+      border: '1px solid rgba(255, 255, 255, 0.2)'
+    },
+    fileHeaderContent: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '1rem'
+    },
+    fileHeaderIcon: {
+      fontSize: '2.5rem'
+    },
+    fileHeaderTitle: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      color: 'white',
+      marginBottom: '0.5rem'
+    },
+    fileHeaderPath: {
+      color: 'rgba(255, 255, 255, 0.6)',
+      fontSize: '0.875rem',
+      marginBottom: '0.5rem'
+    },
+    fileHeaderMeta: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem',
+      fontSize: '0.875rem',
+      color: 'rgba(255, 255, 255, 0.5)'
+    },
+    metricsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+      gap: '1.5rem'
+    },
+    metricCard: {
+      borderRadius: '1rem',
+      padding: '1.5rem',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backdropFilter: 'blur(10px)',
+      transition: 'all 0.2s',
+      cursor: 'default'
+    },
+    metricCardHover: {
+      transform: 'scale(1.05)'
+    },
+    metricHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.75rem',
+      marginBottom: '1rem'
+    },
+    metricIcon: {
+      fontSize: '1.5rem',
+      transition: 'transform 0.2s'
+    },
+    metricTitle: {
+      fontWeight: '600',
+      color: 'white',
+      fontSize: '1.125rem'
+    },
+    metricValue: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      color: 'white',
+      marginBottom: '0.5rem'
+    },
+    progressBar: {
+      width: '100%',
+      height: '0.5rem',
+      background: 'rgba(255, 255, 255, 0.2)',
+      borderRadius: '0.25rem',
+      marginTop: '0.75rem',
+      overflow: 'hidden'
+    },
+    progressFill: {
+      height: '100%',
+      background: 'linear-gradient(90deg, #10b981, #059669)',
+      borderRadius: '0.25rem',
+      transition: 'width 1s ease'
+    },
+    methodTypeCard: {
+      background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(147, 51, 234, 0.2))',
+      border: '1px solid rgba(236, 72, 153, 0.2)'
+    },
+    methodTypeList: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '0.75rem'
+    },
+    methodTypeItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '0.75rem',
+      background: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '0.5rem'
+    },
+    methodTypeLabel: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem'
+    },
+    methodTypeDot: {
+      width: '0.75rem',
+      height: '0.75rem',
+      borderRadius: '50%'
+    },
+    methodTypeText: {
+      color: 'rgba(255, 255, 255, 0.8)'
+    },
+    methodTypeValue: {
+      fontSize: '1.25rem',
+      fontWeight: 'bold',
+      color: 'white'
+    },
+    indentationCard: {
+      background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2))',
+      border: '1px solid rgba(139, 92, 246, 0.2)'
+    },
+    indentationList: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '0.75rem'
+    },
+    indentationItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    indentationLabel: {
+      color: 'rgba(255, 255, 255, 0.8)'
+    },
+    indentationValue: {
+      fontSize: '1.125rem',
+      fontWeight: '600',
+      color: 'white'
+    },
+    loading: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0f172a, #581c87, #0f172a)',
+      color: 'white'
+    },
+    loadingSpinner: {
+      width: '4rem',
+      height: '4rem',
+      border: '4px solid rgba(139, 92, 246, 0.3)',
+      borderTop: '4px solid #8b5cf6',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    },
+    emptyState: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '24rem'
+    },
+    emptyStateContent: {
+      textAlign: 'center' as const
+    },
+    emptyStateIcon: {
+      fontSize: '3.75rem',
+      marginBottom: '1rem',
+      opacity: 0.5
+    },
+    emptyStateText: {
+      color: 'rgba(255, 255, 255, 0.6)',
+      fontSize: '1.25rem'
+    }
+  };
+
   if (loading && data.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent mx-auto"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-blue-500 border-b-transparent mx-auto animate-spin" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
-          </div>
-          <p className="text-white/80 mt-6 text-lg">Loading your code metrics...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center bg-red-950/50 backdrop-blur-sm rounded-2xl p-8 border border-red-500/20">
-          <div className="text-6xl mb-4">⚠️</div>
-          <p className="text-red-200 text-xl mb-4">{error}</p>
-          <button 
-            onClick={fetchData}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <div className="text-8xl mb-6 animate-bounce">📊</div>
-          <h1 className="text-3xl font-bold text-white mb-4">Ready for Analysis!</h1>
-          <p className="text-white/70 mb-6 text-lg leading-relaxed">
-            Start analyzing your code files to see beautiful metrics here.
-          </p>
-          <div className="bg-gray-900/80 backdrop-blur text-green-400 p-6 rounded-xl font-mono text-sm border border-green-500/20">
-            <div className="text-green-300 mb-2"># Run your analyzer:</div>
-            <div className="text-white">python -m cli.main analyze file.py</div>
-          </div>
-          <button 
-            onClick={fetchData}
-            className="mt-6 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105"
-          >
-            🔄 Check for Updates
-          </button>
+      <div style={styles.loading}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={styles.loadingSpinner}></div>
+          <p style={{ marginTop: '1.5rem', fontSize: '1.125rem' }}>Loading your code metrics...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"></link> */}
+    <div style={styles.container}>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          
+          .metric-card:hover .metric-icon {
+            transform: scale(1.1);
+          }
+        `}
+      </style>
+      
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-40">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-                <span className="text-3xl">📊</span>
-                Code Quality Dashboard
-              </h1>
-              <p className="text-white/60 mt-1">{data.length} files analyzed</p>
-            </div>
-            <button 
-              onClick={fetchData}
-              disabled={loading}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                loading 
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-                  : 'bg-purple-600 hover:bg-purple-700 text-white hover:scale-105'
-              }`}
-            >
-              {loading ? '🔄 Updating...' : '🔄 Refresh'}
-            </button>
+      <div style={styles.header}>
+        <div style={styles.headerContent}>
+          <div>
+            <h1 style={styles.title}>
+              <span style={{ fontSize: '2rem' }}>📊</span>
+              Code Quality Dashboard
+            </h1>
+            <p style={styles.subtitle}>{data.length} files analyzed</p>
           </div>
+          <button 
+            onClick={fetchData}
+            disabled={loading}
+            style={{
+              ...styles.refreshButton,
+              ...(loading ? {} : { ':hover': { background: '#6d28d9' } })
+            }}
+          >
+            {loading ? '🔄 Updating...' : '🔄 Refresh'}
+          </button>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* File Selector Sidebar */}
-          <div className="xl:col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 sticky top-24">
-              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                <span>📁</span>
-                Analyzed Files
-              </h2>
-              <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                {data.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => setSelectedFile(item)}
-                    className={`group p-4 rounded-xl cursor-pointer transition-all duration-200 hover:scale-[1.02] ${
-                      selectedFile?.id === item.id 
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/25 scale-[1.02]' 
-                        : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="text-xl">
-                        {item.metrics.file_extension === '.py' ? '🐍' : 
-                         item.metrics.file_extension === '.js' ? '🟨' :
-                         item.metrics.file_extension === '.ts' ? '🔷' :
-                         item.metrics.file_extension === '.jsx' ? '⚛️' :
-                         item.metrics.file_extension === '.tsx' ? '⚛️' : '📄'}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium truncate text-sm" title={item.file_name}>
-                          {item.file_name}
-                        </div>
-                        <div 
-                          className={`text-xs truncate mt-1 ${
-                            selectedFile?.id === item.id ? 'text-white/80' : 'text-white/50'
-                          }`} 
-                          title={item.file_path}
-                        >
-                          {item.file_path.replace(item.file_name, '')}
-                        </div>
-                        <div className={`text-xs mt-2 flex items-center gap-2 ${
-                          selectedFile?.id === item.id ? 'text-white/70' : 'text-white/40'
-                        }`}>
-                          <span>🕒</span>
-                          {formatAge(item.age)}
-                        </div>
-                      </div>
-                    </div>
+      <div style={styles.mainContent}>
+        {/* Sidebar */}
+        <div style={styles.sidebar}>
+          <h2 style={styles.sidebarTitle}>
+            <span>📁</span>
+            Analyzed Files
+          </h2>
+          <div style={styles.fileList}>
+            {data.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setSelectedFile(item)}
+                style={{
+                  ...styles.fileItem,
+                  ...(selectedFile?.id === item.id ? styles.fileItemSelected : styles.fileItemDefault)
+                }}
+                className="file-item"
+                onMouseEnter={(e) => {
+                  if (selectedFile?.id !== item.id) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedFile?.id !== item.id) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  }
+                }}
+              >
+                <div style={styles.fileInfo}>
+                  <div style={styles.fileIcon}>
+                    {item.metrics.file_extension === '.py' ? '🐍' : 
+                     item.metrics.file_extension === '.js' ? '🟨' :
+                     item.metrics.file_extension === '.ts' ? '🔷' :
+                     item.metrics.file_extension === '.jsx' ? '⚛️' :
+                     item.metrics.file_extension === '.tsx' ? '⚛️' :
+                     item.metrics.file_extension === '.go' ? '🔵' : '📄'}
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Metrics Display */}
-          <div className="xl:col-span-3">
-            {selectedFile ? (
-              <div className="space-y-6">
-                {/* File Header */}
-                <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl">
-                      {selectedFile.metrics.file_extension === '.py' ? '🐍' : 
-                       selectedFile.metrics.file_extension === '.js' ? '🟨' :
-                       selectedFile.metrics.file_extension === '.ts' ? '🔷' :
-                       selectedFile.metrics.file_extension === '.jsx' ? '⚛️' :
-                       selectedFile.metrics.file_extension === '.tsx' ? '⚛️' : '📄'}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={styles.fileName} title={item.file_name}>
+                      {item.file_name}
                     </div>
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-bold text-white mb-2">{selectedFile.file_name}</h2>
-                      <p className="text-white/60 text-sm mb-2" title={selectedFile.file_path}>
-                        📁 {selectedFile.file_path}
-                      </p>
-                      <div className="flex items-center gap-4 text-sm text-white/50">
-                        <span>🕒 {selectedFile.readable_timestamp}</span>
-                        <span>💾 {selectedFile.metrics.file_size ? `${(selectedFile.metrics.file_size / 1024).toFixed(1)} KB` : 'N/A'}</span>
-                        <span>📂 {selectedFile.metrics.file_extension || 'N/A'}</span>
-                      </div>
+                    <div style={styles.filePath} title={item.file_path}>
+                      {item.file_path.replace(item.file_name, '')}
+                    </div>
+                    <div style={styles.fileAge}>
+                      <span>🕒</span>
+                      {formatAge(item.age)}
                     </div>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(selectedFile.metrics).map(([key, value]) => {
-                    // Skip file info metrics as they're shown in header
-                    if (['file_name', 'file_path', 'file_size', 'file_extension'].includes(key)) {
-                      return null;
-                    }
+        {/* Metrics Display */}
+        <div style={styles.metricsArea}>
+          {selectedFile ? (
+            <>
+              {/* File Header */}
+              <div style={styles.fileHeader}>
+                <div style={styles.fileHeaderContent}>
+                  <div style={styles.fileHeaderIcon}>
+                    {selectedFile.metrics.file_extension === '.py' ? '🐍' : 
+                     selectedFile.metrics.file_extension === '.js' ? '🟨' :
+                     selectedFile.metrics.file_extension === '.ts' ? '🔷' :
+                     selectedFile.metrics.file_extension === '.jsx' ? '⚛️' :
+                     selectedFile.metrics.file_extension === '.tsx' ? '⚛️' :
+                     selectedFile.metrics.file_extension === '.go' ? '🔵' : '📄'}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h2 style={styles.fileHeaderTitle}>{selectedFile.file_name}</h2>
+                    <p style={styles.fileHeaderPath} title={selectedFile.file_path}>
+                      📁 {selectedFile.file_path}
+                    </p>
+                    <div style={styles.fileHeaderMeta}>
+                      <span>🕒 {selectedFile.readable_timestamp}</span>
+                      <span>💾 {selectedFile.metrics.file_size ? `${(selectedFile.metrics.file_size / 1024).toFixed(1)} KB` : 'N/A'}</span>
+                      <span>📂 {selectedFile.metrics.file_extension || 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                    if (key === 'method_type_count' && typeof value === 'object' && value !== null) {
-                      return (
-                        <div key={key} className="bg-gradient-to-br from-pink-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl p-6 border border-pink-500/20 hover:scale-105 transition-all duration-200">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="text-2xl">🔧</span>
-                            <h3 className="font-semibold text-white text-lg">Method Types</h3>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg">
-                              <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                                <span className="text-white/80">Public</span>
-                              </div>
-                              <span className="text-xl font-bold text-white">{(value as any).public}</span>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg">
-                              <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                                <span className="text-white/80">Private</span>
-                              </div>
-                              <span className="text-xl font-bold text-white">{(value as any).private}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }
+              {/* Metrics Grid */}
+              <div style={styles.metricsGrid}>
+                {Object.entries(selectedFile.metrics).map(([key, value]) => {
+                  // Skip file info metrics
+                  if (['file_name', 'file_path', 'file_size', 'file_extension'].includes(key)) {
+                    return null;
+                  }
 
-                    // Special handling for indentation
-                    if (key === 'indentation_type' || key === 'indentation_size') {
-                      return null; // We'll handle these together
-                    }
-
+                  if (key === 'method_type_count' && typeof value === 'object' && value !== null) {
                     return (
                       <div 
                         key={key} 
-                        className={`bg-gradient-to-br ${getMetricColor(key)}/20 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:scale-105 transition-all duration-200 group`}
+                        style={{ ...styles.metricCard, ...styles.methodTypeCard }}
+                        className="metric-card"
                       >
-                        <div className="flex items-center gap-3 mb-4">
-                          <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                            {getMetricIcon(key)}
-                          </span>
-                          <h3 className="font-semibold text-white text-lg">
-                            {formatLabel(key)}
-                          </h3>
+                        <div style={styles.metricHeader}>
+                          <span style={styles.metricIcon} className="metric-icon">🔧</span>
+                          <h3 style={styles.metricTitle}>Method Types</h3>
                         </div>
-                        <div className="text-3xl font-bold text-white mb-2">
-                          {formatMetricValue(key, value)}
-                        </div>
-                        {key.includes('ratio') && (
-                          <div className="w-full bg-white/20 rounded-full h-2 mt-3">
-                            <div 
-                              className="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full transition-all duration-1000"
-                              style={{width: `${Math.min((value as number) * 100, 100)}%`}}
-                            ></div>
+                        <div style={styles.methodTypeList}>
+                          <div style={styles.methodTypeItem}>
+                            <div style={styles.methodTypeLabel}>
+                              <span style={{ ...styles.methodTypeDot, background: '#10b981' }}></span>
+                              <span style={styles.methodTypeText}>Public</span>
+                            </div>
+                            <span style={styles.methodTypeValue}>{(value as any).public}</span>
                           </div>
-                        )}
+                          <div style={styles.methodTypeItem}>
+                            <div style={styles.methodTypeLabel}>
+                              <span style={{ ...styles.methodTypeDot, background: '#3b82f6' }}></span>
+                              <span style={styles.methodTypeText}>Private</span>
+                            </div>
+                            <span style={styles.methodTypeValue}>{(value as any).private}</span>
+                          </div>
+                        </div>
                       </div>
                     );
-                  })}
+                  }
 
-                  {/* Special indentation card */}
-                  {(selectedFile.metrics.indentation_type || selectedFile.metrics.indentation_size) && (
-                    <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/20 hover:scale-105 transition-all duration-200">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">📐</span>
-                        <h3 className="font-semibold text-white text-lg">Indentation</h3>
+                  if (key === 'indentation_type' || key === 'indentation_size') {
+                    return null;
+                  }
+
+                  return (
+                    <div 
+                      key={key} 
+                      style={{ 
+                        ...styles.metricCard, 
+                        background: getMetricColor(key).replace('135deg', '135deg') + '20'
+                      }}
+                      className="metric-card"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
+                      <div style={styles.metricHeader}>
+                        <span style={styles.metricIcon} className="metric-icon">
+                          {getMetricIcon(key)}
+                        </span>
+                        <h3 style={styles.metricTitle}>
+                          {formatLabel(key)}
+                        </h3>
                       </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-white/80">Type:</span>
-                          <span className="text-lg font-semibold text-white">
-                            {selectedFile.metrics.indentation_type || 'N/A'}
-                          </span>
+                      <div style={styles.metricValue}>
+                        {formatMetricValue(key, value)}
+                      </div>
+                      {key.includes('ratio') && (
+                        <div style={styles.progressBar}>
+                          <div 
+                            style={{
+                              ...styles.progressFill,
+                              width: `${Math.min((value as number) * 100, 100)}%`
+                            }}
+                          ></div>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-white/80">Size:</span>
-                          <span className="text-lg font-semibold text-white">
-                            {selectedFile.metrics.indentation_size || 'N/A'}
-                          </span>
-                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Indentation Card */}
+                {(selectedFile.metrics.indentation_type || selectedFile.metrics.indentation_size) && (
+                  <div style={{ ...styles.metricCard, ...styles.indentationCard }} className="metric-card">
+                    <div style={styles.metricHeader}>
+                      <span style={styles.metricIcon} className="metric-icon">📐</span>
+                      <h3 style={styles.metricTitle}>Indentation</h3>
+                    </div>
+                    <div style={styles.indentationList}>
+                      <div style={styles.indentationItem}>
+                        <span style={styles.indentationLabel}>Type:</span>
+                        <span style={styles.indentationValue}>
+                          {selectedFile.metrics.indentation_type || 'N/A'}
+                        </span>
+                      </div>
+                      <div style={styles.indentationItem}>
+                        <span style={styles.indentationLabel}>Size:</span>
+                        <span style={styles.indentationValue}>
+                          {selectedFile.metrics.indentation_size || 'N/A'}
+                        </span>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                  <div className="text-6xl mb-4 opacity-50">👆</div>
-                  <p className="text-white/60 text-xl">Select a file from the sidebar to view its metrics</p>
-                </div>
+            </>
+          ) : (
+            <div style={styles.emptyState}>
+              <div style={styles.emptyStateContent}>
+                <div style={styles.emptyStateIcon}>👆</div>
+                <p style={styles.emptyStateText}>Select a file from the sidebar to view its metrics</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
-
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(147, 51, 234, 0.8);
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(147, 51, 234, 1);
-        }
-      `}</style>
     </div>
   );
 }
