@@ -4,7 +4,6 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>SpiceCloud | Powered by SpiceCodeCLI</title>
         <link rel="icon" href="/spicecode-logo.png" />
       </Head>
       <body className="antialiased">
