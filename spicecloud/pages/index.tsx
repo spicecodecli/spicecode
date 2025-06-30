@@ -456,7 +456,9 @@ export default function Home() {
   emptyStateText: {
     color: 'rgba(0, 0, 0, 0.7)',
     fontSize: '1.25rem'
-  }
+  },
+  fileIconImg: { width: '1.5rem', height: '1.5rem', objectFit: 'contain' as const },
+  fileHeaderImg: { width: '3rem', height: '3rem', objectFit: 'contain' as const }
 };
 
 
@@ -509,61 +511,64 @@ export default function Home() {
           </button>
         </div>
       </div>
+      
 
       <div style={styles.mainContent}>
-        {/* Sidebar */}
-        <div style={styles.sidebar}>
-          <h2 style={styles.sidebarTitle}>
-            <span>📁</span>
-            Analyzed Files
-          </h2>
-          <div style={styles.fileList}>
-            {data.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedFile(item)}
-                style={{
-                  ...styles.fileItem,
-                  ...(selectedFile?.id === item.id ? styles.fileItemSelected : styles.fileItemDefault)
-                }}
-                className="file-item"
-                onMouseEnter={(e) => {
-                  if (selectedFile?.id !== item.id) {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedFile?.id !== item.id) {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                  }
-                }}
-              >
-                <div style={styles.fileInfo}>
-                  <div style={styles.fileIcon}>
-                    {item.metrics.file_extension === '.py' ? '🐍' : 
-                     item.metrics.file_extension === '.js' ? '🟨' :
-                     item.metrics.file_extension === '.ts' ? '🔷' :
-                     item.metrics.file_extension === '.jsx' ? '⚛️' :
-                     item.metrics.file_extension === '.tsx' ? '⚛️' :
-                     item.metrics.file_extension === '.go' ? '🔵' : '📄'}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={styles.fileName} title={item.file_name}>
-                      {item.file_name}
-                    </div>
-                    <div style={styles.filePath} title={item.file_path}>
-                      {item.file_path.replace(item.file_name, '')}
-                    </div>
-                    <div style={styles.fileAge}>
-                      <span>🕒</span>
-                      {formatAge(item.age)}
-                    </div>
-                  </div>
-                </div>
+  {/* Sidebar */}
+  <div style={styles.sidebar}>
+    <h2 style={styles.sidebarTitle}>
+      <span>📁</span>
+      Analyzed Files
+    </h2>
+    <div style={styles.fileList}>
+      {data.map((item) => (
+        <div
+          key={item.id}
+          onClick={() => setSelectedFile(item)}
+          style={{
+            ...styles.fileItem,
+            ...(selectedFile?.id === item.id
+              ? styles.fileItemSelected
+              : styles.fileItemDefault)
+          }}
+          className="file-item"
+          onMouseEnter={(e) => {
+            if (selectedFile?.id !== item.id) {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (selectedFile?.id !== item.id) {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            }
+          }}
+        >
+          <div style={styles.fileInfo}>
+            <div style={styles.fileIcon}>
+              <img
+                src={getFileIconSrc(item.metrics.file_extension)}
+                alt={item.metrics.file_extension}
+                style={styles.fileIconImg}
+              />
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={styles.fileName} title={item.file_name}>
+                {item.file_name}
               </div>
-            ))}
+              <div style={styles.filePath} title={item.file_path}>
+                {item.file_path.replace(item.file_name, '')}
+              </div>
+              <div style={styles.fileAge}>
+                <span>🕒</span>
+                {formatAge(item.age)}
+              </div>
+            </div>
           </div>
         </div>
+      ))}
+    </div>
+  </div>
 
         {/* Metrics Display */}
         <div style={styles.metricsArea}>
