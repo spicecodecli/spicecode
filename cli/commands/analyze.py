@@ -39,18 +39,20 @@ def send_to_server(data):
                 print("✓ New analysis sent to server")
             return True
         else:
-            print(f"⚠ Server responded with status {response.status_code}", file=sys.stderr)
+            # print(f"⚠ Server responded with status {response.status_code}", file=sys.stderr)
             return False
             
     except requests.exceptions.ConnectionError:
-        print("⚠ Could not connect to server - make sure it's running on localhost:3000", file=sys.stderr)
+        # print("⚠ Could not connect to server - make sure it's running on localhost:3000", file=sys.stderr)
         return False
     except requests.exceptions.Timeout:
-        print("⚠ Server request timed out", file=sys.stderr)
+        # print("⚠ Server request timed out", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"⚠ Error sending to server: {e}", file=sys.stderr)
+        # Linha para debugar erros, descomente se precisar:
+        # print(f"⚠ Error sending to server: {e}", file=sys.stderr)
         return False
+
 
 
 def analyze_command(file, all, json_output, LANG_FILE):
