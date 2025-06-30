@@ -27,65 +27,38 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      // Simulated data for demo
-      const mockData = [
-        {
-          id: '1',
-          hash: 'abc123',
-          timestamp: Date.now() - 1800000,
-          file_name: 'func_sample.go',
-          file_path: 'C:\\Users\\marua\\Desktop\\scripts\\2024\\2025\\spicecode\\tests\\sample-code\\func_sample.go',
-          age: 1800000,
-          readable_timestamp: '29/06/2025, 23:13:33',
-          metrics: {
-            line_count: 28,
-            comment_line_count: 2,
-            inline_comment_count: 1,
-            function_count: 15,
-            external_dependencies_count: 1,
-            comment_ratio: 0.1667,
-            file_extension: '.go',
-            file_size: 1024,
-            indentation_type: 'tabs',
-            indentation_size: 4,
-            method_type_count: { public: 8, private: 7 }
-          }
-        },
-        {
-          id: '2',
-          hash: 'def456',
-          timestamp: Date.now() - 1920000,
-          file_name: 'example.js',
-          file_path: 'C:\\Users\\marua\\Desktop\\scripts\\2024\\2025\\spicecode\\tests\\sample-code\\example.js',
-          age: 1920000,
-          readable_timestamp: '29/06/2025, 23:11:33',
-          metrics: {
-            line_count: 45,
-            comment_line_count: 8,
-            inline_comment_count: 3,
-            function_count: 6,
-            external_dependencies_count: 3,
-            comment_ratio: 0.2444,
-            file_extension: '.js',
-            file_size: 2048
-          }
-        }
-      ];
-      
-      setData(mockData);
-      if (mockData.length > 0 && !selectedFile) {
-        setSelectedFile(mockData[0]);
+const fetchData = async () => {
+  try {
+    setLoading(true);
+
+    // ‼ ajuste a rota se o seu endpoint for diferente
+    const res  = await fetch('/api/files');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const json = await res.json();           
+
+    const files = json.map((f: any) => ({
+      ...f,
+      age: Date.now() - f.timestamp,
+      readable_timestamp: new Date(f.timestamp).toLocaleString('pt-BR'),
+      // se comment_ratio vier como string (“16.23%”) e você preferir número:
+      metrics: {
+        ...f.metrics,
+        comment_ratio: typeof f.metrics.comment_ratio === 'string'
+          ? parseFloat(f.metrics.comment_ratio) / 100
+          : f.metrics.comment_ratio
       }
-    } catch (err) {
-      setError('Error fetching data');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    }));
+
+    setData(files);
+    if (files.length && !selectedFile) setSelectedFile(files[0]);
+  } catch (err) {
+    setError('Erro ao buscar dados');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchData();
