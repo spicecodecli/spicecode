@@ -468,7 +468,7 @@ const fetchData = async () => {
           <div>
             <h1 style={styles.title}>
               <span style={{ fontSize: '2rem' }}>📊</span>
-              Code Quality Dashboard
+              SpiceCloud | Powered by SpiceCodeCLI
             </h1>
             <p style={styles.subtitle}>{data.length} files analyzed</p>
           </div>
