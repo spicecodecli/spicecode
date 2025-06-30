@@ -3,6 +3,7 @@ import requests
 import json
 import hashlib
 import os
+import sys
 
 from utils.get_translation import get_translation
 from spice.analyze import analyze_file
