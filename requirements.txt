@@ -36,6 +36,6 @@ shellingham==1.5.4
 twine==6.1.0
 typer==0.15.4
 typing_extensions==4.12.2
-urllib3==2.3.0
+urllib3==2.5.0
 wcwidth==0.2.13
 wheel==0.45.1
