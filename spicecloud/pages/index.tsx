@@ -551,13 +551,13 @@ const fetchData = async () => {
               <div style={styles.fileHeader}>
                 <div style={styles.fileHeaderContent}>
                   <div style={styles.fileHeaderIcon}>
-                    {selectedFile.metrics.file_extension === '.py' ? '🐍' : 
-                     selectedFile.metrics.file_extension === '.js' ? '🟨' :
-                     selectedFile.metrics.file_extension === '.ts' ? '🔷' :
-                     selectedFile.metrics.file_extension === '.jsx' ? '⚛️' :
-                     selectedFile.metrics.file_extension === '.tsx' ? '⚛️' :
-                     selectedFile.metrics.file_extension === '.go' ? '🔵' : '📄'}
-                  </div>
+  <img
+    src={getFileIconSrc(selectedFile.metrics.file_extension)}
+    alt={selectedFile.metrics.file_extension}
+    style={styles.fileHeaderImg}
+  />
+</div>
+
                   <div style={{ flex: 1 }}>
                     <h2 style={styles.fileHeaderTitle}>{selectedFile.file_name}</h2>
                     <p style={styles.fileHeaderPath} title={selectedFile.file_path}>
