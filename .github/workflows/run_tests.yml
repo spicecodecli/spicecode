@@ -25,6 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         # Install the project in editable mode to pick up changes
+        pip install -r requirements.txt
         pip install -e .
         # Install test dependencies, including pytest-cov for coverage
         pip install pytest typer numpy pytest-cov
