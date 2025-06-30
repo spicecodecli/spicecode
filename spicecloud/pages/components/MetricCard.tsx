@@ -1,5 +1,10 @@
 import React from 'react';
-import { formatMetricValue, getMetricIcon, getMetricColor, formatLabel } from '../utils/utils';
+import {
+  formatMetricValue,
+  getMetricIcon,
+  getMetricColor,
+  formatLabel,
+} from '../utils/utils';
 import { styles } from '../utils/styles';
 
 interface MetricCardProps {
@@ -7,12 +12,22 @@ interface MetricCardProps {
   value: any;
 }
 
-export const MetricCard: React.FC<MetricCardProps> = ({ metricKey, value }) => {
+export const MetricCard: React.FC<MetricCardProps> = ({
+  metricKey,
+  value,
+}) => {
+  /* 👉 custom display for average_function_size */
+  const displayValue =
+    metricKey === 'average_function_size'
+      ? `${parseFloat(value).toFixed(1)} lines`
+      : formatMetricValue(metricKey, value);
+
   return (
-    <div 
-      style={{ 
-        ...styles.metricCard, 
-        background: getMetricColor(metricKey).replace('135deg', '135deg') + '20'
+    <div
+      style={{
+        ...styles.metricCard,
+        background:
+          getMetricColor(metricKey).replace('135deg', '135deg') + '20',
       }}
       className="metric-card"
       onMouseEnter={(e) => {
@@ -26,19 +41,18 @@ export const MetricCard: React.FC<MetricCardProps> = ({ metricKey, value }) => {
         <span style={styles.metricIcon} className="metric-icon">
           {getMetricIcon(metricKey)}
         </span>
-        <h3 style={styles.metricTitle}>
-          {formatLabel(metricKey)}
-        </h3>
+        <h3 style={styles.metricTitle}>{formatLabel(metricKey)}</h3>
       </div>
-      <div style={styles.metricValue}>
-        {formatMetricValue(metricKey, value)}
-      </div>
+
+      <div style={styles.metricValue}>{displayValue}</div>
+
+      {/* progress bar only for ratio‑type metrics */}
       {metricKey.includes('ratio') && (
         <div style={styles.progressBar}>
-          <div 
+          <div
             style={{
               ...styles.progressFill,
-              width: `${Math.min((value as number) * 100, 100)}%`
+              width: `${Math.min((value as number) * 100, 100)}%`,
             }}
           ></div>
         </div>
