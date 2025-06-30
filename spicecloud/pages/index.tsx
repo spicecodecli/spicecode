@@ -11,6 +11,16 @@ interface MetricData {
   readable_timestamp: string;
 }
 
+const getFileIconSrc = (ext: string): string => {
+  switch (ext) {
+    case '.py':  return '/python-logo.png';
+    case '.js':  return '/javascript-logo.png';
+    case '.rb':  return '/ruby-logo.png';
+    case '.go':  return '/go-logo.png';
+    default:     return '/file-icon.png';
+  }
+};
+
 export default function Home() {
   const [data, setData] = useState<MetricData[]>([]);
   const [selectedFile, setSelectedFile] = useState<MetricData | null>(null);
