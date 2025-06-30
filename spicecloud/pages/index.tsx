@@ -463,27 +463,31 @@ const fetchData = async () => {
       </style>
       
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <div>
-            <h1 style={styles.title}>
-              <span style={{ fontSize: '2rem' }}>📊</span>
-              SpiceCloud | Powered by SpiceCodeCLI
-            </h1>
-            <p style={styles.subtitle}>{data.length} files analyzed</p>
-          </div>
-          <button 
-            onClick={fetchData}
-            disabled={loading}
-            style={{
-              ...styles.refreshButton,
-              ...(loading ? {} : { ':hover': { background: '#6d28d9' } })
-            }}
-          >
-            {loading ? '🔄 Updating...' : '🔄 Refresh'}
-          </button>
-        </div>
-      </div>
+<div style={styles.header}>
+  <div style={styles.headerContent}>
+    <div>
+      <h1 style={styles.title}>
+        <img 
+          src="/spicecode-logo.png" 
+          alt="SpiceCode Logo" 
+          style={{ width: '3rem', height: '3rem', verticalAlign: 'middle', marginRight: '0.5rem' }}
+        />
+        SpiceCloud | Powered by SpiceCodeCLI
+      </h1>
+      <p style={styles.subtitle}>{data.length} files analyzed</p>
+    </div>
+    <button 
+      onClick={fetchData}
+      disabled={loading}
+      style={{
+        ...styles.refreshButton,
+        ...(loading ? {} : { ':hover': { background: '#6d28d9' } })
+      }}
+    >
+      {loading ? '🔄 Updating...' : '🔄 Refresh'}
+    </button>
+  </div>
+</div>
       
 
       <div style={styles.mainContent}>
