@@ -33,7 +33,7 @@ const config = {
   // my site is not chinese. but thank you for the heads up
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'pt-BR'],
   },
 
   presets: [
@@ -88,12 +88,17 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
+          {
+          type: 'localeDropdown',
+          position: 'left',
+        },
           // {to: '/blog', label: 'Blog', position: 'left'}, // Blog disabled
           {
             href: 'https://github.com/spicecodecli/spicecode',
             label: 'GitHub',
             position: 'right',
           },
+          
         ],
       },
       footer: {
